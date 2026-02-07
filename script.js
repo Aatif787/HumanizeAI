@@ -2695,46 +2695,59 @@ function initializeIntroPopup() {
   const popup = document.getElementById('intro-popup');
   const video = document.getElementById('intro-video-element');
 
-  if (!popup || !video) return;
+  console.log('Intro Popup Element:', popup);
+  console.log('Intro Video Element:', video);
 
-  // Set volume to 50% as requested
+  if (!popup || !video) {
+    console.error('Popup or Video element missing from DOM!');
+    return;
+  }
+
+  // Force reset state
+  popup.style.display = 'flex';
+  popup.style.opacity = '0';
+  popup.style.visibility = 'hidden';
+
+  // Set volume to 50%
   video.volume = 0.5;
 
-  // Show the popup with a small delay for better effect
-  setTimeout(() => {
+  // Show the popup immediately
+  const showPopup = () => {
+    console.log('Activating Popup now...');
     popup.classList.add('active');
-
-    // Play the video (unmute to hear the 50% volume)
+    
+    // Play the video
     video.muted = false;
-    video.play().catch(() => {
-      console.log('Intro video autoplay blocked: Waiting for interaction');
-      // Fallback: keep muted if autoplay with sound is blocked
+    video.play().then(() => {
+      console.log('Intro video playing successfully');
+    }).catch((err) => {
+      console.warn('Autoplay with sound blocked, trying muted...', err);
       video.muted = true;
-      video.play().catch(() => {});
+      video.play().catch(e => console.error('Video play failed entirely:', e));
     });
 
-    // Close on click for better UX
-    popup.addEventListener('click', () => {
+    // Auto-disable after 5 seconds
+    setTimeout(() => {
+      console.log('Auto-disabling popup...');
       popup.classList.remove('active');
       setTimeout(() => {
         popup.style.display = 'none';
         video.pause();
-      }, 800);
-    });
+      }, 1000);
+    }, 5000);
+  };
 
-    // Auto-disable after 4 seconds
+  // Trigger show
+  setTimeout(showPopup, 100);
+
+  // Close on click
+  popup.addEventListener('click', () => {
+    popup.classList.remove('active');
     setTimeout(() => {
-      if (popup.style.display !== 'none') {
-        popup.classList.remove('active');
-
-        // Fully remove from DOM or set display none after transition
-        setTimeout(() => {
-          popup.style.display = 'none';
-          video.pause();
-        }, 800); // Wait for the 0.8s transition
-      }
-    }, 4000);
-  }, 300);
+      popup.style.display = 'none';
+      video.pause();
+    }, 800);
+  });
 }
 
 /**
