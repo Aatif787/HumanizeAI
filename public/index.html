@@ -232,18 +232,61 @@
             }
             
             .intro-title {
-                font-size: 4.5rem;
+                font-size: 5rem;
                 font-weight: 950;
                 margin-top: 1.5rem;
-                background: linear-gradient(135deg, #ffffff 0%, #71717a 50%, #ffffff 100%);
+                background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 50%, #ffffff 100%);
                 background-size: 200% auto;
                 animation: shine 3s linear infinite;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 font-family: 'Inter', sans-serif;
-                letter-spacing: -0.07em;
-                line-height: 0.9;
+                letter-spacing: -0.05em;
+                line-height: 1;
                 text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+                position: relative;
+                display: inline-block;
+            }
+
+            .star-particle {
+                position: absolute;
+                background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0) 70%);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 10002;
+                filter: blur(1px);
+                box-shadow: 0 0 10px #fff, 0 0 20px #fff;
+            }
+
+            @keyframes star-explosion {
+                0% {
+                    transform: translate(0, 0) scale(1);
+                    opacity: 1;
+                }
+                20% {
+                    transform: translate(var(--tx), var(--ty)) scale(1.5);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(var(--target-x), var(--target-y)) scale(0.2);
+                    opacity: 0.8;
+                }
+            }
+
+            .intro-title span {
+                opacity: 0;
+                display: inline-block;
+                transition: opacity 0.5s ease;
+            }
+
+            .intro-title.merged span {
+                opacity: 1;
+                animation: letter-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            }
+
+            @keyframes letter-pop {
+                0% { transform: scale(0); filter: blur(10px); }
+                100% { transform: scale(1); filter: blur(0); }
             }
 
             @keyframes shine {
@@ -364,7 +407,9 @@
                     Your browser does not support the video tag.
                 </video>
             </div>
-            <h2 class="intro-title">Saniya</h2>
+            <h2 id="saniya-title" class="intro-title">
+                <span>S</span><span>a</span><span>n</span><span>i</span><span>y</span><span>a</span>
+            </h2>
             <div class="mt-8 flex justify-center space-x-2">
                 <div class="w-2 h-2 bg-white/20 rounded-full animate-bounce" style="animation-delay: 0s"></div>
                 <div class="w-2 h-2 bg-white/40 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>

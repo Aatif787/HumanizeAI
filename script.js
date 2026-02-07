@@ -2694,53 +2694,83 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeIntroPopup() {
   const popup = document.getElementById('intro-popup');
   const video = document.getElementById('intro-video-element');
+  const title = document.getElementById('saniya-title');
 
-  console.log('Intro Popup Element:', popup);
-  console.log('Intro Video Element:', video);
+  if (!popup || !video || !title) return;
 
-  if (!popup || !video) {
-    console.error('Popup or Video element missing from DOM!');
-    return;
-  }
-
-  // Force reset state
-  popup.style.display = 'flex';
-  popup.style.opacity = '0';
-  popup.style.visibility = 'hidden';
-
-  // Set volume to 50%
   video.volume = 0.5;
 
-  // Show the popup immediately
-  const showPopup = () => {
-    console.log('Activating Popup now...');
-    popup.classList.add('active');
+  const runStarAnimation = () => {
+    const letters = title.querySelectorAll('span');
+    const container = document.querySelector('.intro-content');
     
-    // Play the video
-    video.muted = false;
-    video.play().then(() => {
-      console.log('Intro video playing successfully');
-    }).catch((err) => {
-      console.warn('Autoplay with sound blocked, trying muted...', err);
-      video.muted = true;
-      video.play().catch(e => console.error('Video play failed entirely:', e));
+    letters.forEach((letter, index) => {
+      const letterRect = letter.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      
+      // Target position relative to the container
+      const targetX = letterRect.left - containerRect.left + (letterRect.width / 2);
+      const targetY = letterRect.top - containerRect.top + (letterRect.height / 2);
+
+      // Create multiple stars per letter for the explosion
+      for (let i = 0; i < 8; i++) {
+        const star = document.createElement('div');
+        star.className = 'star-particle';
+        
+        // Random starting explosion offset
+        const tx = (Math.random() - 0.5) * 400;
+        const ty = (Math.random() - 0.5) * 400;
+        
+        const size = Math.random() * 4 + 2;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = '50%';
+        star.style.top = '50%';
+        
+        star.style.setProperty('--tx', `${tx}px`);
+        star.style.setProperty('--ty', `${ty}px`);
+        star.style.setProperty('--target-x', `${targetX - (containerRect.width / 2)}px`);
+        star.style.setProperty('--target-y', `${targetY - (containerRect.height / 2)}px`);
+        
+        const duration = 1.5 + Math.random() * 1;
+        star.style.animation = `star-explosion ${duration}s cubic-bezier(0.165, 0.84, 0.44, 1) forwards`;
+        
+        container.appendChild(star);
+        
+        // Remove star after animation
+        setTimeout(() => star.remove(), duration * 1000);
+      }
     });
 
-    // Auto-disable after 5 seconds
+    // Merge letters after explosion starts to settle
     setTimeout(() => {
-      console.log('Auto-disabling popup...');
+      title.classList.add('merged');
+    }, 1200);
+  };
+
+  const showPopup = () => {
+    popup.classList.add('active');
+    
+    // Start explosion after popup opens
+    setTimeout(runStarAnimation, 800);
+    
+    video.muted = false;
+    video.play().catch(() => {
+      video.muted = true;
+      video.play().catch(() => {});
+    });
+
+    setTimeout(() => {
       popup.classList.remove('active');
       setTimeout(() => {
         popup.style.display = 'none';
         video.pause();
       }, 1000);
-    }, 5000);
+    }, 6000); // Extended slightly to see the animation
   };
 
-  // Trigger show
   setTimeout(showPopup, 100);
 
-  // Close on click
   popup.addEventListener('click', () => {
     popup.classList.remove('active');
     setTimeout(() => {
