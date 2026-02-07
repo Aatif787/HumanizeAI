@@ -75,34 +75,35 @@ app.use('/api/user', authenticateToken, userRoutes);
 app.use('/api/detect', authenticateToken, detectionRoutes);
 
 // Serve static files (frontend)
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(express.static(path.join(__dirname, '../public')));
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-  });
-} else {
-  // Serve static files in development
-  app.use(express.static(path.join(__dirname, '../public')));
+// Serve required frontend scripts from project root
+app.get('/advanced-humanizer.js', (req, res) => {
+  res.sendFile(path.join(__dirname, '../advanced-humanizer.js'));
+});
+app.get('/script.js', (req, res) => {
+  res.sendFile(path.join(__dirname, '../script.js'));
+});
+app.get('/ai-detection-tester.js', (req, res) => {
+  res.sendFile(path.join(__dirname, '../ai-detection-tester.js'));
+});
+app.get('/on-device-detection-integration.js', (req, res) => {
+  res.sendFile(path.join(__dirname, '../on-device-detection-integration.js'));
+});
 
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
-  });
+// Main entry point for frontend
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
-  // Serve required frontend scripts from project root
-  app.get('/advanced-humanizer.js', (req, res) => {
-    res.sendFile(path.join(__dirname, '../advanced-humanizer.js'));
-  });
-  app.get('/script.js', (req, res) => {
-    res.sendFile(path.join(__dirname, '../script.js'));
-  });
-  app.get('/ai-detection-tester.js', (req, res) => {
-    res.sendFile(path.join(__dirname, '../ai-detection-tester.js'));
-  });
-  app.get('/on-device-detection-integration.js', (req, res) => {
-    res.sendFile(path.join(__dirname, '../on-device-detection-integration.js'));
-  });
-}
+// Fallback for SPA-like routing (optional but good for stability)
+app.get('*', (req, res, next) => {
+  // If it's an API route, let it fall through to the API routes or 404
+  if (req.originalUrl.startsWith('/api')) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 // Error handling middleware
 app.use(errorHandler);
