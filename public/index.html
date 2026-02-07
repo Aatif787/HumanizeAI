@@ -202,8 +202,8 @@
             }
             
             .intro-overlay.active {
-                opacity: 1;
-                visibility: visible;
+                opacity: 1 !important;
+                visibility: visible !important;
             }
             
             .intro-content {
@@ -222,8 +222,9 @@
                 max-width: 500px;
                 width: 95%;
                 position: relative;
-                overflow: hidden;
+                overflow: visible; /* Changed from hidden to allow particles to float out slightly */
                 perspective: 1000px;
+                z-index: 10001;
             }
             
             .intro-overlay.active .intro-content {
@@ -320,7 +321,7 @@
         document.head.appendChild(introStyle);
 
         // Add particles to popup
-        window.addEventListener('DOMContentLoaded', () => {
+        const initParticles = () => {
             const container = document.querySelector('.intro-content');
             if (container) {
                 for (let i = 0; i < 15; i++) {
@@ -336,7 +337,13 @@
                     container.appendChild(p);
                 }
             }
-        });
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initParticles);
+        } else {
+            initParticles();
+        }
         
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');

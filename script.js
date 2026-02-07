@@ -2666,6 +2666,8 @@ class AIDetectionUI {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM Content Loaded - Initializing UI...');
+  
   window.textHumanizer = new TextHumanizer();
   window.aiDetector = new AIDetector();
   window.aiDetectionUI = new AIDetectionUI();
@@ -2674,6 +2676,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeMainUI();
 
   // Initialize intro popup
+  console.log('Initializing Intro Popup...');
   initializeIntroPopup();
 
   // Initialize navigation video
