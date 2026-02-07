@@ -2692,21 +2692,40 @@ document.addEventListener('DOMContentLoaded', function() {
  * Initialize intro popup functionality
  */
 function initializeIntroPopup() {
+  console.log('[Popup] Initializing...');
   const popup = document.getElementById('intro-popup');
   const video = document.getElementById('intro-video-element');
   const title = document.getElementById('saniya-title');
 
-  if (!popup || !video || !title) return;
-
+  if (!popup) {
+    console.error('[Popup] Error: #intro-popup element not found in DOM');
+    return;
+  }
+  
   // Set volume to 0 as requested
-  video.volume = 0;
-  video.muted = true;
-  video.controls = false;
+  if (video) {
+    video.volume = 0;
+    video.muted = true;
+    video.controls = false;
+  } else {
+    console.warn('[Popup] Warning: #intro-video-element not found');
+  }
+
+  if (!title) {
+    console.warn('[Popup] Warning: #saniya-title not found');
+  }
 
   const runStarAnimation = () => {
+    if (!title) return;
+    console.log('[Popup] Starting star animation...');
     const letters = title.querySelectorAll('span');
     const container = document.querySelector('.intro-content');
     
+    if (!container) {
+      console.error('[Popup] Error: .intro-content not found for star animation');
+      return;
+    }
+
     letters.forEach((letter, index) => {
       const letterRect = letter.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
@@ -2756,26 +2775,40 @@ function initializeIntroPopup() {
   };
 
   const showPopup = () => {
+    console.log('[Popup] Displaying popup...');
     popup.classList.add('active');
+    popup.style.display = 'flex'; // Ensure display is flex
+    
     setTimeout(runStarAnimation, 600);
-    video.play().catch(() => {});
+    
+    if (video) {
+      video.play().catch(err => {
+        console.warn('[Popup] Video play failed (likely autoplay policy):', err);
+      });
+    }
 
+    // Auto-disable after duration
     setTimeout(() => {
+      console.log('[Popup] Auto-disabling popup...');
       popup.classList.remove('active');
       setTimeout(() => {
         popup.style.display = 'none';
-        video.pause();
+        if (video) video.pause();
       }, 1000);
     }, 7000); 
   };
 
+  // Trigger after a short delay for better impact
+  console.log('[Popup] Scheduling trigger in 300ms...');
   setTimeout(showPopup, 300);
 
+  // Close on click anywhere
   popup.addEventListener('click', () => {
+    console.log('[Popup] User clicked to close');
     popup.classList.remove('active');
     setTimeout(() => {
       popup.style.display = 'none';
-      video.pause();
+      if (video) video.pause();
     }, 800);
   });
 }
