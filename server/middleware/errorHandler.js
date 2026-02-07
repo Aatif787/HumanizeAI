@@ -1,7 +1,11 @@
 const logger = require('../config/logger');
 
-const errorHandler = (err, req, res) => {
+const errorHandler = (err, req, res, next) => {
   logger.error(err.stack);
+
+  if (res.headersSent) {
+    return next(err);
+  }
 
   if (err.name === 'ValidationError') {
     const errors = Object.values(err.errors).map(val => val.message);
