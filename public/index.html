@@ -320,7 +320,14 @@
         `;
         document.head.appendChild(introStyle);
 
-        // Add particles to popup
+        // Theme initialization
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        // Particle effect logic
         const initParticles = () => {
             const container = document.querySelector('.intro-content');
             if (container) {
@@ -343,12 +350,6 @@
             document.addEventListener('DOMContentLoaded', initParticles);
         } else {
             initParticles();
-        }
-        
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
         }
     </script>
 </head>

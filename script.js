@@ -3015,6 +3015,16 @@ function initializeMainUI() {
   // Export functionality
   initializeExportFunctionality();
 
+  // Dark Mode Toggle functionality
+  const darkModeToggle = document.getElementById('dark-mode-toggle');
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.theme = isDark ? 'dark' : 'light';
+    });
+  }
+
   // Add real-time preview to style selector changes
 
   // Add real-time preview to style selector changes
