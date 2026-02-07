@@ -118,21 +118,22 @@ const PORT = process.env.PORT || 3000;
 // Connect to database and start server
 const startServer = async () => {
   try {
-    const dbConnected = await connectDB();
-
-    if (!dbConnected) {
-      console.log('⚠️  Running without database connection');
-      logger.warn('Running without database connection');
+    await connectDB();
+    
+    // Only listen if we're not running as a Vercel function
+    if (!process.env.VERCEL) {
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+        logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+      });
     }
-
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
-      logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
-    });
   } catch (error) {
-    console.error('❌ Failed to start server:', error);
-    logger.error('Failed to start server:', error);
-    process.exit(1);
+    console.error('❌ Server startup error:', error);
+    logger.error('Server startup error:', error);
+    // Don't exit on Vercel
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
   }
 };
 

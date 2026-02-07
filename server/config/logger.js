@@ -11,21 +11,19 @@ const logger = winston.createLogger({
   format: logFormat,
   defaultMeta: { service: 'ai-text-humanizer' },
   transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log' }),
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
         winston.format.simple()
       )
     })
-  ],
-  exceptionHandlers: [
-    new winston.transports.File({ filename: 'logs/exceptions.log' })
-  ],
-  rejectionHandlers: [
-    new winston.transports.File({ filename: 'logs/rejections.log' })
   ]
 });
+
+// Only add file transports if not on Vercel/Production
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  logger.add(new winston.transports.File({ filename: 'logs/error.log', level: 'error' }));
+  logger.add(new winston.transports.File({ filename: 'logs/combined.log' }));
+}
 
 module.exports = logger;
