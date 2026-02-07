@@ -78,25 +78,32 @@ app.use('/api/humanize', authenticateToken, humanizerRoutes);
 app.use('/api/user', authenticateToken, userRoutes);
 app.use('/api/detect', authenticateToken, detectionRoutes);
 
-// Serve static files (frontend)
-app.use(express.static(path.join(__dirname, '../public')));
+// Serve static files (frontend) with cache control
+app.use(express.static(path.join(__dirname, '../public'), {
+  maxAge: '1d', // Cache for 1 day
+  setHeaders: (res, path) => {
+    if (path.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    } else if (path.endsWith('.js') || path.endsWith('.css') || path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.svg') || path.endsWith('.mp4')) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1 year for versioned assets
+    }
+  }
+}));
 
-// Serve required frontend scripts from project root
-app.get('/advanced-humanizer.js', (req, res) => {
-  res.sendFile(path.join(__dirname, '../advanced-humanizer.js'));
-});
-app.get('/script.js', (req, res) => {
-  res.sendFile(path.join(__dirname, '../script.js'));
-});
-app.get('/ai-detection-tester.js', (req, res) => {
-  res.sendFile(path.join(__dirname, '../ai-detection-tester.js'));
-});
-app.get('/on-device-detection-integration.js', (req, res) => {
-  res.sendFile(path.join(__dirname, '../on-device-detection-integration.js'));
-});
+// Serve required frontend scripts from project root with no-cache for development/root files
+const serveScript = (fileName) => (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.sendFile(path.join(__dirname, `../${fileName}`));
+};
 
-// Main entry point for frontend
+app.get('/advanced-humanizer.js', serveScript('advanced-humanizer.js'));
+app.get('/script.js', serveScript('script.js'));
+app.get('/ai-detection-tester.js', serveScript('ai-detection-tester.js'));
+app.get('/on-device-detection-integration.js', serveScript('on-device-detection-integration.js'));
+
+// Main entry point for frontend - strictly no-cache
 app.get('/', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 

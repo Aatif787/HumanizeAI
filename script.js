@@ -2698,7 +2698,10 @@ function initializeIntroPopup() {
 
   if (!popup || !video || !title) return;
 
-  video.volume = 0.5;
+  // Set volume to 0 as requested
+  video.volume = 0;
+  video.muted = true;
+  video.controls = false;
 
   const runStarAnimation = () => {
     const letters = title.querySelectorAll('span');
@@ -2708,57 +2711,54 @@ function initializeIntroPopup() {
       const letterRect = letter.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
       
-      // Target position relative to the container
       const targetX = letterRect.left - containerRect.left + (letterRect.width / 2);
       const targetY = letterRect.top - containerRect.top + (letterRect.height / 2);
 
-      // Create multiple stars per letter for the explosion
-      for (let i = 0; i < 8; i++) {
+      // Create photorealistic star particles
+      for (let i = 0; i < 12; i++) {
         const star = document.createElement('div');
         star.className = 'star-particle';
         
-        // Random starting explosion offset
-        const tx = (Math.random() - 0.5) * 400;
-        const ty = (Math.random() - 0.5) * 400;
-        
-        const size = Math.random() * 4 + 2;
+        // Realistic star sizing
+        const size = Math.random() * 3 + 1;
         star.style.width = `${size}px`;
         star.style.height = `${size}px`;
-        star.style.left = '50%';
+        
+        // Photorealistic lighting/glow
+        star.style.background = `radial-gradient(circle, #fff 0%, rgba(255,255,255,0.8) 40%, transparent 100%)`;
+        star.style.boxShadow = `0 0 ${size * 3}px #fff, 0 0 ${size * 6}px rgba(139, 92, 246, 0.4)`;
+        
+        star.style.left = '40%'; // Start from center-ish of text area
         star.style.top = '50%';
+        
+        const tx = (Math.random() - 0.5) * 600;
+        const ty = (Math.random() - 0.5) * 600;
         
         star.style.setProperty('--tx', `${tx}px`);
         star.style.setProperty('--ty', `${ty}px`);
-        star.style.setProperty('--target-x', `${targetX - (containerRect.width / 2)}px`);
+        star.style.setProperty('--target-x', `${targetX - (containerRect.width * 0.4)}px`);
         star.style.setProperty('--target-y', `${targetY - (containerRect.height / 2)}px`);
         
-        const duration = 1.5 + Math.random() * 1;
-        star.style.animation = `star-explosion ${duration}s cubic-bezier(0.165, 0.84, 0.44, 1) forwards`;
+        const duration = 1.2 + Math.random() * 0.8;
+        const delay = index * 0.05 + Math.random() * 0.2;
+        
+        star.style.animation = `star-explosion ${duration}s cubic-bezier(0.19, 1, 0.22, 1) ${delay}s forwards`;
         
         container.appendChild(star);
-        
-        // Remove star after animation
-        setTimeout(() => star.remove(), duration * 1000);
+        setTimeout(() => star.remove(), (duration + delay) * 1000);
       }
     });
 
-    // Merge letters after explosion starts to settle
+    // Realistic sequential reveal of letters
     setTimeout(() => {
       title.classList.add('merged');
-    }, 1200);
+    }, 800);
   };
 
   const showPopup = () => {
     popup.classList.add('active');
-    
-    // Start explosion after popup opens
-    setTimeout(runStarAnimation, 800);
-    
-    video.muted = false;
-    video.play().catch(() => {
-      video.muted = true;
-      video.play().catch(() => {});
-    });
+    setTimeout(runStarAnimation, 600);
+    video.play().catch(() => {});
 
     setTimeout(() => {
       popup.classList.remove('active');
@@ -2766,10 +2766,10 @@ function initializeIntroPopup() {
         popup.style.display = 'none';
         video.pause();
       }, 1000);
-    }, 6000); // Extended slightly to see the animation
+    }, 7000); 
   };
 
-  setTimeout(showPopup, 100);
+  setTimeout(showPopup, 300);
 
   popup.addEventListener('click', () => {
     popup.classList.remove('active');
