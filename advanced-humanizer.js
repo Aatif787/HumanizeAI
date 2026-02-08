@@ -3456,18 +3456,18 @@ if (typeof document !== 'undefined' && typeof window !== 'undefined') {
     try {
       window.advancedHumanizer = new AdvancedTextHumanizer();
       window.advancedDetector = new AdvancedAIDetector();
-      
+
       // Initialize test suite safely
       if (window.textHumanizer) {
-         window.aiDetectionTestSuite = new AIDetectionTestSuite(window.textHumanizer, window.advancedDetector);
+        window.aiDetectionTestSuite = new AIDetectionTestSuite(window.textHumanizer, window.advancedDetector);
       }
-      
+
       console.log('🚀 Advanced AI Text Humanizer initialized with multi-stage transformation pipeline');
       console.log('🧪 AI Detection Test Suite ready for comprehensive testing');
-      
+
       // Dispatch event to signal readiness
       document.dispatchEvent(new CustomEvent('advancedHumanizerReady'));
-      
+
     } catch (e) {
       console.error('Error initializing Advanced Humanizer:', e);
     }

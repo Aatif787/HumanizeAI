@@ -3071,7 +3071,7 @@ function initializeMainUI() {
       // Disable button during processing
       humanizeBtn.disabled = true;
       humanizeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-      
+
       // Show processing overlay
       const processingOverlay = document.getElementById('processing-overlay');
       const qualityIndicators = document.getElementById('quality-indicators');
@@ -3101,7 +3101,7 @@ function initializeMainUI() {
 
         if (result) {
           outputText.value = result.humanized;
-          
+
           // Hide processing overlay and show quality indicators
           if (processingOverlay) processingOverlay.classList.add('hidden');
           if (qualityIndicators) qualityIndicators.classList.remove('hidden');
@@ -3154,7 +3154,7 @@ function initializeMainUI() {
         // Re-enable button
         humanizeBtn.disabled = false;
         humanizeBtn.innerHTML = '<i class="fas fa-magic"></i> Humanize Text';
-        
+
         // Hide processing overlay if it's still visible (e.g. on error)
         const processingOverlay = document.getElementById('processing-overlay');
         if (processingOverlay) processingOverlay.classList.add('hidden');
