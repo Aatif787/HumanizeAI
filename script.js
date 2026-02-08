@@ -2665,9 +2665,48 @@ class AIDetectionUI {
   }
 }
 
+function initializeThemeToggle() {
+  const toggle = document.getElementById('dark-mode-toggle');
+  if (!toggle) return;
+
+  const applyTheme = (theme) => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
+  const storedTheme = localStorage.getItem('theme');
+  if (storedTheme === 'light' || storedTheme === 'dark') {
+    applyTheme(storedTheme);
+  }
+
+  toggle.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+}
+
+function forceUnmuteAllVideos() {
+  const videos = document.querySelectorAll('video');
+  videos.forEach(v => {
+    v.muted = false;
+    v.defaultMuted = false;
+    v.volume = 1.0;
+    v.removeAttribute('muted');
+    const playPromise = v.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {});
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded - Initializing UI...');
   console.log('Current App Version:', window.APP_VERSION || 'Unknown');
+
+  initializeThemeToggle();
 
   try {
     window.textHumanizer = new TextHumanizer();
@@ -2689,26 +2728,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const handleFirstInteraction = (e) => {
       console.log(`[Audio] Silent activation on ${e.type}...`);
       window._userInteracted = true;
-      
+
       try {
         if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
-      } catch (err) {}
+      } catch (err) {
+        console.warn('[Audio] AudioContext init failed:', err);
+      }
 
-      const videos = document.querySelectorAll('video');
-      videos.forEach(v => {
-        v.muted = false;
-        v.volume = 1.0;
-        v.removeAttribute('muted');
-        if (v.paused) v.play().catch(() => {});
-      });
+      forceUnmuteAllVideos();
 
-      ['click', 'touchstart', 'mousedown', 'keydown', 'scroll'].forEach(event => {
+      ['click', 'touchstart', 'touchend', 'pointerdown', 'mousedown', 'keydown', 'scroll'].forEach(event => {
         window.removeEventListener(event, handleFirstInteraction, { capture: true });
       });
     };
 
-    ['click', 'touchstart', 'mousedown', 'keydown', 'scroll'].forEach(event => {
+    ['click', 'touchstart', 'touchend', 'pointerdown', 'mousedown', 'keydown', 'scroll'].forEach(event => {
       window.addEventListener(event, handleFirstInteraction, { once: true, capture: true });
     });
 
@@ -2738,11 +2773,14 @@ function initializeIntroPopup() {
     return;
   }
 
-  // Start muted for reliable autoplay; unmuted by global interaction handler
-   if (video) {
-     video.volume = 1.0;
-     video.muted = true;
-     video.controls = false;
+  if (video) {
+    video.volume = 1.0;
+    video.muted = !window._userInteracted;
+    video.defaultMuted = video.muted;
+    if (!video.muted) {
+      video.removeAttribute('muted');
+    }
+    video.controls = false;
   } else {
     console.warn('[Popup] Warning: #intro-video-element not found');
   }
@@ -2812,7 +2850,7 @@ function initializeIntroPopup() {
 
   const showPopup = () => {
     console.log('[Popup] Displaying popup...');
-    
+
     // Reset any previous state
     popup.style.display = 'flex';
     popup.style.opacity = '1';
@@ -2827,10 +2865,11 @@ function initializeIntroPopup() {
         // If user already interacted, try to unmute immediately
         if (window._userInteracted) {
           video.muted = false;
+          video.defaultMuted = false;
           video.volume = 1.0;
           video.removeAttribute('muted');
         }
-        
+
         video.play().catch(err => {
           console.warn('[Popup] Video play failed:', err);
         });
@@ -2845,10 +2884,10 @@ function initializeIntroPopup() {
     setTimeout(() => {
       console.log('[Popup] Auto-disabling popup...');
       popup.classList.remove('active');
-      
+
       // Also fade out manually to be sure
       popup.style.opacity = '0';
-      
+
       setTimeout(() => {
         popup.style.display = 'none';
         popup.style.visibility = 'hidden';
@@ -2866,7 +2905,7 @@ function initializeIntroPopup() {
     console.log('[Popup] User clicked to close');
     popup.classList.remove('active');
     popup.style.opacity = '0';
-    
+
     setTimeout(() => {
       popup.style.display = 'none';
       popup.style.visibility = 'hidden';
@@ -2882,9 +2921,12 @@ function initializeNavVideo() {
   const video = document.getElementById('nav-video');
   if (!video) return;
 
-  // Set initial state - Start muted for reliability; unmuted by global interaction handler
   video.volume = 1.0;
-  video.muted = true;
+  video.muted = !window._userInteracted;
+  video.defaultMuted = video.muted;
+  if (!video.muted) {
+    video.removeAttribute('muted');
+  }
   video.playbackRate = 1.0;
 
   video.addEventListener('canplay', () => {
@@ -2923,8 +2965,13 @@ function initializeNavVideo() {
     e.stopPropagation(); // Don't close popup when clicking video
     video.muted = !video.muted;
     if (!video.muted) {
+      video.defaultMuted = false;
       video.volume = 1.0;
       video.removeAttribute('muted');
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
     }
     console.log('[NavVideo] Video muted state changed:', video.muted, 'Volume:', video.volume);
   });
@@ -3155,15 +3202,7 @@ function initializeMainUI() {
   // Export functionality
   initializeExportFunctionality();
 
-  // Dark Mode Toggle functionality
-  const darkModeToggle = document.getElementById('dark-mode-toggle');
-  if (darkModeToggle) {
-    darkModeToggle.addEventListener('click', () => {
-      document.documentElement.classList.toggle('dark');
-      const isDark = document.documentElement.classList.contains('dark');
-      localStorage.theme = isDark ? 'dark' : 'light';
-    });
-  }
+  initializeThemeToggle();
 
   // Add real-time preview to style selector changes
 
