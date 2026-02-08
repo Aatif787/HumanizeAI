@@ -2710,10 +2710,10 @@ function initializeIntroPopup() {
     return;
   }
 
-  // Set volume to 0 as requested
+  // Set volume as requested
   if (video) {
-    video.volume = 0;
-    video.muted = true;
+    video.volume = 0.5;
+    video.muted = false;
     video.controls = false;
   } else {
     console.warn('[Popup] Warning: #intro-video-element not found');
@@ -2849,7 +2849,7 @@ function initializeNavVideo() {
 
   // Set initial state
   video.volume = 0.5;
-  video.muted = true; // Start muted for reliable autoplay
+  video.muted = false; // Unmute as requested
   video.playbackRate = 1.0;
 
   const playVideo = () => {
