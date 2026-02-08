@@ -541,40 +541,48 @@ class TextHumanizer {
       if (this.advancedHumanizer && options.useAdvanced !== false) {
         console.log('Using advanced multi-stage transformation pipeline...');
 
-        // Step 1: Semantic disassembly
-        this.updateStatus('Analyzing semantic structure...');
-        const semanticAnalysis = this.advancedHumanizer.semanticEngine.disassemble(humanized);
+        try {
+          // Step 1: Semantic disassembly
+          this.updateStatus('Analyzing semantic structure...');
+          const semanticAnalysis = this.advancedHumanizer.semanticEngine.disassemble(humanized);
 
-        // Step 2: Style synthesis
-        this.updateStatus('Synthesizing human-like style...');
-        const synthesizedText = this.advancedHumanizer.styleSynthesizer.synthesize(semanticAnalysis, {
-          style: style.name || 'casual',
-          complexity: sentenceLevel || 'moderate',
-          emotion: style.emotion || 'neutral',
-          formality: style.formality || 'adaptive',
-          culturalContext: style.culturalContext || 'general'
-        });
+          // Step 2: Style synthesis
+          this.updateStatus('Synthesizing human-like style...');
+          const synthesizedText = this.advancedHumanizer.styleSynthesizer.synthesize(semanticAnalysis, {
+            style: style.name || 'casual',
+            complexity: sentenceLevel || 'moderate',
+            emotion: style.emotion || 'neutral',
+            formality: style.formality || 'adaptive',
+            culturalContext: style.culturalContext || 'general'
+          });
 
-        // Step 3: Stylistic reengineering
-        this.updateStatus('Reengineering stylistic elements...');
-        humanized = this.advancedHumanizer.stylisticEngine.reengineer(synthesizedText, {
-          style: style.name || 'casual',
-          complexity: sentenceLevel || 'moderate',
-          emotion: style.emotion || 'neutral'
-        });
+          // Step 3: Stylistic reengineering
+          this.updateStatus('Reengineering stylistic elements...');
+          humanized = this.advancedHumanizer.stylisticEngine.reengineer(synthesizedText, {
+            style: style.name || 'casual',
+            complexity: sentenceLevel || 'moderate',
+            emotion: style.emotion || 'neutral'
+          });
 
-        // Step 4: AI plagiarism checking
-        this.updateStatus('Checking for AI patterns...');
-        humanized = await this.advancedHumanizer.plagiarismChecker.ensureUniqueness(humanized);
+          // Step 4: AI plagiarism checking
+          this.updateStatus('Checking for AI patterns...');
+          humanized = await this.advancedHumanizer.plagiarismChecker.ensureUniqueness(humanized);
 
-        // Step 5: Pattern obfuscation
-        this.updateStatus('Obfuscating AI fingerprints...');
-        humanized = this.advancedHumanizer.obfuscationEngine.obfuscate(humanized);
+          // Step 5: Pattern obfuscation
+          this.updateStatus('Obfuscating AI fingerprints...');
+          humanized = this.advancedHumanizer.obfuscationEngine.obfuscate(humanized);
 
-        // Step 6: Human verification
-        this.updateStatus('Adding final human touches...');
-        humanized = this.advancedHumanizer.humanVerifier.verify(humanized, { errorLevel });
-        humanized = this.replaceAiPatterns(humanized);
+          // Step 6: Human verification
+          this.updateStatus('Adding final human touches...');
+          humanized = this.advancedHumanizer.humanVerifier.verify(humanized, { errorLevel });
+          humanized = this.replaceAiPatterns(humanized);
+
+        } catch (advancedError) {
+          console.warn('Advanced humanizer failed, falling back to basic pipeline:', advancedError);
+          // Fall back to basic pipeline if advanced fails
+          options.useAdvanced = false;
+          return this.humanizeText(text, options);
+        }
 
       } else {
         // Fall back to basic pipeline
@@ -2870,8 +2878,26 @@ function initializeIntroPopup() {
           video.removeAttribute('muted');
         }
 
-        video.play().catch(err => {
+        // Add comprehensive error handling for video playback
+        video.play().then(() => {
+          console.log('[Popup] Video playback started successfully');
+        }).catch(err => {
           console.warn('[Popup] Video play failed:', err);
+          console.warn('[Popup] Error name:', err.name);
+          console.warn('[Popup] Error message:', err.message);
+
+          // Handle specific autoplay errors
+          if (err.name === 'NotAllowedError') {
+            console.log('[Popup] Autoplay blocked - keeping video muted');
+            video.muted = true;
+            video.play().catch(secondErr => {
+              console.error('[Popup] Even muted playback failed:', secondErr);
+            });
+          } else if (err.name === 'NotSupportedError') {
+            console.error('[Popup] Video format not supported');
+          } else {
+            console.error('[Popup] Unknown video error:', err);
+          }
         });
       };
 
@@ -2940,9 +2966,25 @@ function initializeNavVideo() {
   const playVideo = () => {
     const playPromise = video.play();
     if (playPromise !== undefined) {
-      playPromise.catch(error => {
+      playPromise.then(() => {
+        console.log('[NavVideo] Video playback started successfully');
+      }).catch(error => {
         console.warn('[NavVideo] Autoplay failed:', error);
-        // Fallback: try playing again on user interaction
+        console.warn('[NavVideo] Error name:', error.name);
+        console.warn('[NavVideo] Error message:', error.message);
+
+        // Handle specific autoplay errors
+        if (error.name === 'NotAllowedError') {
+          console.log('[NavVideo] Autoplay blocked - keeping video muted');
+          video.muted = true;
+          video.play().catch(secondErr => {
+            console.error('[NavVideo] Even muted playback failed:', secondErr);
+          });
+        } else if (error.name === 'NotSupportedError') {
+          console.error('[NavVideo] Video format not supported');
+        } else {
+          console.error('[NavVideo] Unknown video error:', error);
+        }
       });
     }
   };
