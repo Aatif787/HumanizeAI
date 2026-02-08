@@ -15,22 +15,35 @@ class TextHumanizer {
     this.wordCount = { input: 0, output: 0 };
     this.confidenceScore = 0;
 
-    // Initialize advanced humanizer if available
-    if (typeof window.AdvancedTextHumanizer !== 'undefined') {
-      this.advancedHumanizer = new window.AdvancedTextHumanizer();
-    } else if (typeof AdvancedTextHumanizer !== 'undefined') {
-      this.advancedHumanizer = new AdvancedTextHumanizer();
-    } else if (window.advancedHumanizer) {
-      this.advancedHumanizer = window.advancedHumanizer;
-    }
+    // Improved advanced humanizer initialization with fallbacks
+    this.advancedHumanizer = null;
+    this.advancedDetector = null;
 
-    if (typeof window.AdvancedAIDetector !== 'undefined') {
-      this.advancedDetector = new window.AdvancedAIDetector();
-    } else if (typeof AdvancedAIDetector !== 'undefined') {
-      this.advancedDetector = new AdvancedAIDetector();
-    } else if (window.advancedDetector) {
-      this.advancedDetector = window.advancedDetector;
-    }
+    const initializeAdvancedEngines = () => {
+      console.log('[Humanizer] Attempting to initialize advanced engines...');
+      if (typeof window.AdvancedTextHumanizer !== 'undefined') {
+        this.advancedHumanizer = new window.AdvancedTextHumanizer();
+        console.log('[Humanizer] AdvancedTextHumanizer initialized from window');
+      } else if (typeof AdvancedTextHumanizer !== 'undefined') {
+        this.advancedHumanizer = new AdvancedTextHumanizer();
+        console.log('[Humanizer] AdvancedTextHumanizer initialized from global');
+      }
+
+      if (typeof window.AdvancedAIDetector !== 'undefined') {
+        this.advancedDetector = new window.AdvancedAIDetector();
+        console.log('[Humanizer] AdvancedAIDetector initialized from window');
+      } else if (typeof AdvancedAIDetector !== 'undefined') {
+        this.advancedDetector = new AdvancedAIDetector();
+        console.log('[Humanizer] AdvancedAIDetector initialized from global');
+      }
+    };
+
+    // Run immediately and also listen for the ready event
+    initializeAdvancedEngines();
+    document.addEventListener('advancedHumanizerReady', () => {
+      console.log('[Humanizer] advancedHumanizerReady event received');
+      initializeAdvancedEngines();
+    });
   }
 
   /**
@@ -548,51 +561,59 @@ class TextHumanizer {
     try {
       // Use advanced humanizer if available and not explicitly disabled
       if (this.advancedHumanizer && options.useAdvanced !== false) {
-        console.log('Using advanced multi-stage transformation pipeline...');
+        console.log('[Humanizer] Using advanced multi-stage transformation pipeline...');
+        this.updateStatus('Initializing advanced transformation...');
 
         try {
-          // Step 1: Semantic disassembly
-          this.updateStatus('Analyzing semantic structure...');
-          const semanticAnalysis = this.advancedHumanizer.semanticEngine.disassemble(humanized);
-
-          // Step 2: Style synthesis
-          this.updateStatus('Synthesizing human-like style...');
-          const synthesizedText = this.advancedHumanizer.styleSynthesizer.synthesize(semanticAnalysis, {
-            style: style.name || 'casual',
-            complexity: sentenceLevel || 'moderate',
-            emotion: style.emotion || 'neutral',
-            formality: style.formality || 'adaptive',
-            culturalContext: style.culturalContext || 'general'
-          });
-
-          // Step 3: Stylistic reengineering
-          this.updateStatus('Reengineering stylistic elements...');
-          humanized = this.advancedHumanizer.stylisticEngine.reengineer(synthesizedText, {
-            style: style.name || 'casual',
-            complexity: sentenceLevel || 'moderate',
-            emotion: style.emotion || 'neutral'
-          });
-
-          // Step 4: AI plagiarism checking
-          this.updateStatus('Checking for AI patterns...');
-          humanized = await this.advancedHumanizer.plagiarismChecker.ensureUniqueness(humanized);
-
-          // Step 5: Pattern obfuscation
-          this.updateStatus('Obfuscating AI fingerprints...');
-          humanized = this.advancedHumanizer.obfuscationEngine.obfuscate(humanized);
-
-          // Step 6: Human verification
-          this.updateStatus('Adding final human touches...');
-          humanized = this.advancedHumanizer.humanVerifier.verify(humanized, { errorLevel });
-          humanized = this.replaceAiPatterns(humanized);
-
+          // Call the advanced humanizer's unified method directly
+          const advancedResult = await this.advancedHumanizer.humanizeText(text, options);
+          
+          if (advancedResult && advancedResult.humanizedText) {
+            humanized = advancedResult.humanizedText;
+            this.confidenceScore = advancedResult.confidenceScore || 95;
+            detectionAnalysis = advancedResult.detectionRisk;
+            console.log('[Humanizer] Advanced transformation successful');
+          } else {
+            throw new Error('Advanced humanizer returned empty result');
+          }
         } catch (advancedError) {
-          console.warn('Advanced humanizer failed, falling back to basic pipeline:', advancedError);
-          // Fall back to basic pipeline if advanced fails
-          options.useAdvanced = false;
-          return this.humanizeText(text, options);
-        }
+          console.warn('[Humanizer] Advanced pipeline failed, falling back to manual stages:', advancedError);
+          
+          try {
+            // Manual fallback stages if the unified method fails
+            this.updateStatus('Analyzing semantic structure...');
+            const semanticAnalysis = this.advancedHumanizer.semanticEngine.disassemble(humanized);
 
+            this.updateStatus('Synthesizing human-like style...');
+            const synthesizedText = this.advancedHumanizer.styleSynthesizer.synthesize(semanticAnalysis, {
+              style: style.name || 'casual',
+              complexity: sentenceLevel || 'moderate',
+              emotion: style.emotion || 'neutral',
+              formality: style.formality || 'adaptive',
+              culturalContext: style.culturalContext || 'general'
+            });
+
+            this.updateStatus('Reengineering stylistic elements...');
+            humanized = this.advancedHumanizer.stylisticEngine.reengineer(synthesizedText, {
+              style: style.name || 'casual',
+              complexity: sentenceLevel || 'moderate',
+              emotion: style.emotion || 'neutral'
+            });
+
+            this.updateStatus('Checking for AI patterns...');
+            humanized = await this.advancedHumanizer.plagiarismChecker.ensureUniqueness(humanized);
+
+            this.updateStatus('Obfuscating AI fingerprints...');
+            humanized = this.advancedHumanizer.obfuscationEngine.obfuscate(humanized);
+
+            this.updateStatus('Adding final human touches...');
+            humanized = this.advancedHumanizer.humanVerifier.verify(humanized, { errorLevel });
+          } catch (manualError) {
+            console.warn('[Humanizer] Manual stages failed, falling back to basic pipeline:', manualError);
+            options.useAdvanced = false;
+            return this.humanizeText(text, options);
+          }
+        }
       } else {
         // Fall back to basic pipeline
         console.log('Using basic transformation pipeline...');
@@ -3078,6 +3099,8 @@ function initializeMainUI() {
       if (processingOverlay) processingOverlay.classList.remove('hidden');
       if (qualityIndicators) qualityIndicators.classList.add('hidden');
 
+      console.log('[UI] Humanize button clicked, text length:', text.length);
+
       try {
         const intensityValue = humanizationLevel?.value || 'moderate';
         const intensityMap = { light: 'light', moderate: 'moderate', deep: 'high', extreme: 'extreme' };
@@ -3097,10 +3120,25 @@ function initializeMainUI() {
           useAdvanced
         };
 
+        console.log('[UI] Options:', options);
+
+        if (!window.textHumanizer) {
+          throw new Error('Humanizer engine not initialized. Please refresh the page.');
+        }
+
         const result = await window.textHumanizer.humanizeText(text, options);
 
-        if (result) {
-          outputText.value = result.humanized;
+        console.log('[UI] Humanization result received:', !!result);
+
+        if (result && result.humanized) {
+          console.log('[UI] Updating output-text with result length:', result.humanized.length);
+          if (outputText) {
+            outputText.value = result.humanized;
+            // Trigger input event to auto-resize
+            outputText.dispatchEvent(new Event('input'));
+          } else {
+            console.error('[UI] #output-text element not found');
+          }
 
           // Hide processing overlay and show quality indicators
           if (processingOverlay) processingOverlay.classList.add('hidden');
