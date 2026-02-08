@@ -2684,6 +2684,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize navigation video
     initializeNavVideo();
 
+    // Force unmute on first user interaction (standard browser workaround)
+    const handleFirstInteraction = () => {
+      console.log('[Audio] First interaction detected - Unmuting all videos...');
+      const videos = document.querySelectorAll('video');
+      videos.forEach(v => {
+        v.muted = false;
+        v.volume = 0.5;
+        // If it was paused due to autoplay policy, try playing it again
+        if (v.paused) {
+          v.play().catch(e => console.warn('[Audio] Play failed after interaction:', e));
+        }
+      });
+      // Remove listeners
+      ['click', 'touchstart', 'keydown', 'scroll'].forEach(event => {
+        window.removeEventListener(event, handleFirstInteraction);
+      });
+    };
+
+    ['click', 'touchstart', 'keydown', 'scroll'].forEach(event => {
+      window.addEventListener(event, handleFirstInteraction, { once: true });
+    });
+
     // Initialize comprehensive testing
     initializeComprehensiveTesting();
 
@@ -2710,10 +2732,10 @@ function initializeIntroPopup() {
     return;
   }
 
-  // Set volume as requested
+  // Start muted for reliable autoplay; unmuted by global interaction handler
   if (video) {
     video.volume = 0.5;
-    video.muted = false;
+    video.muted = true;
     video.controls = false;
   } else {
     console.warn('[Popup] Warning: #intro-video-element not found');
@@ -2847,9 +2869,9 @@ function initializeNavVideo() {
   const video = document.getElementById('nav-video');
   if (!video) return;
 
-  // Set initial state
+  // Set initial state - Start muted for reliability; unmuted by global interaction handler
   video.volume = 0.5;
-  video.muted = false; // Unmute as requested
+  video.muted = true;
   video.playbackRate = 1.0;
 
   const playVideo = () => {
