@@ -2684,42 +2684,81 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize navigation video
     initializeNavVideo();
 
+    // Comprehensive Audio Fix: AudioContext + Global Interaction
+    let audioCtx;
+    
+    const initAudioContext = () => {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          console.log('[Audio] AudioContext created state:', audioCtx.state);
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume().then(() => {
+            console.log('[Audio] AudioContext resumed successfully');
+          });
+        }
+      } catch (e) {
+        console.warn('[Audio] Failed to initialize AudioContext:', e);
+      }
+    };
+
     // Force unmute on first user interaction (standard browser workaround)
     const handleFirstInteraction = (e) => {
       console.log(`[Audio] First interaction (${e.type}) detected - Unmuting all videos...`);
       window._userInteracted = true;
+      
+      // Wake up the audio system
+      initAudioContext();
+      
       const videos = document.querySelectorAll('video');
       
-      // Some browsers need a short delay or multiple attempts
       const unmute = () => {
         videos.forEach(v => {
+          // Force state changes
           v.muted = false;
-          v.volume = 1.0; // Max volume for visibility
-          v.removeAttribute('muted'); // Force attribute removal
+          v.volume = 1.0;
+          v.removeAttribute('muted');
           
-          console.log(`[Audio] Video ${v.id} state: muted=${v.muted}, volume=${v.volume}, paused=${v.paused}`);
-          
-          // If it was paused due to autoplay policy, try playing it again
+          // Fix for some mobile browsers that need manual play trigger
           if (v.paused) {
-            const playPromise = v.play();
-            if (playPromise !== undefined) {
-              playPromise.catch(e => console.warn(`[Audio] Play failed for ${v.id}:`, e));
-            }
+            v.play().catch(err => console.warn(`[Audio] Retry play failed for ${v.id}:`, err));
           }
+          
+          console.log(`[Audio] Video ${v.id} forced state: muted=${v.muted}, vol=${v.volume}`);
         });
       };
 
       unmute();
-      // Double check after a small delay
-      setTimeout(unmute, 100);
+      setTimeout(unmute, 150); // Second pass for slow browsers
+      
+      // UI Notification for user
+      showAudioToast("Sound Enabled 🔊");
 
-      // Remove listeners
+      // Clean up
       ['click', 'touchstart', 'mousedown', 'keydown'].forEach(event => {
         window.removeEventListener(event, handleFirstInteraction, true);
       });
     };
 
-    // Use capture phase to catch interaction before other handlers
+    const showAudioToast = (msg) => {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-20 left-1/2 -translate-x-1/2 bg-black/80 text-white px-6 py-3 rounded-full z-[9999] transition-all duration-500 opacity-0 translate-y-4 pointer-events-none flex items-center space-x-2';
+      toast.innerHTML = `<span>${msg}</span>`;
+      document.body.appendChild(toast);
+      
+      requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translate(-50%, 0)';
+      });
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translate(-50%, 1rem)';
+        setTimeout(() => toast.remove(), 500);
+      }, 3000);
+    };
+
     ['click', 'touchstart', 'mousedown', 'keydown'].forEach(event => {
       window.addEventListener(event, handleFirstInteraction, { once: true, capture: true });
     });
