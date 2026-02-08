@@ -2680,126 +2680,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize navigation video
     initializeNavVideo();
 
-    // 100% Guaranteed Audio Activation via Manual Gate
-    const audioGate = document.getElementById('audio-gate');
-    const enableAudioBtn = document.getElementById('enable-audio-btn');
-    const gateButton = document.getElementById('gate-button');
+    // Initialize intro popup directly as requested
+    console.log('Initializing Intro Popup...');
+    initializeIntroPopup();
+
+    // Silent Audio Activation (Wakes up sound on first user interaction)
     let audioCtx;
-
-    const activateEverything = (e) => {
-      console.log('[Audio] User clicked to enable sound. Activating system...');
-      
-      // 1. Mark global state
+    const handleFirstInteraction = (e) => {
+      console.log(`[Audio] Silent activation on ${e.type}...`);
       window._userInteracted = true;
-
-      // 2. Initialize AudioContext (Industry standard for waking up audio)
+      
       try {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-      } catch (err) {
-        console.warn('[Audio] Context error:', err);
-      }
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+      } catch (err) {}
 
-      // 3. Force Unmute all existing videos
       const videos = document.querySelectorAll('video');
       videos.forEach(v => {
         v.muted = false;
         v.volume = 1.0;
         v.removeAttribute('muted');
-        
-        // If it was supposed to be playing but blocked, play it now
-        const playPromise = v.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(err => console.warn(`[Audio] Play failed for ${v.id}:`, err));
-        }
-        
-        console.log(`[Audio] Forced ${v.id} state: muted=${v.muted}, vol=${v.volume}`);
+        if (v.paused) v.play().catch(() => {});
       });
 
-      // 4. Hide the gate with animation
-      if (audioGate) {
-        audioGate.style.opacity = '0';
-        setTimeout(() => {
-          audioGate.style.display = 'none';
-          
-          // 5. Trigger the intro popup ONLY after sound is enabled
-          console.log('[Popup] Sound enabled, now showing popup...');
-          initializeIntroPopup();
-        }, 700); // 700ms wait for fade
-      }
-    };
-
-    if (enableAudioBtn && gateButton) {
-      enableAudioBtn.addEventListener('click', activateEverything);
-      gateButton.addEventListener('click', activateEverything);
-    } else {
-      // Fallback if elements missing
-      console.warn('[Audio] Gate elements missing, using fallback listeners');
-      ['click', 'touchstart'].forEach(ev => window.addEventListener(ev, activateEverything, { once: true }));
-    }
-
-    // Comprehensive Audio Fix: AudioContext + Global Interaction
-    // (Rest of the previous logic will be superseded by the gate but kept as backup)
-    const handleFirstInteraction = (e) => {
-      console.log(`[Audio] First interaction (${e.type}) detected - Unmuting all videos...`);
-      window._userInteracted = true;
-      
-      // Wake up the audio system
-      initAudioContext();
-      
-      const videos = document.querySelectorAll('video');
-      
-      const unmute = () => {
-        videos.forEach(v => {
-          // Force state changes
-          v.muted = false;
-          v.volume = 1.0;
-          v.removeAttribute('muted');
-          
-          // Fix for some mobile browsers that need manual play trigger
-          if (v.paused) {
-            v.play().catch(err => console.warn(`[Audio] Retry play failed for ${v.id}:`, err));
-          }
-          
-          console.log(`[Audio] Video ${v.id} forced state: muted=${v.muted}, vol=${v.volume}`);
-        });
-      };
-
-      unmute();
-      setTimeout(unmute, 150); // Second pass for slow browsers
-      
-      // UI Notification for user
-      showAudioToast("Sound Enabled 🔊");
-
-      // Clean up
-      ['click', 'touchstart', 'mousedown', 'keydown'].forEach(event => {
-        window.removeEventListener(event, handleFirstInteraction, true);
+      ['click', 'touchstart', 'mousedown', 'keydown', 'scroll'].forEach(event => {
+        window.removeEventListener(event, handleFirstInteraction, { capture: true });
       });
     };
 
-    const showAudioToast = (msg) => {
-      const toast = document.createElement('div');
-      toast.className = 'fixed bottom-20 left-1/2 -translate-x-1/2 bg-black/80 text-white px-6 py-3 rounded-full z-[9999] transition-all duration-500 opacity-0 translate-y-4 pointer-events-none flex items-center space-x-2';
-      toast.innerHTML = `<span>${msg}</span>`;
-      document.body.appendChild(toast);
-      
-      requestAnimationFrame(() => {
-        toast.style.opacity = '1';
-        toast.style.transform = 'translate(-50%, 0)';
-      });
-
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translate(-50%, 1rem)';
-        setTimeout(() => toast.remove(), 500);
-      }, 3000);
-    };
-
-    ['click', 'touchstart', 'mousedown', 'keydown'].forEach(event => {
+    ['click', 'touchstart', 'mousedown', 'keydown', 'scroll'].forEach(event => {
       window.addEventListener(event, handleFirstInteraction, { once: true, capture: true });
     });
 
