@@ -2784,8 +2784,13 @@ function initializeIntroPopup() {
 
   const showPopup = () => {
     console.log('[Popup] Displaying popup...');
+    
+    // Reset any previous state
+    popup.style.display = 'flex';
+    popup.style.opacity = '1';
+    popup.style.visibility = 'visible';
+    popup.style.pointerEvents = 'auto';
     popup.classList.add('active');
-    popup.style.display = 'flex'; // Ensure display is flex
 
     setTimeout(runStarAnimation, 600);
 
@@ -2805,8 +2810,13 @@ function initializeIntroPopup() {
     setTimeout(() => {
       console.log('[Popup] Auto-disabling popup...');
       popup.classList.remove('active');
+      
+      // Also fade out manually to be sure
+      popup.style.opacity = '0';
+      
       setTimeout(() => {
         popup.style.display = 'none';
+        popup.style.visibility = 'hidden';
         if (video) video.pause();
       }, 1000);
     }, 7000);
@@ -2820,8 +2830,11 @@ function initializeIntroPopup() {
   popup.addEventListener('click', () => {
     console.log('[Popup] User clicked to close');
     popup.classList.remove('active');
+    popup.style.opacity = '0';
+    
     setTimeout(() => {
       popup.style.display = 'none';
+      popup.style.visibility = 'hidden';
       if (video) video.pause();
     }, 800);
   });
@@ -2863,7 +2876,8 @@ function initializeNavVideo() {
   document.addEventListener('touchstart', forcePlay);
 
   // Unmute on click if the user wants sound
-  video.addEventListener('click', () => {
+  video.addEventListener('click', (e) => {
+    e.stopPropagation(); // Don't close popup when clicking video
     video.muted = !video.muted;
     console.log('[NavVideo] Video muted:', video.muted);
   });
