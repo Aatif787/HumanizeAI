@@ -2677,33 +2677,73 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize main UI functionality
     initializeMainUI();
 
-    // Initialize intro popup
-    console.log('Initializing Intro Popup...');
-    initializeIntroPopup();
-
     // Initialize navigation video
     initializeNavVideo();
 
-    // Comprehensive Audio Fix: AudioContext + Global Interaction
+    // 100% Guaranteed Audio Activation via Manual Gate
+    const audioGate = document.getElementById('audio-gate');
+    const enableAudioBtn = document.getElementById('enable-audio-btn');
+    const gateButton = document.getElementById('gate-button');
     let audioCtx;
-    
-    const initAudioContext = () => {
+
+    const activateEverything = (e) => {
+      console.log('[Audio] User clicked to enable sound. Activating system...');
+      
+      // 1. Mark global state
+      window._userInteracted = true;
+
+      // 2. Initialize AudioContext (Industry standard for waking up audio)
       try {
         if (!audioCtx) {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          console.log('[Audio] AudioContext created state:', audioCtx.state);
         }
         if (audioCtx.state === 'suspended') {
-          audioCtx.resume().then(() => {
-            console.log('[Audio] AudioContext resumed successfully');
-          });
+          audioCtx.resume();
         }
-      } catch (e) {
-        console.warn('[Audio] Failed to initialize AudioContext:', e);
+      } catch (err) {
+        console.warn('[Audio] Context error:', err);
+      }
+
+      // 3. Force Unmute all existing videos
+      const videos = document.querySelectorAll('video');
+      videos.forEach(v => {
+        v.muted = false;
+        v.volume = 1.0;
+        v.removeAttribute('muted');
+        
+        // If it was supposed to be playing but blocked, play it now
+        const playPromise = v.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => console.warn(`[Audio] Play failed for ${v.id}:`, err));
+        }
+        
+        console.log(`[Audio] Forced ${v.id} state: muted=${v.muted}, vol=${v.volume}`);
+      });
+
+      // 4. Hide the gate with animation
+      if (audioGate) {
+        audioGate.style.opacity = '0';
+        setTimeout(() => {
+          audioGate.style.display = 'none';
+          
+          // 5. Trigger the intro popup ONLY after sound is enabled
+          console.log('[Popup] Sound enabled, now showing popup...');
+          initializeIntroPopup();
+        }, 700); // 700ms wait for fade
       }
     };
 
-    // Force unmute on first user interaction (standard browser workaround)
+    if (enableAudioBtn && gateButton) {
+      enableAudioBtn.addEventListener('click', activateEverything);
+      gateButton.addEventListener('click', activateEverything);
+    } else {
+      // Fallback if elements missing
+      console.warn('[Audio] Gate elements missing, using fallback listeners');
+      ['click', 'touchstart'].forEach(ev => window.addEventListener(ev, activateEverything, { once: true }));
+    }
+
+    // Comprehensive Audio Fix: AudioContext + Global Interaction
+    // (Rest of the previous logic will be superseded by the gate but kept as backup)
     const handleFirstInteraction = (e) => {
       console.log(`[Audio] First interaction (${e.type}) detected - Unmuting all videos...`);
       window._userInteracted = true;
