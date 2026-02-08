@@ -557,6 +557,7 @@ class TextHumanizer {
     const sentenceLevel = options.sentenceLevel || 'moderate';
 
     let humanized = text;
+    let detectionAnalysis = null;
 
     try {
       // Use advanced humanizer if available and not explicitly disabled
@@ -616,7 +617,7 @@ class TextHumanizer {
         }
       } else {
         // Fall back to basic pipeline
-        console.log('Using basic transformation pipeline...');
+        console.log('[Humanizer] Using basic transformation pipeline...');
 
         // Step 1: Apply style-specific transformations
         humanized = this.applyStyleTransformations(humanized, style);
@@ -647,15 +648,14 @@ class TextHumanizer {
       // Calculate confidence score
       this.confidenceScore = this.calculateConfidenceScore(humanized, text);
 
-      // Test against AI detector if available
-      let detectionAnalysis = null;
-      if (this.advancedDetector) {
+      // Test against AI detector if available (only if not already analyzed by advanced engine)
+      if (this.advancedDetector && !detectionAnalysis) {
         detectionAnalysis = this.advancedDetector.analyzeText(humanized);
-        console.log('AI Detection Analysis:', detectionAnalysis);
+        console.log('[Humanizer] AI Detection Analysis:', detectionAnalysis);
 
         // If detection score is too high, try additional obfuscation
         if (detectionAnalysis.overallScore > 30) {
-          console.log('High AI detection score detected, applying additional obfuscation...');
+          console.log('[Humanizer] High AI detection score detected, applying additional obfuscation...');
           humanized = this.advancedHumanizer.obfuscationEngine.obfuscate(humanized);
           detectionAnalysis = this.advancedDetector.analyzeText(humanized);
         }
@@ -3091,7 +3091,8 @@ function initializeMainUI() {
 
       // Disable button during processing
       humanizeBtn.disabled = true;
-      humanizeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      const processingSpinner = document.getElementById('processing-spinner');
+      if (processingSpinner) processingSpinner.classList.remove('hidden');
 
       // Show processing overlay
       const processingOverlay = document.getElementById('processing-overlay');
@@ -3191,7 +3192,8 @@ function initializeMainUI() {
       } finally {
         // Re-enable button
         humanizeBtn.disabled = false;
-        humanizeBtn.innerHTML = '<i class="fas fa-magic"></i> Humanize Text';
+        const processingSpinner = document.getElementById('processing-spinner');
+        if (processingSpinner) processingSpinner.classList.add('hidden');
 
         // Hide processing overlay if it's still visible (e.g. on error)
         const processingOverlay = document.getElementById('processing-overlay');
