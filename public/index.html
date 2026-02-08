@@ -18,11 +18,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="styles.css?v=1.0.1">
-    
+    <link rel="stylesheet" href="styles.css?v=1.0.2">
+
     <script>
         // Deployment Version Tracker
-        window.APP_VERSION = '1.0.1';
+        window.APP_VERSION = '1.0.2';
         console.log('App Version:', window.APP_VERSION);
         const style = document.createElement('style');
         style.textContent = `
@@ -444,7 +444,7 @@
             <div class="intro-glow"></div>
             <div class="intro-text-area">
                 <h2 id="saniya-title" class="intro-title">
-                    <span>S</span><span>a</span><span>n</span><span>i</span><span>y</span><span>a</span>
+                    <span>S</span><span>a</span><span>n</span><span>i</span><span>y</span><span>a</span> <span>S</span><span>h</span><span>o</span><span>w</span>
                 </h2>
                 <div class="mt-6 flex space-x-2">
                     <div class="w-2 h-2 bg-white/30 rounded-full animate-pulse" style="animation-delay: 0s"></div>
@@ -476,7 +476,7 @@
                     </div>
                     <!-- Video Container -->
                     <div class="ml-4 flex items-center">
-                        <video id="nav-video" class="h-10 w-auto rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700" autoplay loop playsinline>
+                        <video id="nav-video" class="h-10 w-auto rounded-lg shadow-sm border border-neutral-200 dark:border-neutral-700" autoplay loop muted playsinline>
                             <source src="video.mp4" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
@@ -810,10 +810,11 @@
             <p class="text-sm text-neutral-500 dark:text-neutral-400">
                 © 2024 Humanize AI Text. Make AI sound like you.
             </p>
+            <p class="text-neutral-400 text-xs mt-1">v1.0.2</p>
         </footer>
     </main>
 
     <!-- Scripts -->
-    <script src="script.js?v=1.0.1"></script>
+    <script src="script.js?v=1.0.2"></script>
 </body>
 </html>

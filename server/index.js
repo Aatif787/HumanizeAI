@@ -23,12 +23,13 @@ const app = express();
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://fonts.googleapis.com", "https://unpkg.com", "https://use.fontawesome.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com", "https://unpkg.com", "https://use.fontawesome.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://cdn.tailwindcss.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      mediaSrc: ["'self'", "data:", "https:"], // Added for video support
+      defaultSrc: ['\'self\''],
+      styleSrc: ['\'self\'', '\'unsafe-inline\'', 'https://cdnjs.cloudflare.com', 'https://fonts.googleapis.com', 'https://unpkg.com', 'https://use.fontawesome.com'],
+      fontSrc: ['\'self\'', 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com', 'https://unpkg.com', 'https://use.fontawesome.com'],
+      scriptSrc: ['\'self\'', '\'unsafe-inline\'', 'https://cdnjs.cloudflare.com', 'https://cdn.tailwindcss.com'],
+      imgSrc: ['\'self\'', 'data:', 'https:'],
+      mediaSrc: ['\'self\'', 'data:', 'https:'], // Added for video support
+      connectSrc: ['\'self\''],
     },
   },
 }));
@@ -57,7 +58,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Logging
-app.use(morgan('combined', { 
+app.use(morgan('combined', {
   stream: { write: message => logger.info(message.trim()) },
   skip: () => process.env.VERCEL // Skip detailed logging on Vercel to avoid potential issues
 }));
@@ -83,7 +84,10 @@ app.use(express.static(path.join(__dirname, '../public'), {
   maxAge: '1d', // Cache for 1 day
   setHeaders: (res, path) => {
     if (path.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      res.setHeader('Surrogate-Control', 'no-store');
     } else if (path.endsWith('.js') || path.endsWith('.css') || path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.svg') || path.endsWith('.mp4')) {
       res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1 year for versioned assets
     }
@@ -130,7 +134,7 @@ const PORT = process.env.PORT || 3000;
 const startServer = async () => {
   try {
     await connectDB();
-    
+
     // Only listen if we're not running as a Vercel function
     if (!process.env.VERCEL) {
       app.listen(PORT, () => {

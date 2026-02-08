@@ -2667,25 +2667,33 @@ class AIDetectionUI {
 
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded - Initializing UI...');
-  
-  window.textHumanizer = new TextHumanizer();
-  window.aiDetector = new AIDetector();
-  window.aiDetectionUI = new AIDetectionUI();
+  console.log('Current App Version:', window.APP_VERSION || 'Unknown');
 
-  // Initialize main UI functionality
-  initializeMainUI();
+  try {
+    window.textHumanizer = new TextHumanizer();
+    window.aiDetector = new AIDetector();
+    window.aiDetectionUI = new AIDetectionUI();
 
-  // Initialize intro popup
-  console.log('Initializing Intro Popup...');
-  initializeIntroPopup();
+    // Initialize main UI functionality
+    initializeMainUI();
 
-  // Initialize navigation video
-  initializeNavVideo();
+    // Initialize intro popup
+    console.log('Initializing Intro Popup...');
+    initializeIntroPopup();
 
-  // Initialize comprehensive testing
-  initializeComprehensiveTesting();
+    // Initialize navigation video
+    initializeNavVideo();
 
-  console.log('AI Text Humanizer and Detector initialized successfully');
+    // Initialize comprehensive testing
+    initializeComprehensiveTesting();
+
+    console.log('AI Text Humanizer and Detector initialized successfully');
+  } catch (error) {
+    console.error('Critical initialization error:', error);
+    // Attempt to show the main UI even if something fails
+    const overlay = document.querySelector('.intro-overlay');
+    if (overlay) overlay.style.display = 'none';
+  }
 });
 
 /**
@@ -2701,7 +2709,7 @@ function initializeIntroPopup() {
     console.error('[Popup] Error: #intro-popup element not found in DOM');
     return;
   }
-  
+
   // Set volume to 0 as requested
   if (video) {
     video.volume = 0;
@@ -2720,7 +2728,7 @@ function initializeIntroPopup() {
     console.log('[Popup] Starting star animation...');
     const letters = title.querySelectorAll('span');
     const container = document.querySelector('.intro-content');
-    
+
     if (!container) {
       console.error('[Popup] Error: .intro-content not found for star animation');
       return;
@@ -2729,7 +2737,7 @@ function initializeIntroPopup() {
     letters.forEach((letter, index) => {
       const letterRect = letter.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
-      
+
       const targetX = letterRect.left - containerRect.left + (letterRect.width / 2);
       const targetY = letterRect.top - containerRect.top + (letterRect.height / 2);
 
@@ -2737,32 +2745,32 @@ function initializeIntroPopup() {
       for (let i = 0; i < 12; i++) {
         const star = document.createElement('div');
         star.className = 'star-particle';
-        
+
         // Realistic star sizing
         const size = Math.random() * 3 + 1;
         star.style.width = `${size}px`;
         star.style.height = `${size}px`;
-        
+
         // Photorealistic lighting/glow
-        star.style.background = `radial-gradient(circle, #fff 0%, rgba(255,255,255,0.8) 40%, transparent 100%)`;
+        star.style.background = 'radial-gradient(circle, #fff 0%, rgba(255,255,255,0.8) 40%, transparent 100%)';
         star.style.boxShadow = `0 0 ${size * 3}px #fff, 0 0 ${size * 6}px rgba(139, 92, 246, 0.4)`;
-        
+
         star.style.left = '40%'; // Start from center-ish of text area
         star.style.top = '50%';
-        
+
         const tx = (Math.random() - 0.5) * 600;
         const ty = (Math.random() - 0.5) * 600;
-        
+
         star.style.setProperty('--tx', `${tx}px`);
         star.style.setProperty('--ty', `${ty}px`);
         star.style.setProperty('--target-x', `${targetX - (containerRect.width * 0.4)}px`);
         star.style.setProperty('--target-y', `${targetY - (containerRect.height / 2)}px`);
-        
+
         const duration = 1.2 + Math.random() * 0.8;
         const delay = index * 0.05 + Math.random() * 0.2;
-        
+
         star.style.animation = `star-explosion ${duration}s cubic-bezier(0.19, 1, 0.22, 1) ${delay}s forwards`;
-        
+
         container.appendChild(star);
         setTimeout(() => star.remove(), (duration + delay) * 1000);
       }
@@ -2778,13 +2786,19 @@ function initializeIntroPopup() {
     console.log('[Popup] Displaying popup...');
     popup.classList.add('active');
     popup.style.display = 'flex'; // Ensure display is flex
-    
+
     setTimeout(runStarAnimation, 600);
-    
+
     if (video) {
-      video.play().catch(err => {
-        console.warn('[Popup] Video play failed (likely autoplay policy):', err);
-      });
+      const startVideo = () => {
+        video.play().catch(err => {
+          console.warn('[Popup] Video play failed:', err);
+        });
+      };
+
+      startVideo();
+      // Also trigger on first interaction with the popup
+      popup.addEventListener('click', startVideo, { once: true });
     }
 
     // Auto-disable after duration
@@ -2795,7 +2809,7 @@ function initializeIntroPopup() {
         popup.style.display = 'none';
         if (video) video.pause();
       }, 1000);
-    }, 7000); 
+    }, 7000);
   };
 
   // Trigger after a short delay for better impact
@@ -2820,37 +2834,39 @@ function initializeNavVideo() {
   const video = document.getElementById('nav-video');
   if (!video) return;
 
-  // Set volume to 50% and ensure it's unmuted to hear it
+  // Set initial state
   video.volume = 0.5;
-  video.muted = false;
-
-  // Ensure playback rate is normal (1.0)
+  video.muted = true; // Start muted for reliable autoplay
   video.playbackRate = 1.0;
 
-  // Handle autoplay with sound restrictions
-  // Most browsers require a user interaction to play unmuted video
   const playVideo = () => {
-    video.play().catch(() => {
-      console.log('Autoplay with sound blocked. Trying muted.');
-      video.muted = true;
-      video.play().catch(() => {
-        console.log('Autoplay failed completely.');
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        console.warn('[NavVideo] Autoplay failed:', error);
+        // Fallback: try playing again on user interaction
       });
-    });
+    }
   };
 
-  // Try playing immediately
+  // Try playing immediately (should work since it's muted)
   playVideo();
 
-  // Also try playing on first click anywhere on the page
-  const playOnInteraction = () => {
-    playVideo();
-    document.removeEventListener('click', playOnInteraction);
-    document.removeEventListener('keydown', playOnInteraction);
+  // Ensure it plays on first interaction with the page
+  const forcePlay = () => {
+    if (video.paused) playVideo();
+    document.removeEventListener('mousedown', forcePlay);
+    document.removeEventListener('touchstart', forcePlay);
   };
 
-  document.addEventListener('click', playOnInteraction);
-  document.addEventListener('keydown', playOnInteraction);
+  document.addEventListener('mousedown', forcePlay);
+  document.addEventListener('touchstart', forcePlay);
+
+  // Unmute on click if the user wants sound
+  video.addEventListener('click', () => {
+    video.muted = !video.muted;
+    console.log('[NavVideo] Video muted:', video.muted);
+  });
 }
 
 /**

@@ -28,7 +28,7 @@ class EvasionVerificationTest {
 
     for (const testCase of testCases) {
       console.log(`\n--- Testing Case: ${testCase.name} ---`);
-      
+
       // 1. Initial Detection
       const initialResult = await this.detector.detectAI(testCase.text);
       console.log(`Original Detection: ${initialResult.prediction} (${initialResult.confidence}%)`);
