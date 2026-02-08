@@ -568,7 +568,7 @@ class TextHumanizer {
         try {
           // Call the advanced humanizer's unified method directly
           const advancedResult = await this.advancedHumanizer.humanizeText(text, options);
-          
+
           if (advancedResult && advancedResult.humanizedText) {
             humanized = advancedResult.humanizedText;
             this.confidenceScore = advancedResult.confidenceScore || 95;
@@ -579,7 +579,7 @@ class TextHumanizer {
           }
         } catch (advancedError) {
           console.warn('[Humanizer] Advanced pipeline failed, falling back to manual stages:', advancedError);
-          
+
           try {
             // Manual fallback stages if the unified method fails
             this.updateStatus('Analyzing semantic structure...');
@@ -2748,20 +2748,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
   try {
     window.textHumanizer = new TextHumanizer();
+  } catch (error) {
+    console.error('Critical initialization error (TextHumanizer):', error);
+  }
+
+  try {
     window.aiDetector = new AIDetector();
+  } catch (error) {
+    console.error('Initialization error (AIDetector):', error);
+  }
+
+  try {
     window.aiDetectionUI = new AIDetectionUI();
+  } catch (error) {
+    console.error('Initialization error (AIDetectionUI):', error);
+  }
 
-    // Initialize main UI functionality
+  try {
     initializeMainUI();
+  } catch (error) {
+    console.error('Initialization error (Main UI):', error);
+  }
 
-    // Initialize navigation video
+  try {
     initializeNavVideo();
+  } catch (error) {
+    console.error('Initialization error (Nav Video):', error);
+  }
 
-    // Initialize intro popup directly as requested
+  try {
     console.log('Initializing Intro Popup...');
     initializeIntroPopup();
+  } catch (error) {
+    console.error('Initialization error (Intro Popup):', error);
+  }
 
-    // Silent Audio Activation (Wakes up sound on first user interaction)
+  try {
     let audioCtx;
     const handleFirstInteraction = (e) => {
       console.log(`[Audio] Silent activation on ${e.type}...`);
@@ -2784,17 +2806,20 @@ document.addEventListener('DOMContentLoaded', function() {
     ['click', 'touchstart', 'touchend', 'pointerdown', 'mousedown', 'keydown', 'scroll'].forEach(event => {
       window.addEventListener(event, handleFirstInteraction, { once: true, capture: true });
     });
-
-    // Initialize comprehensive testing
-    initializeComprehensiveTesting();
-
-    console.log('AI Text Humanizer and Detector initialized successfully');
   } catch (error) {
-    console.error('Critical initialization error:', error);
-    // Attempt to show the main UI even if something fails
-    const overlay = document.querySelector('.intro-overlay');
-    if (overlay) overlay.style.display = 'none';
+    console.error('Initialization error (Audio Activation):', error);
   }
+
+  try {
+    initializeComprehensiveTesting();
+  } catch (error) {
+    console.error('Initialization error (Comprehensive Testing):', error);
+  }
+
+  const overlay = document.querySelector('.intro-overlay');
+  if (overlay) overlay.style.display = 'none';
+
+  console.log('AI Text Humanizer and Detector initialized successfully');
 });
 
 /**
@@ -3246,6 +3271,10 @@ function initializeMainUI() {
     const previewContainer = document.getElementById('real-time-preview');
     const previewContent = document.getElementById('preview-content');
 
+    if (!previewContainer || !previewContent || !inputText) {
+      return;
+    }
+
     if (!inputText.value.trim()) {
       previewContainer.classList.add('hidden');
       return;
@@ -3317,7 +3346,7 @@ function initializeMainUI() {
         updateRealTimePreview();
       } else {
         togglePreviewBtn.innerHTML = '<i class="fas fa-eye-slash"></i> Show Preview';
-        previewContainer.classList.add('hidden');
+        if (previewContainer) previewContainer.classList.add('hidden');
       }
     });
   }
