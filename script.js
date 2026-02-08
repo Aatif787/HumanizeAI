@@ -2685,25 +2685,43 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavVideo();
 
     // Force unmute on first user interaction (standard browser workaround)
-    const handleFirstInteraction = () => {
-      console.log('[Audio] First interaction detected - Unmuting all videos...');
+    const handleFirstInteraction = (e) => {
+      console.log(`[Audio] First interaction (${e.type}) detected - Unmuting all videos...`);
+      window._userInteracted = true;
       const videos = document.querySelectorAll('video');
-      videos.forEach(v => {
-        v.muted = false;
-        v.volume = 0.5;
-        // If it was paused due to autoplay policy, try playing it again
-        if (v.paused) {
-          v.play().catch(e => console.warn('[Audio] Play failed after interaction:', e));
-        }
-      });
+      
+      // Some browsers need a short delay or multiple attempts
+      const unmute = () => {
+        videos.forEach(v => {
+          v.muted = false;
+          v.volume = 1.0; // Max volume for visibility
+          v.removeAttribute('muted'); // Force attribute removal
+          
+          console.log(`[Audio] Video ${v.id} state: muted=${v.muted}, volume=${v.volume}, paused=${v.paused}`);
+          
+          // If it was paused due to autoplay policy, try playing it again
+          if (v.paused) {
+            const playPromise = v.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(e => console.warn(`[Audio] Play failed for ${v.id}:`, e));
+            }
+          }
+        });
+      };
+
+      unmute();
+      // Double check after a small delay
+      setTimeout(unmute, 100);
+
       // Remove listeners
-      ['click', 'touchstart', 'keydown', 'scroll'].forEach(event => {
-        window.removeEventListener(event, handleFirstInteraction);
+      ['click', 'touchstart', 'mousedown', 'keydown'].forEach(event => {
+        window.removeEventListener(event, handleFirstInteraction, true);
       });
     };
 
-    ['click', 'touchstart', 'keydown', 'scroll'].forEach(event => {
-      window.addEventListener(event, handleFirstInteraction, { once: true });
+    // Use capture phase to catch interaction before other handlers
+    ['click', 'touchstart', 'mousedown', 'keydown'].forEach(event => {
+      window.addEventListener(event, handleFirstInteraction, { once: true, capture: true });
     });
 
     // Initialize comprehensive testing
@@ -2733,10 +2751,10 @@ function initializeIntroPopup() {
   }
 
   // Start muted for reliable autoplay; unmuted by global interaction handler
-  if (video) {
-    video.volume = 0.5;
-    video.muted = true;
-    video.controls = false;
+   if (video) {
+     video.volume = 1.0;
+     video.muted = true;
+     video.controls = false;
   } else {
     console.warn('[Popup] Warning: #intro-video-element not found');
   }
@@ -2818,6 +2836,13 @@ function initializeIntroPopup() {
 
     if (video) {
       const startVideo = () => {
+        // If user already interacted, try to unmute immediately
+        if (window._userInteracted) {
+          video.muted = false;
+          video.volume = 1.0;
+          video.removeAttribute('muted');
+        }
+        
         video.play().catch(err => {
           console.warn('[Popup] Video play failed:', err);
         });
@@ -2870,9 +2895,17 @@ function initializeNavVideo() {
   if (!video) return;
 
   // Set initial state - Start muted for reliability; unmuted by global interaction handler
-  video.volume = 0.5;
+  video.volume = 1.0;
   video.muted = true;
   video.playbackRate = 1.0;
+
+  video.addEventListener('canplay', () => {
+    console.log('[NavVideo] Video can play. Duration:', video.duration);
+  });
+
+  video.addEventListener('error', (e) => {
+    console.error('[NavVideo] Video error:', e);
+  });
 
   const playVideo = () => {
     const playPromise = video.play();
@@ -2901,7 +2934,11 @@ function initializeNavVideo() {
   video.addEventListener('click', (e) => {
     e.stopPropagation(); // Don't close popup when clicking video
     video.muted = !video.muted;
-    console.log('[NavVideo] Video muted:', video.muted);
+    if (!video.muted) {
+      video.volume = 1.0;
+      video.removeAttribute('muted');
+    }
+    console.log('[NavVideo] Video muted state changed:', video.muted, 'Volume:', video.volume);
   });
 }
 
