@@ -16,11 +16,20 @@ class TextHumanizer {
     this.confidenceScore = 0;
 
     // Initialize advanced humanizer if available
-    if (typeof AdvancedTextHumanizer !== 'undefined') {
+    if (typeof window.AdvancedTextHumanizer !== 'undefined') {
+      this.advancedHumanizer = new window.AdvancedTextHumanizer();
+    } else if (typeof AdvancedTextHumanizer !== 'undefined') {
       this.advancedHumanizer = new AdvancedTextHumanizer();
+    } else if (window.advancedHumanizer) {
+      this.advancedHumanizer = window.advancedHumanizer;
     }
-    if (typeof AdvancedAIDetector !== 'undefined') {
+
+    if (typeof window.AdvancedAIDetector !== 'undefined') {
+      this.advancedDetector = new window.AdvancedAIDetector();
+    } else if (typeof AdvancedAIDetector !== 'undefined') {
       this.advancedDetector = new AdvancedAIDetector();
+    } else if (window.advancedDetector) {
+      this.advancedDetector = window.advancedDetector;
     }
   }
 

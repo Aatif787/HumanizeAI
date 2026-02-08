@@ -3442,14 +3442,35 @@ class AIDetectionTestSuite {
   }
 }
 
+// Explicitly expose classes to window for script.js to access
+if (typeof window !== 'undefined') {
+  window.AdvancedTextHumanizer = AdvancedTextHumanizer;
+  window.AdvancedAIDetector = AdvancedAIDetector;
+  window.PatternObfuscationEngine = PatternObfuscationEngine;
+  window.AIDetectionTestSuite = AIDetectionTestSuite;
+}
+
 // Browser initialization - only run in browser environment
 if (typeof document !== 'undefined' && typeof window !== 'undefined') {
   document.addEventListener('DOMContentLoaded', function() {
-    window.advancedHumanizer = new AdvancedTextHumanizer();
-    window.advancedDetector = new AdvancedAIDetector();
-    window.aiDetectionTestSuite = new AIDetectionTestSuite(window.textHumanizer, window.advancedDetector);
-    console.log('🚀 Advanced AI Text Humanizer initialized with multi-stage transformation pipeline');
-    console.log('🧪 AI Detection Test Suite ready for comprehensive testing');
+    try {
+      window.advancedHumanizer = new AdvancedTextHumanizer();
+      window.advancedDetector = new AdvancedAIDetector();
+      
+      // Initialize test suite safely
+      if (window.textHumanizer) {
+         window.aiDetectionTestSuite = new AIDetectionTestSuite(window.textHumanizer, window.advancedDetector);
+      }
+      
+      console.log('🚀 Advanced AI Text Humanizer initialized with multi-stage transformation pipeline');
+      console.log('🧪 AI Detection Test Suite ready for comprehensive testing');
+      
+      // Dispatch event to signal readiness
+      document.dispatchEvent(new CustomEvent('advancedHumanizerReady'));
+      
+    } catch (e) {
+      console.error('Error initializing Advanced Humanizer:', e);
+    }
   });
 }
 
