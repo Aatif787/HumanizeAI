@@ -7,7 +7,7 @@
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
     "build": "echo 'Building project...' && exit 0",
-    "vercel-build": "echo 'Vercel build optimization...' && exit 0",
+    "vercel-build": "npm install && echo 'Vercel build complete'",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"

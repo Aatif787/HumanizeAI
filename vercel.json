@@ -6,6 +6,8 @@
       "use": "@vercel/node"
     }
   ],
+  "installCommand": "npm install",
+  "buildCommand": "npm run vercel-build",
   "routes": [
     {
       "src": "/(advanced-humanizer\\.js|script\\.js|styles\\.css|ai-detection-tester\\.js)",
