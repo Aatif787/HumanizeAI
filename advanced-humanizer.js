@@ -1,3 +1,5 @@
+console.log('[AdvancedHumanizer] v1.1.7 loaded');
+
 class AdvancedTextHumanizer {
   constructor() {
     this.initializeEngines();

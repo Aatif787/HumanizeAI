@@ -3,6 +3,8 @@
  * Transforms AI-generated text into natural, human-like content
  */
 
+console.log('[Humanizer] v1.1.7 loaded');
+
 class TextHumanizer {
   constructor() {
     this.initializeSynonymDatabase();
