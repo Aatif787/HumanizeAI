@@ -1,0 +1,7 @@
+{
+  "timestamp": "2026-02-09T16:50:00Z",
+  "version": "1.1.7-final",
+  "deployment_id": "force-rebuild-" + Date.now(),
+  "cache_bust": true,
+  "force_redeploy": true
+}

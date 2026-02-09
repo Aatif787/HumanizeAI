@@ -1,4 +1,4 @@
-console.log('[AdvancedHumanizer] v1.1.7 loaded');
+console.log('[AdvancedHumanizer] v1.1.8 loaded - FORCE DEPLOY');
 
 class AdvancedTextHumanizer {
   constructor() {

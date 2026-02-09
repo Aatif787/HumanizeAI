@@ -8,19 +8,27 @@
   ],
   "routes": [
     {
-      "src": "/(script\\.js|advanced-humanizer\\.js|styles\\.css)",
+      "src": "/(.*)",
       "headers": {
-        "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-        "pragma": "no-cache"
+        "cache-control": "public, max-age=0, must-revalidate",
+        "surrogate-control": "max-age=0",
+        "pragma": "no-cache",
+        "expires": "0"
       },
       "continue": true
     },
     {
       "src": "/(.*)",
-      "dest": "server/index.js",
-      "headers": {
-        "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate"
-      }
+      "dest": "server/index.js"
     }
-  ]
+  ],
+  "functions": {
+    "server/index.js": {
+      "maxDuration": 30
+    }
+  },
+  "github": {
+    "silent": false,
+    "autoJobCancelation": false
+  }
 }

@@ -18,14 +18,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="styles.css?v=1.1.7">
+    <link rel="stylesheet" href="styles.css?v=1.1.8-ts1739122200">
 
     <script>
-        // Deployment Version Tracker
-        window.APP_VERSION = '1.1.7';
-        window.DEPLOY_TIME = '2026-02-09T16:45:00Z';
+        // Deployment Version Tracker - FORCE UPDATE
+        window.APP_VERSION = '1.1.8';
+        window.DEPLOY_TIME = '2026-02-09T16:50:00Z';
+        window.FORCE_DEPLOY = true;
         console.log('App Version:', window.APP_VERSION);
         console.log('Deploy Time:', window.DEPLOY_TIME);
+        console.log('Force Deploy Active:', window.FORCE_DEPLOY);
         const style = document.createElement('style');
         style.textContent = `
             :root {
@@ -455,7 +457,7 @@
     </script>
 </head>
 <body class="bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-body transition-colors duration-300">
-    <div id="update-indicator" class="bg-primary-600 text-white text-[10px] text-center py-0.5 font-mono">v1.1.7 LIVE UPDATE ACTIVE</div>
+    <div id="update-indicator" class="bg-red-600 text-white text-[10px] text-center py-0.5 font-mono">v1.1.8 FORCE DEPLOY - CACHE BUST</div>
     <!-- Intro Popup -->
     <div id="intro-popup" class="intro-overlay">
         <div class="intro-content">
