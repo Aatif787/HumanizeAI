@@ -22,11 +22,7 @@
       "dest": "server/index.js"
     }
   ],
-  "functions": {
-    "server/index.js": {
-      "maxDuration": 30
-    }
-  },
+
   "git": {
     "deploymentEnabled": true,
     "silent": false,
