@@ -27,7 +27,8 @@
       "maxDuration": 30
     }
   },
-  "github": {
+  "git": {
+    "deploymentEnabled": true,
     "silent": false,
     "autoJobCancelation": false
   }
