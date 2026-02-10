@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: humainez
+    env: node
+    plan: starter
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: CORS_ORIGIN
+        value: https://your-domain
+      - key: LOG_LEVEL
+        value: info
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      # Add secrets via Render dashboard (values left blank here)
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: LLM_GATEWAY_URL
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
