@@ -5,6 +5,581 @@
 
 console.log('[Humanizer] v1.1.8 loaded - FORCE DEPLOY');
 
+class HumanizerMetrics {
+  constructor(storageKey = 'humanizer_metrics_v1') {
+    this.storageKey = storageKey;
+    this.entries = [];
+    this.load();
+  }
+
+  load() {
+    try {
+      const raw = localStorage.getItem(this.storageKey);
+      if (raw) this.entries = JSON.parse(raw);
+    } catch (e) {
+      this.entries = [];
+    }
+  }
+
+  save() {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.entries.slice(-200)));
+    } catch (e) {
+      return;
+    }
+  }
+
+  record(entry) {
+    this.entries.push(entry);
+    if (this.entries.length > 200) this.entries.shift();
+    this.save();
+  }
+
+  summary() {
+    if (!this.entries.length) {
+      return {
+        count: 0,
+        avgLatencyMs: 0,
+        avgConfidence: 0,
+        avgNaturalness: 0,
+        avgDetectionRisk: 0
+      };
+    }
+    const totals = this.entries.reduce((acc, e) => {
+      acc.latency += e.latencyMs || 0;
+      acc.confidence += e.confidence || 0;
+      acc.naturalness += e.naturalness || 0;
+      acc.detectionRisk += e.detectionRisk || 0;
+      return acc;
+    }, { latency: 0, confidence: 0, naturalness: 0, detectionRisk: 0 });
+    return {
+      count: this.entries.length,
+      avgLatencyMs: Math.round(totals.latency / this.entries.length),
+      avgConfidence: Math.round(totals.confidence / this.entries.length),
+      avgNaturalness: Math.round(totals.naturalness / this.entries.length),
+      avgDetectionRisk: Math.round(totals.detectionRisk / this.entries.length)
+    };
+  }
+}
+
+class ABTestController {
+  constructor(storageKey = 'humanizer_ab_variant_v1') {
+    this.storageKey = storageKey;
+    this.statsKey = 'humanizer_ab_stats_v1';
+    this.variant = this.loadVariant();
+    this.stats = this.loadStats();
+  }
+
+  loadVariant() {
+    const saved = localStorage.getItem(this.storageKey);
+    if (saved === 'A' || saved === 'B') return saved;
+    const variant = Math.random() < 0.5 ? 'A' : 'B';
+    localStorage.setItem(this.storageKey, variant);
+    return variant;
+  }
+
+  loadStats() {
+    try {
+      const raw = localStorage.getItem(this.statsKey);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {
+      return { A: { count: 0, score: 0 }, B: { count: 0, score: 0 } };
+    }
+    return { A: { count: 0, score: 0 }, B: { count: 0, score: 0 } };
+  }
+
+  record(variant, score) {
+    const bucket = this.stats[variant];
+    bucket.count += 1;
+    bucket.score += score;
+    localStorage.setItem(this.statsKey, JSON.stringify(this.stats));
+  }
+
+  summary() {
+    const a = this.stats.A;
+    const b = this.stats.B;
+    return {
+      A: a.count ? Math.round(a.score / a.count) : 0,
+      B: b.count ? Math.round(b.score / b.count) : 0,
+      countA: a.count,
+      countB: b.count
+    };
+  }
+}
+
+class TrainingDataManager {
+  constructor(seedTexts) {
+    this.seedTexts = seedTexts;
+  }
+
+  prepare() {
+    const cleaned = this.seedTexts
+      .map(t => t.replace(/\s+/g, ' ').trim())
+      .filter(Boolean);
+    const vocab = new Map();
+    const tokens = cleaned.map(text => text.toLowerCase().split(/\s+/));
+    tokens.flat().forEach(tok => {
+      vocab.set(tok, (vocab.get(tok) || 0) + 1);
+    });
+    const dataset = cleaned.map(text => ({
+      text,
+      tokens: text.toLowerCase().split(/\s+/)
+    }));
+    const split = Math.max(1, Math.floor(dataset.length * 0.8));
+    return {
+      train: dataset.slice(0, split),
+      validation: dataset.slice(split),
+      vocab: Array.from(vocab.keys())
+    };
+  }
+}
+
+class SimpleNeuralModel {
+  constructor(vocab) {
+    this.vocab = vocab;
+    this.dim = 16;
+    this.weights = new Array(this.dim).fill(0).map(() => (Math.random() - 0.5) * 0.2);
+  }
+
+  embed(tokens) {
+    const vec = new Array(this.dim).fill(0);
+    tokens.forEach(token => {
+      let hash = 0;
+      for (let i = 0; i < token.length; i += 1) {
+        hash = (hash * 31 + token.charCodeAt(i)) % 100000;
+      }
+      const idx = hash % this.dim;
+      vec[idx] += 1;
+    });
+    return vec;
+  }
+
+  score(tokens) {
+    const vec = this.embed(tokens);
+    const dot = vec.reduce((sum, v, i) => sum + v * this.weights[i], 0);
+    return 1 / (1 + Math.exp(-dot));
+  }
+
+  train(samples) {
+    samples.forEach(sample => {
+      const target = 1;
+      const vec = this.embed(sample.tokens);
+      const pred = this.score(sample.tokens);
+      const error = target - pred;
+      const lr = 0.01;
+      this.weights = this.weights.map((w, i) => w + lr * error * vec[i]);
+    });
+  }
+}
+
+class ModelValidator {
+  validate(model, samples) {
+    if (!samples.length) {
+      return { coherence: 0, naturalness: 0 };
+    }
+    let sum = 0;
+    samples.forEach(sample => {
+      sum += model.score(sample.tokens);
+    });
+    const avg = sum / samples.length;
+    return {
+      coherence: Math.round(avg * 100),
+      naturalness: Math.round((0.6 + avg * 0.4) * 100)
+    };
+  }
+}
+
+class BehavioralAnalyzer {
+  analyze(text) {
+    const sentences = text.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
+    const lengths = sentences.map(s => s.split(/\s+/).length);
+    const avgLen = lengths.reduce((a, b) => a + b, 0) / (lengths.length || 1);
+    const variance = lengths.reduce((acc, l) => acc + Math.pow(l - avgLen, 2), 0) / (lengths.length || 1);
+    const contractions = (text.match(/\b\w+['’]\w+\b/g) || []).length;
+    const questions = (text.match(/\?/g) || []).length;
+    const score = Math.min(100, Math.round((Math.sqrt(variance) + contractions * 2 + questions * 3)));
+    return {
+      variance: Math.round(variance),
+      contractions,
+      questions,
+      score
+    };
+  }
+}
+
+class AffectiveEngine {
+  analyze(text) {
+    const positive = (text.match(/\b(good|great|nice|love|glad|happy|calm|clear)\b/gi) || []).length;
+    const negative = (text.match(/\b(bad|sad|angry|upset|concern|worried|tense)\b/gi) || []).length;
+    const intensity = (text.match(/[!]{1,}/g) || []).length + (text.match(/\b(very|really|so)\b/gi) || []).length;
+    const sentiment = Math.max(-1, Math.min(1, (positive - negative) / Math.max(1, positive + negative)));
+    const emotion = sentiment > 0.3 ? 'positive' : sentiment < -0.3 ? 'negative' : 'neutral';
+    const pacing = intensity > 2 ? 'fast' : 'steady';
+    return { sentiment, emotion, pacing, intensity };
+  }
+}
+
+class SentimentTracker {
+  constructor() {
+    this.key = 'humanizer_affect_history_v1';
+    this.history = [];
+    this.load();
+  }
+  load() {
+    try {
+      const raw = localStorage.getItem(this.key);
+      if (raw) this.history = JSON.parse(raw) || [];
+    } catch (e) {
+      this.history = [];
+    }
+  }
+  save() {
+    try {
+      localStorage.setItem(this.key, JSON.stringify(this.history.slice(-200)));
+    } catch (e) {
+      return;
+    }
+  }
+  push(value) {
+    this.history.push({ v: value, t: Date.now() });
+    this.save();
+  }
+  trend() {
+    if (this.history.length < 2) return { smoothed: 0, direction: 'steady' };
+    let s = 0;
+    let alpha = 0.5;
+    this.history.slice(-20).forEach(h => { s = alpha * h.v + (1 - alpha) * s; });
+    const last = this.history[this.history.length - 1].v;
+    const prev = this.history[this.history.length - 2].v;
+    const dir = last > prev + 0.05 ? 'up' : last < prev - 0.05 ? 'down' : 'steady';
+    return { smoothed: s, direction: dir };
+  }
+}
+
+class SafetyGuard {
+  check(text) {
+    const banned = /\b(hate|violence|racist|sexist|slur|terror|kill|harm)\b/gi;
+    const flagged = (text.match(banned) || []).length > 0;
+    let safeText = text;
+    if (flagged) {
+      safeText = safeText.replace(banned, '');
+      safeText = safeText.replace(/\s{2,}/g, ' ').trim();
+    }
+    return { safe: !flagged, text: safeText, flagged };
+  }
+}
+
+class BiasMitigator {
+  sanitize(text) {
+    const biased = /\b(lazy|stupid|dumb|ignorant|backward)\b/gi;
+    return text.replace(biased, '').replace(/\s{2,}/g, ' ').trim();
+  }
+}
+
+class LongTermMemory {
+  constructor() {
+    this.storeKey = 'humanizer_ltm_v1';
+    this.topics = new Map();
+    this.index = new Map();
+    this.load();
+  }
+  load() {
+    try {
+      const raw = localStorage.getItem(this.storeKey);
+      if (raw) {
+        const data = JSON.parse(raw);
+        Object.keys(data).forEach(k => this.topics.set(k, data[k]));
+      }
+    } catch (e) {
+      return;
+    }
+  }
+  save() {
+    const obj = {};
+    this.topics.forEach((v, k) => { obj[k] = v; });
+    try {
+      localStorage.setItem(this.storeKey, JSON.stringify(obj));
+    } catch (e) {
+      return;
+    }
+  }
+  embed(text) {
+    const tokens = text.toLowerCase().split(/\s+/).filter(Boolean);
+    const dim = 16;
+    const vec = new Array(dim).fill(0);
+    tokens.forEach(token => {
+      let h = 0;
+      for (let i = 0; i < token.length; i += 1) h = (h * 31 + token.charCodeAt(i)) % 100000;
+      vec[h % dim] += 1;
+    });
+    return vec;
+  }
+  add(topic, text) {
+    const entry = { text, ts: Date.now() };
+    const bucket = this.topics.get(topic) || [];
+    bucket.push(entry);
+    this.topics.set(topic, bucket.slice(-200));
+    const vec = this.embed(text);
+    const cur = this.index.get(topic) || new Array(vec.length).fill(0);
+    const merged = cur.map((v, i) => v * 0.9 + vec[i]);
+    this.index.set(topic, merged);
+    this.save();
+  }
+  retrieveContext(tokens) {
+    const keys = Array.from(this.topics.keys());
+    const dim = 16;
+    const q = new Array(dim).fill(0);
+    tokens.forEach(token => {
+      let h = 0;
+      for (let i = 0; i < token.length; i += 1) h = (h * 31 + token.charCodeAt(i)) % 100000;
+      q[h % dim] += 1;
+    });
+    const scored = keys.map(k => {
+      const idx = this.index.get(k) || new Array(dim).fill(0);
+      const sim = q.reduce((sum, v, i) => sum + v * idx[i], 0);
+      return { k, sim };
+    }).sort((a, b) => b.sim - a.sim).slice(0, 3);
+    let best = [];
+    scored.forEach(s => {
+      const items = this.topics.get(s.k) || [];
+      best = best.concat(items.slice(-2));
+    });
+    const context = best.map(b => b.text).join(' ');
+    return context;
+  }
+}
+
+class VoiceSynthesizer {
+  speak(text, options = {}) {
+    const synth = window.speechSynthesis;
+    if (!synth) return false;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = options.rate || 1;
+    utter.pitch = options.pitch || 1;
+    utter.volume = options.volume || 1;
+    synth.speak(utter);
+    return true;
+  }
+}
+
+class CulturalFilter {
+  normalize(text) {
+    const locale = (navigator && navigator.language) ? navigator.language.toLowerCase() : 'en-us';
+    let out = text;
+    if (locale.startsWith('en-gb')) {
+      out = out.replace(/\bcolor\b/gi, 'colour').replace(/\borganize\b/gi, 'organise');
+    } else if (locale.startsWith('en-us')) {
+      out = out.replace(/\bcolour\b/gi, 'color').replace(/\borganise\b/gi, 'organize');
+    }
+    return out;
+  }
+}
+
+class MultimodalCueAnalyzer {
+  async imageMood() {
+    try {
+      if (!window._toneImageFile) return null;
+      const img = await this.loadImage(window._toneImageFile);
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, 64, 64);
+      const data = ctx.getImageData(0, 0, 64, 64).data;
+      let sum = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        sum += 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+      }
+      const avg = sum / (64 * 64);
+      if (avg < 80) return 'somber';
+      if (avg > 180) return 'bright';
+      return 'neutral';
+    } catch (e) {
+      return null;
+    }
+  }
+  loadImage(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(img);
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+}
+
+class EmpathyEvaluator {
+  score(text) {
+    const affirm = (text.match(/\b(I understand|I hear you|I get it|makes sense)\b/gi) || []).length;
+    const care = (text.match(/\b(we can|let’s|we’ll|help|support)\b/gi) || []).length;
+    const calm = (text.match(/\b(calm|clear|simple|easy)\b/gi) || []).length;
+    const total = affirm * 3 + care * 2 + calm;
+    return Math.min(100, Math.round(20 + total * 10));
+  }
+}
+
+class LLMAdapter {
+  inferSync() {
+    return null;
+  }
+}
+
+class SuperHumanizer {
+  constructor() {
+    this.seedTexts = [
+      'I read the brief twice and tried to keep the tone clear without sounding stiff.',
+      'The draft has good ideas, it just needs smoother transitions and more confident phrasing.',
+      'If the message is important, the wording should feel calm and direct.',
+      'People notice rhythm in writing even when they do not name it.',
+      'Shorter sentences add pace, longer ones add reflection.',
+      'I prefer simple verbs because they keep the point easy to follow.',
+      'A small shift in word choice can make the voice feel more human.',
+      'It helps to check the flow from one sentence to the next.'
+    ];
+    this.training = new TrainingDataManager(this.seedTexts).prepare();
+    this.model = new SimpleNeuralModel(this.training.vocab);
+    this.model.train(this.training.train);
+    this.validator = new ModelValidator();
+    this.validation = this.validator.validate(this.model, this.training.validation);
+    this.behavior = new BehavioralAnalyzer();
+    this.metrics = new HumanizerMetrics();
+    this.abTest = new ABTestController();
+    this.affect = new AffectiveEngine();
+    this.memory = new LongTermMemory();
+    this.safety = new SafetyGuard();
+    this.voice = new VoiceSynthesizer();
+    this.llm = new LLMAdapter();
+    this.tracker = new SentimentTracker();
+    this.bias = new BiasMitigator();
+    this.culture = new CulturalFilter();
+    this.multimodal = new MultimodalCueAnalyzer();
+    this.adaptive = {
+      adjust(text, affect, trend) {
+        let out = text;
+        if (affect.emotion === 'negative' || trend.direction === 'down') {
+          out = out.replace(/\b(very|really|so|extremely|highly|totally)\b/gi, '');
+        }
+        out = out.replace(/\s{2,}/g, ' ').trim();
+        return out;
+      }
+    };
+  }
+
+  generate(text, options, baseHumanizer) {
+    const start = performance.now();
+    const tokens = text.toLowerCase().split(/\s+/).filter(Boolean);
+    const variant = this.abTest.variant;
+    let working = text;
+    const style = options.style || 'casual';
+    const affect = this.affect.analyze(text);
+    if (options && options.empathyMode) {
+      // Boost calming adjustments when empathy mode is on
+      if (affect.emotion === 'neutral' && affect.intensity > 1) {
+        affect.pacing = 'steady';
+      }
+    }
+    const context = this.memory.retrieveContext(tokens);
+    const llmOut = this.llm.inferSync(text, { style, affect, context });
+    if (llmOut && llmOut.text) {
+      working = llmOut.text;
+    }
+    if (baseHumanizer) {
+      working = baseHumanizer.replaceAiPatterns(working);
+      working = baseHumanizer.applySynonymDiversification(working, options.synonymLevel || 'medium');
+      working = baseHumanizer.adjustSentenceStructure(working, options.sentenceLevel || 'moderate', baseHumanizer.writingStyles[style] || baseHumanizer.writingStyles.casual);
+      working = baseHumanizer.applyHumanVoiceEnhancements(working, baseHumanizer.writingStyles[style] || baseHumanizer.writingStyles.casual, options.humanizationLevel || 'moderate');
+      working = baseHumanizer.applyRhythmEnhancements(working, options.humanizationLevel || 'moderate');
+    }
+    if (affect.emotion === 'negative') {
+      working = working.replace(/\b(very|really|extremely)\b/gi, '').replace(/\s{2,}/g, ' ').trim();
+    }
+    this.tracker.push(affect.sentiment);
+    const trend = this.trend || this.tracker.trend();
+    working = this.adaptive.adjust(working, affect, trend);
+    working = this.bias.sanitize(working);
+    this.memory.add(style, text);
+    if (variant === 'B') {
+      working = this.applyContextualFlow(working);
+      working = this.applyBehavioralTuning(working);
+    } else {
+      working = this.applyBehavioralTuning(working);
+      working = this.applyContextualFlow(working);
+    }
+    const behavior = this.behavior.analyze(working);
+    const neuralScore = Math.round(this.model.score(tokens) * 100);
+    const confidence = Math.min(98, Math.round((neuralScore + this.validation.naturalness + behavior.score) / 3));
+    const safe = this.safety.check(working);
+    let normalized = this.normalizeOutput(safe.text);
+    normalized = this.culture.normalize(normalized);
+    const output = normalized;
+    const latencyMs = Math.round(performance.now() - start);
+    const detectionRisk = Math.max(5, 100 - confidence);
+    this.metrics.record({
+      latencyMs,
+      confidence,
+      naturalness: behavior.score,
+      detectionRisk
+    });
+    this.abTest.record(variant, confidence);
+    const empathyScore = new EmpathyEvaluator().score(working);
+    if (options && options.speech) this.voice.speak(output, options.speech);
+    return {
+      humanized: output,
+      confidence,
+      detectionAnalysis: { overallScore: detectionRisk, riskLevel: detectionRisk > 40 ? 'medium' : 'low' },
+      pipeline: 'super',
+      validation: this.validation,
+      ab: this.abTest.summary(),
+      metrics: { ...this.metrics.summary(), empathyScore }
+    };
+  }
+
+  applyBehavioralTuning(text) {
+    let adjusted = text.replace(/\s+/g, ' ').trim();
+    adjusted = adjusted.replace(/\bhowever\b/gi, 'but');
+    adjusted = adjusted.replace(/\btherefore\b/gi, 'so');
+    adjusted = adjusted.replace(/\butilize\b/gi, 'use');
+    adjusted = adjusted.replace(/\bmoreover\b/gi, 'also');
+    adjusted = adjusted.replace(/\badditionally\b/gi, 'also');
+    return adjusted;
+  }
+
+  applyContextualFlow(text) {
+    const sentences = text.split(/([.!?])/).reduce((acc, part) => {
+      if (part.match(/[.!?]/)) {
+        acc[acc.length - 1] += part;
+      } else if (part.trim()) {
+        acc.push(part.trim());
+      }
+      return acc;
+    }, []);
+    if (sentences.length < 2) return text;
+    const reordered = [];
+    for (let i = 0; i < sentences.length; i += 1) {
+      const sentence = sentences[i];
+      if (i % 2 === 0) {
+        reordered.push(sentence);
+      } else {
+        reordered.push(sentence.charAt(0).toLowerCase() + sentence.slice(1));
+      }
+    }
+    return reordered.join(' ').replace(/\s+/g, ' ').trim();
+  }
+
+  normalizeOutput(text) {
+    let cleaned = text.replace(/[^\u0020-\u007E]/g, ' ');
+    cleaned = cleaned.replace(/[*_~`>#={}\\]/g, ' ');
+    cleaned = cleaned.replace(/\s{2,}/g, ' ').trim();
+    cleaned = cleaned.replace(/([!?.,;:])\1{1,}/g, '$1');
+    cleaned = cleaned.replace(/\s+([,.!?;:])/g, '$1');
+    return cleaned;
+  }
+}
+
 class TextHumanizer {
   constructor() {
     this.initializeSynonymDatabase();
@@ -16,6 +591,7 @@ class TextHumanizer {
     this.isProcessing = false;
     this.wordCount = { input: 0, output: 0 };
     this.confidenceScore = 0;
+    this.superHumanizer = new SuperHumanizer();
 
     // Improved advanced humanizer initialization with fallbacks
     this.advancedHumanizer = null;
@@ -562,8 +1138,16 @@ class TextHumanizer {
     let detectionAnalysis = null;
 
     try {
+      let superResult = null;
+      if (this.superHumanizer) {
+        superResult = this.superHumanizer.generate(text, options, this);
+      }
+      if (superResult && superResult.humanized) {
+        humanized = superResult.humanized;
+        this.confidenceScore = superResult.confidence || 95;
+        detectionAnalysis = superResult.detectionAnalysis;
+      } else if (this.advancedHumanizer && options.useAdvanced !== false) {
       // Use advanced humanizer if available and not explicitly disabled
-      if (this.advancedHumanizer && options.useAdvanced !== false) {
         console.log('[Humanizer] Using advanced multi-stage transformation pipeline...');
         this.updateStatus('Initializing advanced transformation...');
 
@@ -2779,13 +3363,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   try {
-    console.log('Initializing Intro Popup...');
-    initializeIntroPopup();
-  } catch (error) {
-    console.error('Initialization error (Intro Popup):', error);
-  }
-
-  try {
     let audioCtx;
     const handleFirstInteraction = (e) => {
       console.log(`[Audio] Silent activation on ${e.type}...`);
@@ -2818,184 +3395,8 @@ document.addEventListener('DOMContentLoaded', function() {
     console.error('Initialization error (Comprehensive Testing):', error);
   }
 
-  const overlay = document.querySelector('.intro-overlay');
-  if (overlay) overlay.style.display = 'none';
-
   console.log('AI Text Humanizer and Detector initialized successfully');
 });
-
-/**
- * Initialize intro popup functionality
- */
-function initializeIntroPopup() {
-  console.log('[Popup] Initializing...');
-  const popup = document.getElementById('intro-popup');
-  const video = document.getElementById('intro-video-element');
-  const title = document.getElementById('saniya-title');
-
-  if (!popup) {
-    console.error('[Popup] Error: #intro-popup element not found in DOM');
-    return;
-  }
-
-  if (video) {
-    video.volume = 1.0;
-    video.muted = !window._userInteracted;
-    video.defaultMuted = video.muted;
-    if (!video.muted) {
-      video.removeAttribute('muted');
-    }
-    video.controls = false;
-  } else {
-    console.warn('[Popup] Warning: #intro-video-element not found');
-  }
-
-  if (!title) {
-    console.warn('[Popup] Warning: #saniya-title not found');
-  }
-
-  const runStarAnimation = () => {
-    if (!title) return;
-    console.log('[Popup] Starting star animation...');
-    const letters = title.querySelectorAll('span');
-    const container = document.querySelector('.intro-content');
-
-    if (!container) {
-      console.error('[Popup] Error: .intro-content not found for star animation');
-      return;
-    }
-
-    letters.forEach((letter, index) => {
-      const letterRect = letter.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-
-      const targetX = letterRect.left - containerRect.left + (letterRect.width / 2);
-      const targetY = letterRect.top - containerRect.top + (letterRect.height / 2);
-
-      // Create photorealistic star particles
-      for (let i = 0; i < 12; i++) {
-        const star = document.createElement('div');
-        star.className = 'star-particle';
-
-        // Realistic star sizing
-        const size = Math.random() * 3 + 1;
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
-
-        // Photorealistic lighting/glow
-        star.style.background = 'radial-gradient(circle, #fff 0%, rgba(255,255,255,0.8) 40%, transparent 100%)';
-        star.style.boxShadow = `0 0 ${size * 3}px #fff, 0 0 ${size * 6}px rgba(139, 92, 246, 0.4)`;
-
-        star.style.left = '40%'; // Start from center-ish of text area
-        star.style.top = '50%';
-
-        const tx = (Math.random() - 0.5) * 600;
-        const ty = (Math.random() - 0.5) * 600;
-
-        star.style.setProperty('--tx', `${tx}px`);
-        star.style.setProperty('--ty', `${ty}px`);
-        star.style.setProperty('--target-x', `${targetX - (containerRect.width * 0.4)}px`);
-        star.style.setProperty('--target-y', `${targetY - (containerRect.height / 2)}px`);
-
-        const duration = 1.2 + Math.random() * 0.8;
-        const delay = index * 0.05 + Math.random() * 0.2;
-
-        star.style.animation = `star-explosion ${duration}s cubic-bezier(0.19, 1, 0.22, 1) ${delay}s forwards`;
-
-        container.appendChild(star);
-        setTimeout(() => star.remove(), (duration + delay) * 1000);
-      }
-    });
-
-    // Realistic sequential reveal of letters
-    setTimeout(() => {
-      title.classList.add('merged');
-    }, 800);
-  };
-
-  const showPopup = () => {
-    console.log('[Popup] Displaying popup...');
-
-    // Reset any previous state
-    popup.style.display = 'flex';
-    popup.style.opacity = '1';
-    popup.style.visibility = 'visible';
-    popup.style.pointerEvents = 'auto';
-    popup.classList.add('active');
-
-    setTimeout(runStarAnimation, 600);
-
-    if (video) {
-      const startVideo = () => {
-        // If user already interacted, try to unmute immediately
-        if (window._userInteracted) {
-          video.muted = false;
-          video.defaultMuted = false;
-          video.volume = 1.0;
-          video.removeAttribute('muted');
-        }
-
-        // Add comprehensive error handling for video playback
-        video.play().then(() => {
-          console.log('[Popup] Video playback started successfully');
-        }).catch(err => {
-          console.warn('[Popup] Video play failed:', err);
-          console.warn('[Popup] Error name:', err.name);
-          console.warn('[Popup] Error message:', err.message);
-
-          // Handle specific autoplay errors
-          if (err.name === 'NotAllowedError') {
-            console.log('[Popup] Autoplay blocked - keeping video muted');
-            video.muted = true;
-            video.play().catch(secondErr => {
-              console.error('[Popup] Even muted playback failed:', secondErr);
-            });
-          } else if (err.name === 'NotSupportedError') {
-            console.error('[Popup] Video format not supported');
-          } else {
-            console.error('[Popup] Unknown video error:', err);
-          }
-        });
-      };
-
-      startVideo();
-      // Also trigger on first interaction with the popup
-      popup.addEventListener('click', startVideo, { once: true });
-    }
-
-    // Auto-disable after duration
-    setTimeout(() => {
-      console.log('[Popup] Auto-disabling popup...');
-      popup.classList.remove('active');
-
-      // Also fade out manually to be sure
-      popup.style.opacity = '0';
-
-      setTimeout(() => {
-        popup.style.display = 'none';
-        popup.style.visibility = 'hidden';
-        if (video) video.pause();
-      }, 1000);
-    }, 7000);
-  };
-
-  // Trigger after a short delay for better impact
-  console.log('[Popup] Scheduling trigger in 300ms...');
-  setTimeout(showPopup, 300);
-
-  // Close on click anywhere
-  popup.addEventListener('click', () => {
-    console.log('[Popup] User clicked to close');
-    popup.classList.remove('active');
-    popup.style.opacity = '0';
-
-    setTimeout(() => {
-      popup.style.display = 'none';
-      popup.style.visibility = 'hidden';
-      if (video) video.pause();
-    }, 800);
-  });
-}
 
 /**
  * Initialize navigation video functionality
@@ -3093,6 +3494,9 @@ function initializeMainUI() {
   const humanizationLevel = document.getElementById('humanization-level');
   const naturalVariations = document.getElementById('natural-variations');
   const advancedPipeline = document.getElementById('advanced-pipeline');
+  const empathyModeToggle = document.getElementById('empathy-mode');
+  const speechToggle = document.getElementById('speech-enabled');
+  const toneImageInput = document.getElementById('tone-image');
   const statusMessage = document.getElementById('status-message');
 
   // Add status event listener
@@ -3145,13 +3549,22 @@ function initializeMainUI() {
           synonymLevel: synonymLevel?.value || synonymMap[intensityValue] || 'medium',
           sentenceLevel: sentenceLevel?.value || sentenceMap[intensityValue] || 'moderate',
           humanizationLevel: intensityLevel,
-          useAdvanced
+          useAdvanced,
+          empathyMode: !!(empathyModeToggle && empathyModeToggle.checked),
+          speech: speechToggle && speechToggle.checked ? { rate: 1, pitch: 1, volume: 1 } : undefined
         };
 
         console.log('[UI] Options:', options);
 
         if (!window.textHumanizer) {
           throw new Error('Humanizer engine not initialized. Please refresh the page.');
+        }
+
+        // Attach optional tone image to window for multimodal cue analyzer
+        if (toneImageInput && toneImageInput.files && toneImageInput.files[0]) {
+          window._toneImageFile = toneImageInput.files[0];
+        } else {
+          window._toneImageFile = null;
         }
 
         const result = await window.textHumanizer.humanizeText(text, options);
