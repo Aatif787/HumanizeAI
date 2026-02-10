@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple AI Humanizer Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        textarea { width: 100%; height: 200px; margin: 10px 0; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .container { border: 1px solid #ccc; padding: 20px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <h1>🤖 AI Text Humanizer - Simple Test</h1>
+    
+    <div class="container">
+        <h3>Input Text</h3>
+        <textarea id="input" placeholder="Paste AI-generated text here..."></textarea>
+        <button onclick="humanizeSimple()">Humanize Text</button>
+        <button onclick="clearText()">Clear</button>
+    </div>
+    
+    <div class="container">
+        <h3>Humanized Output</h3>
+        <textarea id="output" readonly placeholder="Humanized text will appear here..."></textarea>
+        <button onclick="copyOutput()">Copy Output</button>
+    </div>
+
+    <script>
+        function humanizeSimple() {
+            const input = document.getElementById('input').value;
+            if (!input.trim()) {
+                alert('Please enter some text!');
+                return;
+            }
+            
+            // Simple humanization
+            let output = input
+                .replace(/\bin conclusion\b/gi, 'so yeah')
+                .replace(/\bfurthermore\b/gi, 'plus')
+                .replace(/\bmoreover\b/gi, 'also')
+                .replace(/\bhowever\b/gi, 'but')
+                .replace(/\btherefore\b/gi, 'so')
+                .replace(/\bartificial intelligence\b/gi, 'AI')
+                .replace(/\bit is important to note\b/gi, 'worth mentioning')
+                .replace(/\bcannot\b/gi, "can't")
+                .replace(/\bdo not\b/gi, "don't")
+                .replace(/\bwill not\b/gi, "won't");
+            
+            // Add some casual elements
+            if (Math.random() > 0.5) {
+                output = 'So, ' + output.charAt(0).toLowerCase() + output.slice(1);
+            }
+            
+            if (Math.random() > 0.7) {
+                output = output.replace(/\bthe\b/g, 'teh');
+            }
+            
+            document.getElementById('output').value = output;
+        }
+        
+        function clearText() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+        }
+        
+        function copyOutput() {
+            const output = document.getElementById('output');
+            output.select();
+            document.execCommand('copy');
+            alert('Output copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
