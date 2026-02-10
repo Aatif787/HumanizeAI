@@ -79,19 +79,34 @@ app.use('/api/humanize', authenticateToken, humanizerRoutes);
 app.use('/api/user', authenticateToken, userRoutes);
 app.use('/api/detect', authenticateToken, detectionRoutes);
 
-// Serve static files (frontend) with cache control
+// Serve static files (frontend) with cache control.
+//
+// Important: Avoid `immutable` caching for same-filename assets (e.g. video.mp4),
+// otherwise Vercel/CDN/browsers can keep serving old bytes after redeploy.
+const isVercel = Boolean(process.env.VERCEL);
 app.use(express.static(path.join(__dirname, '../public'), {
-  maxAge: '1d', // Cache for 1 day
-  setHeaders: (res, path) => {
-    if (path.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate, proxy-revalidate');
+  // On Vercel, prefer revalidation-friendly defaults so new deployments show immediately.
+  maxAge: isVercel ? 0 : '1d',
+  etag: true,
+  lastModified: true,
+  setHeaders: (res, filePath) => {
+    const p = filePath.toLowerCase();
+    if (p.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
       res.setHeader('Pragma', 'no-cache');
       res.setHeader('Expires', '0');
       res.setHeader('Surrogate-Control', 'no-store');
-    } else if (path.endsWith('.js') || path.endsWith('.css')) {
-      res.setHeader('Cache-Control', 'no-cache, must-revalidate');
-    } else if (path.endsWith('.png') || path.endsWith('.jpg') || path.endsWith('.svg') || path.endsWith('.mp4')) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      return;
+    }
+
+    if (p.endsWith('.js') || p.endsWith('.css')) {
+      res.setHeader('Cache-Control', isVercel ? 'no-cache, must-revalidate' : 'public, max-age=86400, must-revalidate');
+      return;
+    }
+
+    // Media/images: DO NOT use immutable unless filenames are content-hashed.
+    if (p.endsWith('.png') || p.endsWith('.jpg') || p.endsWith('.jpeg') || p.endsWith('.svg') || p.endsWith('.mp4') || p.endsWith('.webp') || p.endsWith('.gif')) {
+      res.setHeader('Cache-Control', isVercel ? 'no-cache, must-revalidate' : 'public, max-age=86400, must-revalidate');
     }
   }
 }));
