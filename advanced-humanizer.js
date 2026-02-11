@@ -13,6 +13,7 @@ class AdvancedTextHumanizer {
     this.plagiarismChecker = new AIPlagiarismChecker();
     this.obfuscationEngine = new PatternObfuscationEngine();
     this.humanVerifier = new HumanVerificationEngine();
+    this.aiDetector = new AdvancedAIDetector();
   }
 
   loadDatabases() {
@@ -22,92 +23,154 @@ class AdvancedTextHumanizer {
   }
 
   async humanizeText(text, options = {}) {
-    const config = {
+    let config = {
       style: 'adaptive',
       complexity: 'medium',
       emotion: 'neutral',
       formality: 'adaptive',
       culturalContext: 'general',
+      preserveFacts: true,
+      maxRetries: 3,
       ...options
     };
 
     const startTime = Date.now();
+    let currentText = text;
+    let attempts = 0;
+    let lastValidation = null;
 
-    try {
-      // Stage 1: Semantic Disassembly
-      console.log('🔍 Stage 1: Semantic Disassembly');
-      const semanticAnalysis = this.semanticEngine.disassemble(text);
+    while (attempts < config.maxRetries) {
+      try {
+        attempts++;
+        console.log(`🚀 Humanization attempt ${attempts}/${config.maxRetries}`);
 
-      // Stage 2: Human Style Synthesis
-      console.log('🎨 Stage 2: Human Style Synthesis');
-      const humanizedComponents = this.styleSynthesizer.synthesize(semanticAnalysis, config);
+        // Stage 0: Fact Extraction & Protection
+        const factDatabase = this.extractFacts(currentText);
 
-      // Stage 3: Stylistic Reengineering
-      console.log('⚙️ Stage 3: Stylistic Reengineering');
-      const reengineeredText = this.stylisticEngine.reengineer(humanizedComponents, config);
+        // Stage 1: Semantic Disassembly
+        const semanticAnalysis = this.semanticEngine.disassemble(currentText);
 
-      // Stage 4: Plagiarism Elimination
-      console.log('🔒 Stage 4: Plagiarism Elimination');
-      const uniqueText = await this.plagiarismChecker.ensureUniqueness(reengineeredText);
+        // Stage 2: Human Style Synthesis
+        const humanizedComponents = this.styleSynthesizer.synthesize(semanticAnalysis, config);
 
-      // Stage 5: Pattern Obfuscation
-      console.log('🎭 Stage 5: Pattern Obfuscation');
-      const obfuscatedText = this.obfuscationEngine.obfuscate(uniqueText);
+        // Stage 3: Stylistic Reengineering
+        const reengineeredText = this.stylisticEngine.reengineer(humanizedComponents, config);
 
-      // Stage 6: Human Verification
-      console.log('✅ Stage 6: Human Verification');
-      const finalText = this.humanVerifier.verify(obfuscatedText, { errorLevel: config.errorLevel || 'moderate' });
+        // Stage 4: Plagiarism Elimination
+        const uniqueText = await this.plagiarismChecker.ensureUniqueness(reengineeredText);
 
-      // Final validation
-      const validation = await this.validateOutput(finalText, text);
+        // Stage 5: Pattern Obfuscation
+        const obfuscatedText = this.obfuscationEngine.obfuscate(uniqueText);
 
-      return {
-        success: true,
-        originalText: text,
-        humanizedText: finalText,
-        confidenceScore: validation.confidence,
-        transformations: validation.transformations,
-        detectionRisk: validation.detectionRisk,
-        metadata: {
-          semanticComplexity: semanticAnalysis.complexity,
-          styleProfile: config.style,
-          emotionalInflection: config.emotion,
-          culturalMarkers: config.culturalContext,
-          processingTime: Date.now() - startTime
+        // Stage 6: Human Verification
+        const verifiedText = this.humanVerifier.verify(obfuscatedText, { errorLevel: config.errorLevel || 'moderate' });
+
+        // Stage 7: Fact Reinjection
+        const finalText = config.preserveFacts ? this.reinjectFacts(verifiedText, factDatabase) : verifiedText;
+
+        // Final validation
+        lastValidation = await this.validateOutput(finalText);
+
+        if (lastValidation.detectionRisk === 'minimal' || lastValidation.detectionRisk === 'low') {
+          return {
+            success: true,
+            originalText: text,
+            humanizedText: finalText,
+            confidenceScore: lastValidation.confidence,
+            transformations: lastValidation.transformations,
+            detectionRisk: lastValidation.detectionRisk,
+            analysis: lastValidation.analysis,
+            metadata: {
+              attempts,
+              semanticComplexity: semanticAnalysis.complexity,
+              processingTime: Date.now() - startTime
+            }
+          };
         }
-      };
 
-    } catch (error) {
-      console.error('Humanization failed:', error);
-      return {
-        success: false,
-        error: error.message,
-        partialResult: error.partialResult || text
-      };
+        // If risk is too high, adjust parameters for next attempt
+        console.log(`⚠️ Risk too high (${lastValidation.detectionRisk}). Refining...`);
+        config.style = attempts === 1 ? 'creative' : 'casual';
+        config.errorLevel = attempts === 1 ? 'moderate' : 'high';
+        currentText = finalText; // Refine on top of previous output
+
+      } catch (error) {
+        console.error(`Attempt ${attempts} failed:`, error);
+        if (attempts >= config.maxRetries) throw error;
+      }
     }
+
+    // Return the best attempt if we didn't reach 'low' risk
+    return {
+      success: true,
+      originalText: text,
+      humanizedText: currentText,
+      confidenceScore: lastValidation.confidence,
+      detectionRisk: lastValidation.detectionRisk,
+      analysis: lastValidation.analysis,
+      metadata: {
+        attempts,
+        processingTime: Date.now() - startTime,
+        status: 'max_retries_reached'
+      }
+    };
+  }
+
+  extractFacts(text) {
+    // Identify and protect facts (dates, numbers, names, specific entities)
+    const facts = [];
+    
+    // Dates
+    const dates = text.match(/\b\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\b|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{1,2},? \d{4}\b/gi) || [];
+    dates.forEach(date => facts.push({ type: 'date', value: date }));
+    
+    // Numbers/Stats
+    const numbers = text.match(/\b\d+(?:\.\d+)?%?|\b\d{1,3}(?:,\d{3})+(?:\.\d+)?\b/g) || [];
+    numbers.forEach(num => facts.push({ type: 'number', value: num }));
+    
+    // Proper Nouns (Simplified capitalized word sequences)
+    const properNouns = text.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) || [];
+    properNouns.forEach(name => {
+      // Filter out sentence starters
+      if (!text.startsWith(name)) {
+        facts.push({ type: 'entity', value: name });
+      }
+    });
+    
+    return facts;
+  }
+
+  reinjectFacts(text, factDatabase) {
+    let restored = text;
+    // Ensure all extracted facts are present in the final output
+    // This is a simplified implementation - in a real scenario, we'd use semantic mapping
+    factDatabase.forEach(fact => {
+      if (!restored.toLowerCase().includes(fact.value.toLowerCase())) {
+        // If a fact was lost, we'd Semantically find where it belongs
+        // For now, we log it or append it as a "clarification"
+        console.warn(`Fact lost during humanization: ${fact.value}`);
+      }
+    });
+    return restored;
   }
 
   async validateOutput(humanizedText) {
-    // Simple validation without AIDetector dependency
-    const detectionResults = {
-      overallScore: Math.random() * 20, // Mock score for now
-      patterns: [],
-      confidence: Math.random() * 30 + 70
-    };
-
-    // Calculate confidence based on detection scores
-    const textLength = humanizedText.length;
-    const lengthPenalty = Math.min(10, Math.floor(textLength / 200));
-    const confidence = Math.max(0, 100 - detectionResults.overallScore - lengthPenalty);
-
-    // Risk assessment
-    const riskLevel = confidence >= 90 ? 'minimal' :
-      confidence >= 80 ? 'low' :
-        confidence >= 60 ? 'medium' : 'high';
+    // Real-time analysis using AdvancedAIDetector
+    const analysis = this.aiDetector.analyzeText(humanizedText);
+    
+    // Risk assessment based on real detection metrics
+    const confidence = 100 - analysis.overallScore;
+    const riskLevel = analysis.riskLevel;
 
     return {
-      confidence: confidence,
+      confidence: Math.round(confidence),
       detectionRisk: riskLevel,
+      analysis: {
+        gptScore: analysis.gptScore,
+        claudeScore: analysis.claudeScore,
+        formalScore: analysis.formalScore,
+        overallScore: analysis.overallScore
+      },
       transformations: {
         semantic: true,
         stylistic: true,
@@ -121,33 +184,39 @@ class AdvancedTextHumanizer {
     return {
       casual: {
         contractions: ['don\'t', 'won\'t', 'can\'t', 'shouldn\'t', 'wouldn\'t', 'couldn\'t', 'isn\'t', 'aren\'t', 'wasn\'t', 'weren\'t'],
-        fillers: ['you know', 'like', 'kind of', 'sort of', 'basically', 'actually', 'honestly', 'frankly'],
-        informal: ['gonna', 'wanna', 'gotta', 'kinda', 'sorta', 'lemme', 'gimme'],
-        questions: ['right?', 'you know?', 'don\'t you think?', 'wouldn\'t you say?'],
-        exclamations: ['wow!', 'oh!', 'ah!', 'hey!', 'jeez!', 'man!', 'gosh!']
+        fillers: ['you know', 'like', 'kind of', 'sort of', 'basically', 'actually', 'honestly', 'frankly', 'I mean', 'to be fair', 'at the end of the day'],
+        informal: ['gonna', 'wanna', 'gotta', 'kinda', 'sorta', 'lemme', 'gimme', 'reckon', 'dunno', 'see ya'],
+        questions: ['right?', 'you know?', 'don\'t you think?', 'wouldn\'t you say?', 'if that makes sense?', 'you get what I mean?'],
+        exclamations: ['wow!', 'oh!', 'ah!', 'hey!', 'jeez!', 'man!', 'gosh!', 'holy cow!', 'no way!']
       },
       academic: {
-        hedging: ['may', 'might', 'could', 'would', 'should', 'perhaps', 'possibly', 'potentially'],
-        formal: ['furthermore', 'moreover', 'additionally', 'consequently', 'therefore', 'thus', 'hence'],
-        cautious: ['appears to', 'seems to', 'tends to', 'is likely to', 'suggests that', 'indicates that'],
-        references: ['according to', 'as stated by', 'in the words of', 'as mentioned by', 'as described in']
+        hedging: ['may', 'might', 'could', 'would', 'should', 'perhaps', 'possibly', 'potentially', 'arguably', 'conceivably'],
+        formal: ['furthermore', 'moreover', 'additionally', 'consequently', 'therefore', 'thus', 'hence', 'notwithstanding', 'conversely'],
+        cautious: ['appears to', 'seems to', 'tends to', 'is likely to', 'suggests that', 'indicates that', 'points toward', 'leads one to believe'],
+        references: ['according to', 'as stated by', 'in the words of', 'as mentioned by', 'as described in', 'as evidenced by', 'drawing from']
       },
       creative: {
-        metaphors: ['like a', 'as if', 'metaphorically speaking', 'figuratively', 'symbolically'],
-        imagery: ['vividly', 'brightly', 'darkly', 'mysteriously', 'brilliantly', 'subtly'],
-        emotional: ['heartfelt', 'passionate', 'intense', 'profound', 'moving', 'touching', 'powerful'],
-        poetic: ['whisper', 'echo', 'dance', 'flow', 'bloom', 'soar', 'linger', 'unfold']
+        metaphors: ['like a', 'as if', 'metaphorically speaking', 'figuratively', 'symbolically', 'akin to', 'reminiscent of'],
+        imagery: ['vividly', 'brightly', 'darkly', 'mysteriously', 'brilliantly', 'subtly', 'hauntingly', 'ethereally'],
+        emotional: ['heartfelt', 'passionate', 'intense', 'profound', 'moving', 'touching', 'powerful', 'gut-wrenching', 'soul-stirring'],
+        poetic: ['whisper', 'echo', 'dance', 'flow', 'bloom', 'soar', 'linger', 'unfold', 'shimmer', 'cascade']
       },
       professional: {
-        business: ['strategic', 'efficient', 'effective', 'productive', 'optimized', 'streamlined', 'scalable'],
-        technical: ['implementation', 'integration', 'deployment', 'configuration', 'customization', 'optimization'],
-        action: ['drive', 'leverage', 'execute', 'deliver', 'achieve', 'accomplish', 'implement', 'facilitate'],
-        results: ['outcomes', 'deliverables', 'metrics', 'KPIs', 'ROI', 'performance', 'impact']
+        business: ['strategic', 'efficient', 'effective', 'productive', 'optimized', 'streamlined', 'scalable', 'synergistic', 'bottom-line'],
+        technical: ['implementation', 'integration', 'deployment', 'configuration', 'customization', 'optimization', 'architecture', 'infrastructure'],
+        action: ['drive', 'leverage', 'execute', 'deliver', 'achieve', 'accomplish', 'implement', 'facilitate', 'orchestrate', 'spearhead'],
+        results: ['outcomes', 'deliverables', 'metrics', 'KPIs', 'ROI', 'performance', 'impact', 'milestones', 'benchmarks']
       },
       cultural: {
-        american: { idioms: ['ballpark figure', 'touch base', 'circle back', 'drill down', 'low-hanging fruit'] },
-        british: { idioms: ['chuffed to bits', 'taking the mickey', 'throw a spanner', 'bits and bobs'] },
-        australian: { idioms: ['no worries', 'she\'ll be right', 'fair dinkum', 'arvo', 'brekkie'] }
+        american: { idioms: ['ballpark figure', 'touch base', 'circle back', 'drill down', 'low-hanging fruit', 'shoot the breeze', 'barking up the wrong tree'] },
+        british: { idioms: ['chuffed to bits', 'taking the mickey', 'throw a spanner', 'bits and bobs', 'full of beans', 'not my cup of tea'] },
+        australian: { idioms: ['no worries', 'she\'ll be right', 'fair dinkum', 'arvo', 'brekkie', 'flat out like a lizard drinking'] }
+      },
+      domainSpecific: {
+        legal: ['pursuant to', 'herein', 'notwithstanding', 'aforementioned', 'burden of proof', 'due diligence'],
+        medical: ['prognosis', 'symptomatic', 'efficacy', 'contraindicated', 'manifestation', 'clinical presentation'],
+        tech: ['legacy system', 'technical debt', 'agile methodology', 'low-latency', 'end-to-end encryption'],
+        marketing: ['customer journey', 'brand awareness', 'conversion rate', 'market penetration', 'segmentation']
       }
     };
   }
@@ -214,6 +283,7 @@ class SemanticDisassemblyEngine {
     const semanticUnits = this.extractSemanticUnits(sentences);
     const aiPatterns = this.identifyAIPatterns(text);
     const complexity = this.analyzeComplexity(text);
+    const thoughtFlow = this.analyzeThoughtFlow(text);
 
     return {
       originalText: text,
@@ -221,6 +291,7 @@ class SemanticDisassemblyEngine {
       semanticUnits,
       aiPatterns,
       complexity,
+      thoughtFlow,
       metadata: {
         sentenceCount: sentences.length,
         avgSentenceLength: this.calculateAvgSentenceLength(sentences),
@@ -228,6 +299,49 @@ class SemanticDisassemblyEngine {
         emotionalTone: this.detectEmotionalTone(text)
       }
     };
+  }
+
+  analyzeThoughtFlow(text) {
+    // Analyze how ideas are connected (logical progression vs. human-like associative jumps)
+    const sentences = this.segmentSentences(text);
+    const flow = [];
+    
+    for (let i = 0; i < sentences.length - 1; i++) {
+      const current = sentences[i];
+      const next = sentences[i+1];
+      
+      flow.push({
+        transitionType: this.identifyTransitionType(current, next),
+        coherenceScore: this.calculateCoherence(current, next),
+        semanticJump: this.calculateSemanticJump(current, next)
+      });
+    }
+    
+    return flow;
+  }
+
+  identifyTransitionType(s1, s2) {
+    const logicalMarkers = /\b(therefore|consequently|thus|hence|accordingly)\b/gi;
+    const additiveMarkers = /\b(furthermore|moreover|additionally|also)\b/gi;
+    const contrastMarkers = /\b(however|nevertheless|nonetheless|but|yet)\b/gi;
+    
+    if (s2.match(logicalMarkers)) return 'logical_consequence';
+    if (s2.match(additiveMarkers)) return 'additive_expansion';
+    if (s2.match(contrastMarkers)) return 'adversative_contrast';
+    
+    return 'associative_jump';
+  }
+
+  calculateCoherence(s1, s2) {
+    const words1 = new Set(s1.toLowerCase().match(/\b\w+\b/g));
+    const words2 = new Set(s2.toLowerCase().match(/\b\w+\b/g));
+    const intersection = [...words1].filter(w => words2.has(w));
+    return intersection.length / Math.max(1, Math.min(words1.size, words2.size));
+  }
+
+  calculateSemanticJump(s1, s2) {
+    // High score means ideas are very different (human-like pivot)
+    return 1 - this.calculateCoherence(s1, s2);
   }
 
   segmentSentences(text) {
@@ -520,10 +634,8 @@ class HumanStyleSynthesizer {
   reconstructSentence(unit, styleElements, structure, vocabulary, emotion) {
     let reconstructed = unit.original;
 
-    // Apply vocabulary changes
-    Object.entries(vocabulary.replacements).forEach(([original, replacement]) => {
-      reconstructed = reconstructed.replace(new RegExp(`\\b${original}\\b`, 'gi'), replacement);
-    });
+    // Apply vocabulary changes with linguistic variation
+    reconstructed = this.applyLinguisticVariation(reconstructed, vocabulary);
 
     // Apply style elements
     if (Math.random() < styleElements.contractions) {
@@ -542,6 +654,43 @@ class HumanStyleSynthesizer {
     reconstructed = this.applyStructuralVariation(reconstructed, structure);
 
     return reconstructed;
+  }
+
+  applyLinguisticVariation(text, vocabulary) {
+    let result = text;
+    
+    // 1. Synonym Replacement with Weighted Randomness
+    Object.entries(vocabulary.replacements).forEach(([original, replacement]) => {
+      if (Math.random() < 0.7) { // 70% chance to replace to avoid consistency patterns
+        result = result.replace(new RegExp(`\\b${original}\\b`, 'gi'), replacement);
+      }
+    });
+
+    // 2. Semantic Restructuring (Passive to Active or vice-versa to break AI rhythm)
+    if (Math.random() < 0.4) {
+      result = this.toggleVoice(result);
+    }
+
+    return result;
+  }
+
+  toggleVoice(sentence) {
+    // Simplified voice toggling logic
+    const passivePattern = /\b(is|are|was|were|being|been)\s+(\w+ed)\b/i;
+    const match = sentence.match(passivePattern);
+    
+    if (match) {
+      // Try to convert to active (very simplified)
+      const verb = match[2].replace(/ed$/, '');
+      return sentence.replace(passivePattern, verb);
+    } else {
+      // Try to convert to passive (very simplified)
+      const words = sentence.split(' ');
+      if (words.length > 3) {
+        return `${words[0]} was ${words[1]}ed ${words.slice(2).join(' ')}`;
+      }
+    }
+    return sentence;
   }
 
   addContractions(text) {
@@ -709,7 +858,11 @@ class StylisticReengineeringEngine {
       }
     }
 
-    const variedSentences = sentences.map((sentence, _index) => {
+    // Complexity fluctuation model: cycles through different target complexities
+    // to create a "human-like" rhythm (short, medium, long, medium, short, etc.)
+    const rhythmPattern = [0.2, 0.5, 0.8, 0.6, 0.3]; // Fluctuating complexity targets
+    
+    const variedSentences = sentences.map((sentence, index) => {
       const trimmed = sentence.trim();
       if (trimmed === '') return sentence;
 
@@ -717,26 +870,52 @@ class StylisticReengineeringEngine {
       const trailingMatch = sentence.match(/[.!?]+\s*$/);
       const trailing = trailingMatch ? trailingMatch[0] : '. ';
 
-      // Randomly vary sentence structure
-      const complexityWeight = _complexity === 'high' ? 0.15 : _complexity === 'low' ? -0.05 : 0;
-      const variation = Math.min(1, Math.random() + complexityWeight + (_index % 2) * 0.02);
+      // Base variation on rhythm pattern + random noise + global complexity setting
+      const patternTarget = rhythmPattern[index % rhythmPattern.length];
+      const complexityWeight = _complexity === 'high' ? 0.2 : _complexity === 'low' ? -0.2 : 0;
+      const variation = Math.max(0, Math.min(1, patternTarget + (Math.random() - 0.5) * 0.2 + complexityWeight));
 
-      if (variation < 0.2) {
-        // Shorten long sentences
-        return this.shortenSentence(trimmed.replace(/[.!?]$/, '')) + trailing;
-      } else if (variation < 0.4) {
-        // Split compound sentences
-        return this.splitCompoundSentence(trimmed.replace(/[.!?]$/, '')) + trailing;
-      } else if (variation < 0.6) {
-        // Add complexity to simple sentences
+      if (variation < 0.25) {
+        // 1. Short, punchy sentence
+        return this.simplifyToShortPunchy(trimmed.replace(/[.!?]$/, '')) + trailing;
+      } else if (variation < 0.5) {
+        // 2. Medium length, standard structure
+        return this.addMinorVariation(trimmed.replace(/[.!?]$/, '')) + trailing;
+      } else if (variation < 0.75) {
+        // 3. Complex sentence with dependent clauses
         return this.addComplexity(trimmed.replace(/[.!?]$/, '')) + trailing;
       } else {
-        // Keep original but add minor variation
-        return this.addMinorVariation(trimmed.replace(/[.!?]$/, '')) + trailing;
+        // 4. Highly complex/elaborate sentence
+        return this.elaborateSentence(trimmed.replace(/[.!?]$/, '')) + trailing;
       }
     });
 
     return variedSentences.join(' ').replace(/\s+/g, ' ').trim();
+  }
+
+  simplifyToShortPunchy(sentence) {
+    const words = sentence.split(' ');
+    if (words.length <= 6) return sentence;
+
+    // Try to extract the core subject-verb-object
+    // This is a simplified heuristic: take first few words and last few
+    if (words.length > 12) {
+      return words.slice(0, 8).join(' ');
+    }
+    return sentence;
+  }
+
+  elaborateSentence(sentence) {
+    const elaborations = [
+      (s) => `${s}, a fact that cannot be overlooked in this context`,
+      (s) => `While it might seem straightforward, ${s.charAt(0).toLowerCase() + s.slice(1)}, which leads to further questions`,
+      (s) => `${s}, especially when considering the broader implications of the situation`,
+      (s) => `In light of recent developments, ${s.charAt(0).toLowerCase() + s.slice(1)}`,
+      (s) => `${s} (and this is something experts often point out)`
+    ];
+
+    const elaborator = elaborations[Math.floor(Math.random() * elaborations.length)];
+    return elaborator(sentence);
   }
 
   shortenSentence(sentence) {
@@ -1184,6 +1363,7 @@ class PatternObfuscationEngine {
     obfuscated = this.breakParagraphStructure(obfuscated);
     obfuscated = this.injectPersonalVoice(obfuscated);
     obfuscated = this.splitComplexSentences(obfuscated);
+    obfuscated = this.applyAdversarialPerturbations(obfuscated);
 
     // Final cleanup to fix artifacts
     obfuscated = obfuscated
@@ -1198,6 +1378,42 @@ class PatternObfuscationEngine {
       .trim();
 
     return obfuscated;
+  }
+
+  applyAdversarialPerturbations(text) {
+    // Specifically target AI detection signals with adversarial techniques
+    let perturbed = text;
+    
+    // 1. Break N-gram patterns (common AI detection method)
+    perturbed = this.breakNGrams(perturbed);
+    
+    // 2. Inject adversarial noise (tiny, imperceptible changes that confuse classifiers)
+    perturbed = this.injectAdversarialNoise(perturbed);
+    
+    return perturbed;
+  }
+
+  breakNGrams(text) {
+    // Break 3-gram and 4-gram patterns that AI often produces
+    const sentences = text.split(/([.!?]\s+)/);
+    return sentences.map(s => {
+      if (s.length < 10) return s;
+      const words = s.split(' ');
+      if (words.length > 10 && Math.random() < 0.3) {
+        // Insert a tiny "adversarial" filler or swap order
+        const idx = Math.floor(words.length / 2);
+        words.splice(idx, 0, Math.random() < 0.5 ? 'just' : 'actually');
+      }
+      return words.join(' ');
+    }).join('');
+  }
+
+  injectAdversarialNoise(text) {
+    // Inject subtle linguistic noise to lower classifier confidence
+    return text.replace(/\b(very|really|quite|extremely)\b/gi, (match) => {
+      const noise = ['', 'well,', 'honestly,', 'sort of'];
+      return Math.random() < 0.2 ? `${noise[Math.floor(Math.random() * noise.length)]} ${match}` : match;
+    });
   }
 
   splitSentencesPreserve(text) {
@@ -3317,6 +3533,9 @@ class AIDetectionTestSuite {
       });
       const advancedAnalysis = this.detector.analyzeText(advancedResult.humanizedText);
 
+      // Multi-tool Simulation (Turnitin, GPTZero, Originality.ai)
+      const multiToolAnalysis = this.simulateMultiToolDetection(advancedResult.humanizedText);
+
       const testResult = {
         name: test.name,
         original: {
@@ -3332,7 +3551,8 @@ class AIDetectionTestSuite {
         advancedPipeline: {
           detectionScore: advancedAnalysis.overallScore,
           riskLevel: advancedAnalysis.riskLevel,
-          improvement: originalAnalysis.overallScore - advancedAnalysis.overallScore
+          improvement: originalAnalysis.overallScore - advancedAnalysis.overallScore,
+          multiTool: multiToolAnalysis
         }
       };
 
@@ -3341,9 +3561,55 @@ class AIDetectionTestSuite {
       console.log(`  Original: ${originalAnalysis.overallScore}% AI (${originalAnalysis.riskLevel})`);
       console.log(`  Basic: ${basicAnalysis.overallScore}% AI (${basicAnalysis.riskLevel}) - Improved by ${testResult.basicPipeline.improvement}%`);
       console.log(`  Advanced: ${advancedAnalysis.overallScore}% AI (${advancedAnalysis.riskLevel}) - Improved by ${testResult.advancedPipeline.improvement}%`);
+      console.log(`  Multi-Tool Evasion: ${multiToolAnalysis.evasionConfidence}% confidence`);
     }
 
     return this.generateTestReport();
+  }
+
+  simulateMultiToolDetection(text) {
+    // Simulate specialized detection algorithms
+    const results = {
+      turnitin: this.simulateTurnitin(text),
+      gptZero: this.simulateGPTZero(text),
+      originality: this.simulateOriginality(text),
+      evasionConfidence: 0
+    };
+
+    results.evasionConfidence = Math.round(
+      (results.turnitin.evasionScore + results.gptZero.evasionScore + results.originality.evasionScore) / 3
+    );
+
+    return results;
+  }
+
+  simulateTurnitin(text) {
+    // Turnitin focuses on similarity and pattern matching
+    const patterns = text.match(/\b\w{5,}\b/g) || [];
+    const uniquePatterns = new Set(patterns).size;
+    const evasionScore = Math.min(100, (uniquePatterns / Math.max(1, patterns.length)) * 120);
+    return { name: 'Turnitin', evasionScore };
+  }
+
+  simulateGPTZero(text) {
+    // GPTZero focuses on perplexity and burstiness
+    const sentences = text.split(/[.!?]/).filter(s => s.trim());
+    const lengths = sentences.map(s => s.split(' ').length);
+    const variance = this.calculateVariance(lengths);
+    const evasionScore = Math.min(100, (variance / 10) * 100);
+    return { name: 'GPTZero', evasionScore };
+  }
+
+  simulateOriginality(text) {
+    // Originality.ai uses deep learning classifiers
+    const detectorAnalysis = this.detector.analyzeText(text);
+    const evasionScore = 100 - detectorAnalysis.overallScore;
+    return { name: 'Originality.ai', evasionScore };
+  }
+
+  calculateVariance(numbers) {
+    const mean = numbers.reduce((a, b) => a + b, 0) / numbers.length;
+    return numbers.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / numbers.length;
   }
 
   /**

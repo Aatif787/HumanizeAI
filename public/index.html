@@ -464,15 +464,19 @@
                 </div>
             </div>
             
-            <!-- Advanced Pipeline Toggle -->
-            <div class="mt-6 flex items-center justify-between bg-neutral-50 dark:bg-neutral-800/50 rounded-lg p-4">
+            <!-- Hyper Humanize Mode Toggle -->
+            <div class="mt-6 flex items-center justify-between bg-gradient-to-r from-primary-50 to-accent-50 dark:from-primary-900/10 dark:to-accent-900/10 border border-primary-100 dark:border-primary-800/50 rounded-xl p-5 shadow-sm">
                 <div>
-                    <h4 class="font-medium text-neutral-800 dark:text-neutral-200">The Good Stuff (8 steps, no fluff)</h4>
-                    <p class="text-sm text-neutral-600 dark:text-neutral-400">Breaks stiff phrasing, adds natural flow, keeps it believable.</p>
+                    <h4 class="font-display font-bold text-primary-900 dark:text-primary-100 flex items-center">
+                        Hyper-Humanize Mode
+                        <span class="ml-2 px-2 py-0.5 bg-primary-600 text-white text-[10px] rounded-full uppercase tracking-wider">v1.1.8</span>
+                    </h4>
+                    <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-1">Multi-stage evasion: linguistic variation, semantic restructuring, and adversarial training.</p>
                 </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="advanced-pipeline" class="sr-only peer" checked>
-                    <div class="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-neutral-600 peer-checked:bg-primary-600"></div>
+                <label class="modern-switch hyper-humanize-toggle">
+                    <input type="checkbox" id="advanced-pipeline" checked>
+                    <div class="modern-switch-track"></div>
+                    <div class="modern-switch-thumb"></div>
                 </label>
             </div>
 
@@ -482,9 +486,10 @@
                     <h4 class="font-medium text-neutral-800 dark:text-neutral-200">Empathetic Mode</h4>
                     <p class="text-sm text-neutral-600 dark:text-neutral-400">Adjusts tone and pacing based on user sentiment.</p>
                 </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="empathy-mode" class="sr-only peer">
-                    <div class="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-neutral-600 peer-checked:bg-primary-600"></div>
+                <label class="modern-switch">
+                    <input type="checkbox" id="empathy-mode">
+                    <div class="modern-switch-track"></div>
+                    <div class="modern-switch-thumb"></div>
                 </label>
             </div>
 
@@ -494,9 +499,10 @@
                     <h4 class="font-medium text-neutral-800 dark:text-neutral-200">Speech Output</h4>
                     <p class="text-sm text-neutral-600 dark:text-neutral-400">Speak the final text with natural prosody.</p>
                 </div>
-                <label class="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="speech-enabled" class="sr-only peer">
-                    <div class="w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-neutral-600 peer-checked:bg-primary-600"></div>
+                <label class="modern-switch">
+                    <input type="checkbox" id="speech-enabled">
+                    <div class="modern-switch-track"></div>
+                    <div class="modern-switch-thumb"></div>
                 </label>
             </div>
 

@@ -306,6 +306,40 @@
     }
 }
 
+/* Modern Toggle Switch Styling */
+.modern-switch {
+    @apply relative inline-flex items-center cursor-pointer;
+}
+
+.modern-switch input {
+    @apply sr-only peer;
+}
+
+.modern-switch-track {
+    @apply w-11 h-6 bg-neutral-200 dark:bg-neutral-700 rounded-full transition-all duration-300
+           peer-checked:bg-primary-600 peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.modern-switch-thumb {
+    @apply absolute top-[2px] left-[2px] bg-white border-neutral-300 border rounded-full h-5 w-5 
+           transition-all duration-300 shadow-sm;
+    content: '';
+}
+
+.modern-switch input:checked ~ .modern-switch-thumb {
+    @apply translate-x-full border-white;
+}
+
+/* Hyper Humanize Mode Specific Styles */
+.hyper-humanize-toggle .modern-switch-track {
+    @apply peer-checked:bg-gradient-to-r peer-checked:from-primary-600 peer-checked:to-accent-600;
+}
+
+.hyper-humanize-toggle input:checked ~ .modern-switch-track {
+    box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.3);
+}
+
 /* Dark mode toggle animation */
 .dark-mode-toggle {
     transition: all var(--transition-speed) ease;
