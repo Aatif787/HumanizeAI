@@ -3,7 +3,7 @@ services:
     name: humainez
     env: node
     plan: starter
-    buildCommand: "npm install"
+    buildCommand: "npm install && pip install -r requirements.txt"
     startCommand: "npm start"
     autoDeploy: true
     envVars:

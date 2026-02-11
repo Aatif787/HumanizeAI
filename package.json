@@ -7,7 +7,7 @@
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
     "build": "npm run vercel-build",
-    "vercel-build": "npm install && npm run build:assets && echo 'Vercel build complete - v1.1.8-force'",
+    "vercel-build": "npm install && pip install -r requirements.txt && npm run build:assets && echo 'Vercel build complete - v1.1.8-force'",
     "build:assets": "echo 'Building assets...' && node -e \"console.log('Asset build complete - ' + new Date().toISOString())\"",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",

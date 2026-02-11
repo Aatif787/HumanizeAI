@@ -1,11 +1,49 @@
 const logger = require('../config/logger');
 const path = require('path');
+const { spawn } = require('child_process');
 const { AdvancedTextHumanizer, AdvancedAIDetector } = require(path.join(__dirname, '../../advanced-humanizer.js'));
 
 class HumanizerService {
   constructor() {
     this.humanizer = new AdvancedTextHumanizer();
     this.detector = new AdvancedAIDetector();
+  }
+
+  /**
+   * Invokes the Python-based Super Humanize engine for advanced linguistic variation.
+   * @param {string} text 
+   * @returns {Promise<Object>}
+   */
+  async invokePythonSuperHumanizer(text) {
+    return new Promise((resolve, reject) => {
+      const pythonProcess = spawn('python', [
+        path.join(__dirname, '../../super_humanize.py'),
+        text
+      ]);
+
+      let resultData = '';
+      let errorData = '';
+
+      pythonProcess.stdout.on('data', (data) => {
+        resultData += data.toString();
+      });
+
+      pythonProcess.stderr.on('data', (data) => {
+        errorData += data.toString();
+      });
+
+      pythonProcess.on('close', (code) => {
+        if (code !== 0) {
+          logger.error(`Python SuperHumanizer failed with code ${code}: ${errorData}`);
+          return reject(new Error('Python humanization failed'));
+        }
+        try {
+          resolve(JSON.parse(resultData));
+        } catch (e) {
+          reject(new Error('Failed to parse Python output'));
+        }
+      });
+    });
   }
 
   async humanizeAdvanced(text, options = {}) {
@@ -17,24 +55,35 @@ class HumanizerService {
       if (typeof text !== 'string') {
         throw new Error('Input must be a string');
       }
-      const llmFirst = options.useExternalLLM ? await this.invokeLLM(text, options) : null;
-      let humanizedText = llmFirst || null;
 
-      // Use the root advanced-humanizer logic
-      if (!humanizedText) {
-        const adv = await this.humanizer.humanizeText(text, {
-          style: options.style || 'casual',
-          intensity: options.complexity === 'high' ? 1.0 : (options.complexity === 'medium' ? 0.7 : 0.4),
-          formality: options.formality || 'medium',
-          errorLevel: options.errorLevel || 'moderate'
-        });
-        if (adv && adv.humanizedText) {
-          humanizedText = adv.humanizedText;
-        } else if (typeof adv === 'string') {
-          humanizedText = adv;
-        } else {
-          humanizedText = text;
+      // 1. Optional external LLM pre-processing
+      const llmFirst = options.useExternalLLM ? await this.invokeLLM(text, options) : null;
+      let humanizedText = llmFirst || text;
+
+      // 2. Python Super Humanize Engine (The "Best Language" enhancement)
+      try {
+        logger.info('Invoking Python SuperHumanizer for linguistic variation...');
+        const pythonResult = await this.invokePythonSuperHumanizer(humanizedText);
+        if (pythonResult && pythonResult.humanized) {
+          humanizedText = pythonResult.humanized;
+          logger.info(`Python enhancement complete. Burstiness improvement: ${pythonResult.metrics.improvement}`);
         }
+      } catch (pyError) {
+        logger.warn('Python SuperHumanizer failed, continuing with JS pipeline:', pyError.message);
+      }
+
+      // 3. JS Advanced Humanizer Pipeline
+      const adv = await this.humanizer.humanizeText(humanizedText, {
+        style: options.style || 'casual',
+        intensity: options.complexity === 'high' ? 1.0 : (options.complexity === 'medium' ? 0.7 : 0.4),
+        formality: options.formality || 'medium',
+        errorLevel: options.errorLevel || 'moderate'
+      });
+
+      if (adv && adv.humanizedText) {
+        humanizedText = adv.humanizedText;
+      } else if (typeof adv === 'string') {
+        humanizedText = adv;
       }
 
       const processingTime = Date.now() - startTime;
