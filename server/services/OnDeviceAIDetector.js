@@ -379,9 +379,12 @@ class EdgeInferenceEngine {
   initializeWorkerPool() {
     // Web Workers for parallel processing (browser)
     // Worker threads for Node.js
+    const maxWorkers = (typeof navigator !== 'undefined' && navigator.hardwareConcurrency)
+      ? navigator.hardwareConcurrency
+      : 4;
     return {
       workers: [],
-      maxWorkers: navigator?.hardwareConcurrency || 4
+      maxWorkers
     };
   }
 

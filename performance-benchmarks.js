@@ -4,15 +4,19 @@
  */
 
 const OnDeviceDetectionService = require('./server/services/OnDeviceDetectionService');
+const { AdvancedTextHumanizer, AdvancedAIDetector } = require('./advanced-humanizer.js');
 const fs = require('fs');
 const path = require('path');
 
 class PerformanceBenchmark {
   constructor() {
     this.onDeviceService = new OnDeviceDetectionService();
+    this.humanizer = new AdvancedTextHumanizer();
+    this.detector = new AdvancedAIDetector();
     this.results = {
       onDevice: [],
       apiBased: [],
+      humanizer: [],
       comparison: {}
     };
 
@@ -39,6 +43,49 @@ class PerformanceBenchmark {
         expected: 'mixed_content'
       }
     ];
+  }
+
+  async benchmarkHumanizer() {
+    console.log('✍️ Running Humanizer Benchmark...');
+    for (const testCase of this.testTexts) {
+      const iterations = 5;
+      const results = [];
+      for (let i = 0; i < iterations; i++) {
+        try {
+          const startTime = performance.now();
+          const humanized = await this.humanizer.humanizeText(testCase.text, {
+            style: 'casual',
+            complexity: 'medium',
+            formality: 'medium',
+            errorLevel: 'moderate',
+            maxRetries: 2
+          });
+          const endTime = performance.now();
+          const output = humanized.humanizedText || humanized.text || '';
+          const analysis = this.detector.analyzeText(output);
+          results.push({
+            iteration: i + 1,
+            processingTime: endTime - startTime,
+            detectionScore: analysis.overallScore,
+            success: true
+          });
+        } catch (error) {
+          results.push({
+            iteration: i + 1,
+            error: error.message,
+            success: false
+          });
+        }
+      }
+      const successes = results.filter(r => r.success);
+      this.results.humanizer.push({
+        testCase: testCase.name,
+        results,
+        averageTime: successes.length ? successes.reduce((sum, r) => sum + r.processingTime, 0) / successes.length : 0,
+        averageScore: successes.length ? successes.reduce((sum, r) => sum + r.detectionScore, 0) / successes.length : 100,
+        successRate: successes.length / results.length
+      });
+    }
   }
 
   // Simulate API-based detection (with network latency)
@@ -198,16 +245,31 @@ class PerformanceBenchmark {
 
   // Generate detailed benchmark report
   generateBenchmarkReport() {
+    const humanizerAvgTime = this.results.humanizer.length
+      ? this.results.humanizer.reduce((sum, r) => sum + r.averageTime, 0) / this.results.humanizer.length
+      : 0;
+    const humanizerAvgScore = this.results.humanizer.length
+      ? this.results.humanizer.reduce((sum, r) => sum + r.averageScore, 0) / this.results.humanizer.length
+      : 0;
+    const humanizerSuccessRate = this.results.humanizer.length
+      ? this.results.humanizer.reduce((sum, r) => sum + r.successRate, 0) / this.results.humanizer.length
+      : 0;
     const report = {
       timestamp: new Date().toISOString(),
       summary: {
         totalTestCases: this.testTexts.length,
         iterationsPerTestCase: 10,
+        humanizer: {
+          averageTime: humanizerAvgTime,
+          averageScore: humanizerAvgScore,
+          successRate: humanizerSuccessRate
+        },
         comparison: this.results.comparison
       },
       detailedResults: {
         onDevice: this.results.onDevice,
-        apiBased: this.results.apiBased
+        apiBased: this.results.apiBased,
+        humanizer: this.results.humanizer
       },
       recommendations: this.generateRecommendations()
     };
@@ -270,6 +332,9 @@ class PerformanceBenchmark {
       await this.benchmarkAPI();
       console.log('');
 
+      await this.benchmarkHumanizer();
+      console.log('');
+
       this.generateComparisonReport();
 
       const report = this.generateBenchmarkReport();
@@ -300,6 +365,13 @@ class PerformanceBenchmark {
     console.log(`  On-Device: ${comparison.speed.onDevice.toFixed(1)}ms average`);
     console.log(`  API-Based: ${comparison.speed.apiBased.toFixed(1)}ms average`);
     console.log(`  Speedup: ${comparison.speed.speedup.toFixed(1)}x faster with ${comparison.speed.winner}\n`);
+
+    if (report.summary.humanizer) {
+      console.log('✍️ Humanizer Performance:');
+      console.log(`  Average Time: ${report.summary.humanizer.averageTime.toFixed(1)}ms`);
+      console.log(`  Average Detection Score: ${report.summary.humanizer.averageScore.toFixed(1)}%`);
+      console.log(`  Success Rate: ${(report.summary.humanizer.successRate * 100).toFixed(1)}%\n`);
+    }
 
     console.log('🎯 Accuracy Comparison:');
     console.log(`  On-Device: ${(comparison.accuracy.onDevice * 100).toFixed(1)}%`);

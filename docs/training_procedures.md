@@ -22,3 +22,13 @@
 - Human-likeness panel ratings and empathy scores.
 - Cultural sensitivity checks.
 - Regression suite on style and safety invariants.
+
+## Iterative Enhancement Pipeline
+- Run iterative improvements with baseline, conversational, technical, and long-form scenarios.
+- Track average detection score, evasion confidence, and failure count per iteration.
+- Enforce edge-case validation for empty and whitespace inputs.
+- Run stress validation with parallel requests to confirm stability.
+
+## Release Readiness
+- Generate release metadata with version, commit, and pipeline summary.
+- Store rollback mapping to the previous release manifest.

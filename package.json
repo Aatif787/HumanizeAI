@@ -10,8 +10,14 @@
     "vercel-build": "npm install && pip install -r requirements.txt && npm run build:assets && echo 'Vercel build complete - v1.1.8-force'",
     "build:assets": "echo 'Building assets...' && node -e \"console.log('Asset build complete - ' + new Date().toISOString())\"",
     "test": "jest",
+    "test:unit": "jest server/tests/hyperHumanizer.test.js server/tests/modelEnhancementPipeline.test.js",
+    "test:integration": "node server/tests/comprehensive-tests.js",
+    "test:performance": "node performance-benchmarks.js",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "model:enhance": "node model-enhancement-pipeline.js --iterations 3",
+    "model:validate": "node model-enhancement-pipeline.js --iterations 3 --validate",
+    "model:release": "node model-enhancement-pipeline.js --iterations 3 --validate --release"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -50,6 +56,12 @@
   "engines": {
     "node": ">=20.0.0 <22.0.0",
     "npm": ">=8.0.0 <11.0.0"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "<rootDir>/server/tests/onDeviceDetection.test.js",
+      "<rootDir>/test.js"
+    ]
   },
   "keywords": [
     "ai",

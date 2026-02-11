@@ -67,7 +67,7 @@ class OnDeviceDetectionService {
       return {
         prediction: prediction.prediction,
         confidence: prediction.confidence,
-        analysis: options.detailed ? results : undefined,
+        detailedAnalysis: results.detailedAnalysis || this.generateDetailedAnalysis(results),
         processingTime: processingTime,
         modelVersions: this.getModelVersions(),
         timestamp: new Date().toISOString()
@@ -127,6 +127,11 @@ class OnDeviceDetectionService {
    */
   generateDetailedAnalysis(results) {
     const analysis = {
+      textClassification: results.classification,
+      languageAnalysis: results.languageAnalysis,
+      stylometry: results.stylometry,
+      semanticAnalysis: results.semanticAnalysis,
+      ensembleResult: results.ensembleResult,
       summary: this.generateSummary(results),
       indicators: this.identifyIndicators(results),
       patterns: results.patterns,
@@ -408,9 +413,11 @@ class OnDeviceDetectionService {
       prediction = 'mixed_content';
     }
 
+    const normalizedConfidence = Math.max(ensembleResult.confidence, 0.5);
+
     return {
       prediction: prediction,
-      confidence: Math.round(ensembleResult.confidence * 100)
+      confidence: normalizedConfidence
     };
   }
 
@@ -446,9 +453,29 @@ class OnDeviceDetectionService {
       prediction = 'human_written';
     }
 
+    const confidence = Math.min(indicatorRatio * 10, 0.9);
+
     return {
       prediction: prediction,
-      confidence: Math.min(indicatorRatio * 100, 90),
+      confidence,
+      detailedAnalysis: {
+        textClassification: { prediction, confidence },
+        languageAnalysis: null,
+        stylometry: null,
+        semanticAnalysis: null,
+        ensembleResult: { aiProbability: prediction === 'ai_generated' ? 0.7 : 0.3, confidence },
+        summary: {
+          overallPrediction: prediction,
+          confidence,
+          keyFindings: [],
+          riskFactors: []
+        },
+        indicators: [],
+        patterns: null,
+        recommendations: [],
+        modelContributions: null,
+        confidenceFactors: null
+      },
       fallback: true,
       error: error.message,
       processingTime: 0,

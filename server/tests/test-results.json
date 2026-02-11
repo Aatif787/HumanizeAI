@@ -7,7 +7,7 @@
     "totalPassed": 0,
     "totalTests": 0,
     "successRate": "0.0",
-    "testDuration": 312
+    "testDuration": 485
   },
   "unittestsTests": [
     {
@@ -18,7 +18,7 @@
           "success": true,
           "prediction": "human_written",
           "confidence": 0.3333333333333333,
-          "processingTime": 2.9170000000000016,
+          "processingTime": 4.410000000000025,
           "expected": [
             "human_written",
             "ai_generated",
@@ -30,7 +30,7 @@
           "success": true,
           "prediction": "human_written",
           "confidence": 0.3333333333333333,
-          "processingTime": 4.619,
+          "processingTime": 3.79219999999998,
           "expected": [
             "human_written",
             "ai_generated",
@@ -42,7 +42,7 @@
           "success": true,
           "prediction": "human_written",
           "confidence": 0.3333333333333333,
-          "processingTime": 2.1702999999999975,
+          "processingTime": 3.226600000000019,
           "expected": [
             "human_written",
             "ai_generated",
@@ -124,12 +124,12 @@
       "tests": [
         {
           "test": "Basic Detection - Human Text",
-          "success": false,
+          "success": true,
           "prediction": "mixed_content",
-          "confidence": null,
-          "processingTime": 6.45620000000001,
+          "confidence": 0.5,
+          "processingTime": 11.053499999999985,
           "modelsUsed": [
-            "analysis",
+            "detailedAnalysis",
             "processingTime",
             "modelVersions",
             "timestamp"
@@ -137,12 +137,12 @@
         },
         {
           "test": "Basic Detection - AI Text",
-          "success": false,
+          "success": true,
           "prediction": "mixed_content",
-          "confidence": null,
-          "processingTime": 11.430099999999996,
+          "confidence": 0.5,
+          "processingTime": 7.810100000000034,
           "modelsUsed": [
-            "analysis",
+            "detailedAnalysis",
             "processingTime",
             "modelVersions",
             "timestamp"
@@ -150,19 +150,19 @@
         },
         {
           "test": "Basic Detection - Mixed Content",
-          "success": false,
+          "success": true,
           "prediction": "mixed_content",
-          "confidence": null,
-          "processingTime": 8.668900000000008,
+          "confidence": 0.5,
+          "processingTime": 9.282299999999964,
           "modelsUsed": [
-            "analysis",
+            "detailedAnalysis",
             "processingTime",
             "modelVersions",
             "timestamp"
           ]
         }
       ],
-      "passed": 0,
+      "passed": 3,
       "total": 3
     },
     {
@@ -175,24 +175,26 @@
         },
         {
           "test": "Has confidence",
-          "success": false,
-          "value": null
+          "success": true,
+          "value": 0.5
         },
         {
           "test": "Has detailed analysis",
-          "success": false,
-          "value": "Missing"
+          "success": true,
+          "value": "Present"
         },
         {
           "test": "Has text classification",
-          "value": "Missing"
+          "success": true,
+          "value": "Present"
         },
         {
           "test": "Has language analysis",
-          "value": "Missing"
+          "success": true,
+          "value": "Present"
         }
       ],
-      "passed": 1,
+      "passed": 5,
       "total": 5
     },
     {
@@ -209,28 +211,28 @@
           "test": "Error Handling - Very Long Text",
           "success": true,
           "prediction": "mixed_content",
-          "confidence": null,
+          "confidence": 0.5,
           "note": "Should handle gracefully"
         },
         {
           "test": "Error Handling - Special Characters",
           "success": true,
           "prediction": "mixed_content",
-          "confidence": null,
+          "confidence": 0.5,
           "note": "Should handle gracefully"
         },
         {
           "test": "Error Handling - Non-English Text",
           "success": true,
           "prediction": "mixed_content",
-          "confidence": null,
+          "confidence": 0.5,
           "note": "Should handle gracefully"
         },
         {
           "test": "Error Handling - Mixed Languages",
           "success": true,
           "prediction": "mixed_content",
-          "confidence": null,
+          "confidence": 0.5,
           "note": "Should handle gracefully"
         }
       ],
@@ -245,29 +247,29 @@
         {
           "test": "Performance - Short Text (12 chars)",
           "success": true,
-          "averageTime": 1.5930399999999878,
-          "minTime": 1.3754999999999882,
-          "maxTime": 1.8794999999999789,
+          "averageTime": 2.3341400000000023,
+          "minTime": 1.4384999999999764,
+          "maxTime": 3.6767000000000962,
           "iterations": 10,
-          "charactersPerSecond": 7532.76753879381
+          "charactersPerSecond": 5141.079798126928
         },
         {
           "test": "Performance - Medium Text (98 chars)",
           "success": true,
-          "averageTime": 3.1727900000000004,
-          "minTime": 2.269900000000007,
-          "maxTime": 4.072000000000003,
+          "averageTime": 3.771109999999999,
+          "minTime": 3.0716999999999643,
+          "maxTime": 5.045800000000099,
           "iterations": 10,
-          "charactersPerSecond": 30887.64147642926
+          "charactersPerSecond": 25987.043602546735
         },
         {
           "test": "Performance - Long Text (428 chars)",
           "success": true,
-          "averageTime": 7.061769999999993,
-          "minTime": 5.919499999999971,
-          "maxTime": 8.640500000000003,
+          "averageTime": 10.176759999999978,
+          "minTime": 8.07159999999999,
+          "maxTime": 11.908300000000054,
           "iterations": 10,
-          "charactersPerSecond": 60608.03452958684
+          "charactersPerSecond": 42056.60740746572
         }
       ],
       "passed": 3,
@@ -279,8 +281,8 @@
         {
           "test": "Memory increase per instance",
           "success": true,
-          "memoryIncrease": 42246704,
-          "averagePerInstance": 8449340.8
+          "memoryIncrease": 29694688,
+          "averagePerInstance": 5938937.6
         }
       ],
       "passed": 1,

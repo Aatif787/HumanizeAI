@@ -100,7 +100,10 @@ app.use(express.static(path.join(__dirname, '../public'), {
     }
 
     if (p.endsWith('.js') || p.endsWith('.css')) {
-      res.setHeader('Cache-Control', isVercel ? 'no-cache, must-revalidate' : 'public, max-age=86400, must-revalidate');
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      res.setHeader('Surrogate-Control', 'no-store');
       return;
     }
 
@@ -134,6 +137,7 @@ app.get('*', (req, res, next) => {
   if (req.originalUrl.startsWith('/api')) {
     return next();
   }
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 

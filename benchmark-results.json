@@ -1,19 +1,24 @@
 {
-  "timestamp": "2026-02-06T05:15:43.428Z",
+  "timestamp": "2026-02-11T18:52:49.718Z",
   "summary": {
     "totalTestCases": 4,
     "iterationsPerTestCase": 10,
+    "humanizer": {
+      "averageTime": 2.440325000000166,
+      "averageScore": 0,
+      "successRate": 1
+    },
     "comparison": {
       "speed": {
-        "onDevice": 6.211127499999999,
-        "apiBased": 333.84661499999993,
-        "speedup": 53.74976040984507,
+        "onDevice": 6.218147500000004,
+        "apiBased": 164.27813500000002,
+        "speedup": 26.419144126124365,
         "winner": "On-Device"
       },
       "accuracy": {
         "onDevice": 0.25,
-        "apiBased": 0.45,
-        "difference": 0.2,
+        "apiBased": 0.35,
+        "difference": 0.09999999999999998,
         "winner": "API-Based"
       },
       "reliability": {
@@ -33,75 +38,75 @@
           {
             "iteration": 1,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 11.230800000000002,
+            "confidence": 0,
+            "processingTime": 10.0043,
             "success": true
           },
           {
             "iteration": 2,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 5.496799999999993,
+            "confidence": 0,
+            "processingTime": 5.162400000000019,
             "success": true
           },
           {
             "iteration": 3,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 3.192399999999992,
+            "confidence": 0,
+            "processingTime": 3.371700000000004,
             "success": true
           },
           {
             "iteration": 4,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 3.158699999999996,
+            "confidence": 0,
+            "processingTime": 3.0815000000000055,
             "success": true
           },
           {
             "iteration": 5,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 4.011300000000006,
+            "confidence": 0,
+            "processingTime": 4.2520000000000095,
             "success": true
           },
           {
             "iteration": 6,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 3.0849000000000046,
+            "confidence": 0,
+            "processingTime": 3.049000000000035,
             "success": true
           },
           {
             "iteration": 7,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 3.33959999999999,
+            "confidence": 0,
+            "processingTime": 3.037900000000036,
             "success": true
           },
           {
             "iteration": 8,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 3.8893000000000058,
+            "confidence": 0,
+            "processingTime": 2.8344999999999914,
             "success": true
           },
           {
             "iteration": 9,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 3.2783000000000015,
+            "confidence": 0,
+            "processingTime": 3.25649999999996,
             "success": true
           },
           {
             "iteration": 10,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 2.954900000000009,
+            "confidence": 0,
+            "processingTime": 3.391999999999996,
             "success": true
           }
         ],
-        "averageTime": 4.3637,
+        "averageTime": 4.144180000000006,
         "successRate": 1,
         "accuracy": 0
       },
@@ -112,75 +117,75 @@
           {
             "iteration": 1,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 5.059600000000003,
+            "confidence": 0,
+            "processingTime": 5.622500000000002,
             "success": true
           },
           {
             "iteration": 2,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 5.457999999999998,
+            "confidence": 0,
+            "processingTime": 5.67270000000002,
             "success": true
           },
           {
             "iteration": 3,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.316299999999998,
+            "confidence": 0,
+            "processingTime": 8.339200000000005,
             "success": true
           },
           {
             "iteration": 4,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 5.332099999999997,
+            "confidence": 0,
+            "processingTime": 5.661200000000008,
             "success": true
           },
           {
             "iteration": 5,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.219799999999992,
+            "confidence": 0,
+            "processingTime": 5.227399999999989,
             "success": true
           },
           {
             "iteration": 6,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 5.392599999999987,
+            "confidence": 0,
+            "processingTime": 5.191000000000031,
             "success": true
           },
           {
             "iteration": 7,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 5.459000000000003,
+            "confidence": 0,
+            "processingTime": 4.544700000000034,
             "success": true
           },
           {
             "iteration": 8,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 4.834900000000005,
+            "confidence": 0,
+            "processingTime": 5.213899999999967,
             "success": true
           },
           {
             "iteration": 9,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 4.229700000000008,
+            "confidence": 0,
+            "processingTime": 5.1447,
             "success": true
           },
           {
             "iteration": 10,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 4.3408000000000015,
+            "confidence": 0,
+            "processingTime": 5.136799999999994,
             "success": true
           }
         ],
-        "averageTime": 5.46428,
+        "averageTime": 5.575410000000005,
         "successRate": 1,
         "accuracy": 0
       },
@@ -191,75 +196,75 @@
           {
             "iteration": 1,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.680299999999988,
+            "confidence": 0,
+            "processingTime": 8.719100000000026,
             "success": true
           },
           {
             "iteration": 2,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.311399999999992,
+            "confidence": 0,
+            "processingTime": 9.35759999999999,
             "success": true
           },
           {
             "iteration": 3,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.794399999999996,
+            "confidence": 0,
+            "processingTime": 8.819700000000012,
             "success": true
           },
           {
             "iteration": 4,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.407199999999989,
+            "confidence": 0,
+            "processingTime": 8.529600000000016,
             "success": true
           },
           {
             "iteration": 5,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.958100000000002,
+            "confidence": 0,
+            "processingTime": 8.38839999999999,
             "success": true
           },
           {
             "iteration": 6,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.947000000000003,
+            "confidence": 0,
+            "processingTime": 8.517600000000016,
             "success": true
           },
           {
             "iteration": 7,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.569199999999995,
+            "confidence": 0,
+            "processingTime": 8.5351,
             "success": true
           },
           {
             "iteration": 8,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.835499999999996,
+            "confidence": 0,
+            "processingTime": 8.598299999999995,
             "success": true
           },
           {
             "iteration": 9,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 9.107699999999994,
+            "confidence": 0,
+            "processingTime": 8.207600000000014,
             "success": true
           },
           {
             "iteration": 10,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 8.6978,
+            "confidence": 0,
+            "processingTime": 8.500299999999982,
             "success": true
           }
         ],
-        "averageTime": 8.730859999999996,
+        "averageTime": 8.617330000000004,
         "successRate": 1,
         "accuracy": 0
       },
@@ -270,75 +275,75 @@
           {
             "iteration": 1,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.660000000000025,
+            "confidence": 0,
+            "processingTime": 6.552099999999996,
             "success": true
           },
           {
             "iteration": 2,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.085899999999981,
+            "confidence": 0,
+            "processingTime": 6.650500000000022,
             "success": true
           },
           {
             "iteration": 3,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.271799999999985,
+            "confidence": 0,
+            "processingTime": 6.60469999999998,
             "success": true
           },
           {
             "iteration": 4,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.5400000000000205,
+            "confidence": 0,
+            "processingTime": 6.936699999999973,
             "success": true
           },
           {
             "iteration": 5,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.161900000000003,
+            "confidence": 0,
+            "processingTime": 6.853600000000029,
             "success": true
           },
           {
             "iteration": 6,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.251700000000028,
+            "confidence": 0,
+            "processingTime": 6.359100000000012,
             "success": true
           },
           {
             "iteration": 7,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.604999999999961,
+            "confidence": 0,
+            "processingTime": 6.541699999999992,
             "success": true
           },
           {
             "iteration": 8,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 5.955800000000011,
+            "confidence": 0,
+            "processingTime": 6.1743999999999915,
             "success": true
           },
           {
             "iteration": 9,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.241600000000005,
+            "confidence": 0,
+            "processingTime": 6.4202000000000226,
             "success": true
           },
           {
             "iteration": 10,
             "prediction": "mixed_content",
-            "confidence": null,
-            "processingTime": 6.08299999999997,
+            "confidence": 0,
+            "processingTime": 6.2637000000000285,
             "success": true
           }
         ],
-        "averageTime": 6.285669999999999,
+        "averageTime": 6.535670000000005,
         "successRate": 1,
         "accuracy": 1
       }
@@ -350,98 +355,98 @@
         "results": [
           {
             "iteration": 1,
-            "prediction": "ai_generated",
-            "confidence": 0.8348564644377745,
-            "processingTime": 442.3293,
-            "networkLatency": 154.83272976934416,
-            "apiProcessingTime": 262.4994391571581,
+            "prediction": "human_written",
+            "confidence": 0.932041095963042,
+            "processingTime": 46.998200000000054,
+            "networkLatency": 11.384692618303516,
+            "apiProcessingTime": 28.78904347420025,
             "success": true
           },
           {
             "iteration": 2,
             "prediction": "ai_generated",
-            "confidence": 0.9896377851574836,
-            "processingTime": 268.8215,
-            "networkLatency": 141.40640410724163,
-            "apiProcessingTime": 115.4700754761845,
+            "confidence": 0.7313111033004563,
+            "processingTime": 63.5684,
+            "networkLatency": 16.00451740319599,
+            "apiProcessingTime": 20.592876328446664,
             "success": true
           },
           {
             "iteration": 3,
-            "prediction": "human_written",
-            "confidence": 0.714357112957909,
-            "processingTime": 343.97659999999996,
-            "networkLatency": 101.09858509041945,
-            "apiProcessingTime": 227.17196146144244,
+            "prediction": "mixed_content",
+            "confidence": 0.712454268287142,
+            "processingTime": 63.24890000000005,
+            "networkLatency": 12.203970541640299,
+            "apiProcessingTime": 34.11273697230192,
             "success": true
           },
           {
             "iteration": 4,
             "prediction": "ai_generated",
-            "confidence": 0.9687701358410002,
-            "processingTime": 469.6784,
-            "networkLatency": 157.9226012312927,
-            "apiProcessingTime": 282.64178557935156,
+            "confidence": 0.8169281830746518,
+            "processingTime": 47.11410000000001,
+            "networkLatency": 10.208992232491035,
+            "apiProcessingTime": 30.761013386821478,
             "success": true
           },
           {
             "iteration": 5,
-            "prediction": "mixed_content",
-            "confidence": 0.7449006948897742,
-            "processingTime": 454.9668999999999,
-            "networkLatency": 146.7728991952818,
-            "apiProcessingTime": 286.6702986144486,
+            "prediction": "human_written",
+            "confidence": 0.9357054666747717,
+            "processingTime": 76.43779999999992,
+            "networkLatency": 16.20894625737188,
+            "apiProcessingTime": 31.270770902923026,
             "success": true
           },
           {
             "iteration": 6,
-            "prediction": "human_written",
-            "confidence": 0.7633219124611775,
-            "processingTime": 203.5558000000001,
-            "networkLatency": 61.52281941567241,
-            "apiProcessingTime": 128.60943737332974,
+            "prediction": "mixed_content",
+            "confidence": 0.8814232540761373,
+            "processingTime": 30.716199999999958,
+            "networkLatency": 11.752642444258905,
+            "apiProcessingTime": 14.0819676533602,
             "success": true
           },
           {
             "iteration": 7,
             "prediction": "human_written",
-            "confidence": 0.754439638993257,
-            "processingTime": 328.9778000000001,
-            "networkLatency": 158.2759247332442,
-            "apiProcessingTime": 141.8876548749897,
+            "confidence": 0.9820684007305762,
+            "processingTime": 46.56219999999996,
+            "networkLatency": 6.61672722050371,
+            "apiProcessingTime": 30.778367477753992,
             "success": true
           },
           {
             "iteration": 8,
-            "prediction": "mixed_content",
-            "confidence": 0.9958600498614767,
-            "processingTime": 466.60210000000006,
-            "networkLatency": 139.2696304371725,
-            "apiProcessingTime": 299.00406022390723,
+            "prediction": "human_written",
+            "confidence": 0.9684491151867758,
+            "processingTime": 61.81670000000008,
+            "networkLatency": 21.796322571411626,
+            "apiProcessingTime": 17.516699511497382,
             "success": true
           },
           {
             "iteration": 9,
-            "prediction": "human_written",
-            "confidence": 0.9687393045108927,
-            "processingTime": 248.87019999999984,
-            "networkLatency": 72.28862757344118,
-            "apiProcessingTime": 170.33490574526525,
+            "prediction": "ai_generated",
+            "confidence": 0.9282325342388598,
+            "processingTime": 46.302099999999996,
+            "networkLatency": 22.24511030896234,
+            "apiProcessingTime": 11.407381027394367,
             "success": true
           },
           {
             "iteration": 10,
-            "prediction": "mixed_content",
-            "confidence": 0.9490836129183626,
-            "processingTime": 419.28629999999976,
-            "networkLatency": 171.1952656422979,
-            "apiProcessingTime": 245.47815625761018,
+            "prediction": "human_written",
+            "confidence": 0.9390808919905919,
+            "processingTime": 62.66989999999987,
+            "networkLatency": 22.495321406657247,
+            "apiProcessingTime": 21.51246685816622,
             "success": true
           }
         ],
-        "averageTime": 364.7064899999999,
+        "averageTime": 54.543449999999986,
         "successRate": 1,
-        "accuracy": 0.4
+        "accuracy": 0.5
       },
       {
         "testCase": "Medium Text",
@@ -449,98 +454,98 @@
         "results": [
           {
             "iteration": 1,
-            "prediction": "ai_generated",
-            "confidence": 0.9923981202656427,
-            "processingTime": 340.44429999999966,
-            "networkLatency": 120.1697053042552,
-            "apiProcessingTime": 205.47959842351707,
+            "prediction": "mixed_content",
+            "confidence": 0.7841913540675958,
+            "processingTime": 141.09210000000007,
+            "networkLatency": 36.51502724339333,
+            "apiProcessingTime": 93.20606627991118,
             "success": true
           },
           {
             "iteration": 2,
             "prediction": "human_written",
-            "confidence": 0.918591038210767,
-            "processingTime": 325.98369999999977,
-            "networkLatency": 56.51945440451221,
-            "apiProcessingTime": 250.88501949525352,
+            "confidence": 0.7556874093064097,
+            "processingTime": 154.17059999999992,
+            "networkLatency": 51.62842226430939,
+            "apiProcessingTime": 86.3788910210851,
             "success": true
           },
           {
             "iteration": 3,
-            "prediction": "ai_generated",
-            "confidence": 0.8796150200683058,
-            "processingTime": 415.78139999999985,
-            "networkLatency": 149.1444289081697,
-            "apiProcessingTime": 258.91921870248467,
+            "prediction": "human_written",
+            "confidence": 0.8309240345845182,
+            "processingTime": 218.15429999999992,
+            "networkLatency": 71.69975290352075,
+            "apiProcessingTime": 125.17948156905862,
             "success": true
           },
           {
             "iteration": 4,
-            "prediction": "mixed_content",
-            "confidence": 0.8384871264583756,
-            "processingTime": 341.60509999999977,
-            "networkLatency": 67.67354190132157,
-            "apiProcessingTime": 263.33893107020486,
+            "prediction": "human_written",
+            "confidence": 0.7620717267408699,
+            "processingTime": 186.88750000000005,
+            "networkLatency": 74.56368246245583,
+            "apiProcessingTime": 98.75725412990845,
             "success": true
           },
           {
             "iteration": 5,
             "prediction": "mixed_content",
-            "confidence": 0.8270847828786482,
-            "processingTime": 263.3665000000001,
-            "networkLatency": 53.40782900190769,
-            "apiProcessingTime": 199.88411866002258,
+            "confidence": 0.7416893810637712,
+            "processingTime": 171.01960000000008,
+            "networkLatency": 71.79693100999864,
+            "apiProcessingTime": 82.85560309528447,
             "success": true
           },
           {
             "iteration": 6,
-            "prediction": "ai_generated",
-            "confidence": 0.9624701961736352,
-            "processingTime": 215.35639999999967,
-            "networkLatency": 51.5785651255324,
-            "apiProcessingTime": 152.09479150264582,
+            "prediction": "mixed_content",
+            "confidence": 0.7800379920971618,
+            "processingTime": 94.93860000000018,
+            "networkLatency": 35.30827059018028,
+            "apiProcessingTime": 43.872680655403904,
             "success": true
           },
           {
             "iteration": 7,
             "prediction": "ai_generated",
-            "confidence": 0.73323401527109,
-            "processingTime": 247.28439999999955,
-            "networkLatency": 90.4190145250553,
-            "apiProcessingTime": 140.1868569855592,
+            "confidence": 0.808975205627467,
+            "processingTime": 139.85099999999989,
+            "networkLatency": 74.93686416681774,
+            "apiProcessingTime": 52.19900644170377,
             "success": true
           },
           {
             "iteration": 8,
-            "prediction": "mixed_content",
-            "confidence": 0.9846695510554666,
-            "processingTime": 248.76350000000002,
-            "networkLatency": 96.99539413631254,
-            "apiProcessingTime": 138.44425091470455,
+            "prediction": "human_written",
+            "confidence": 0.935420083231312,
+            "processingTime": 109.67910000000029,
+            "networkLatency": 24.62210184965797,
+            "apiProcessingTime": 75.14852879793042,
             "success": true
           },
           {
             "iteration": 9,
-            "prediction": "mixed_content",
-            "confidence": 0.7870465726938404,
-            "processingTime": 341.98399999999947,
-            "networkLatency": 65.6098877752312,
-            "apiProcessingTime": 255.3601270995586,
+            "prediction": "human_written",
+            "confidence": 0.9257762521379828,
+            "processingTime": 126.90239999999994,
+            "networkLatency": 29.500727997678784,
+            "apiProcessingTime": 80.58615790166155,
             "success": true
           },
           {
             "iteration": 10,
             "prediction": "ai_generated",
-            "confidence": 0.714426393621384,
-            "processingTime": 386.2607000000007,
-            "networkLatency": 131.93830449159177,
-            "apiProcessingTime": 240.3115427948576,
+            "confidence": 0.788822328059829,
+            "processingTime": 173.0245,
+            "networkLatency": 61.512036341459655,
+            "apiProcessingTime": 97.23358681284948,
             "success": true
           }
         ],
-        "averageTime": 312.6829999999999,
+        "averageTime": 151.57197000000002,
         "successRate": 1,
-        "accuracy": 0.5
+        "accuracy": 0.2
       },
       {
         "testCase": "Long Text",
@@ -548,98 +553,98 @@
         "results": [
           {
             "iteration": 1,
-            "prediction": "ai_generated",
-            "confidence": 0.8917545139187023,
-            "processingTime": 434.27920000000086,
-            "networkLatency": 133.7975200363,
-            "apiProcessingTime": 293.9576401162143,
+            "prediction": "mixed_content",
+            "confidence": 0.9399266366507976,
+            "processingTime": 264.7978000000003,
+            "networkLatency": 149.3935845875389,
+            "apiProcessingTime": 107.40164776773385,
             "success": true
           },
           {
             "iteration": 2,
-            "prediction": "ai_generated",
-            "confidence": 0.9125814791595539,
-            "processingTime": 450.08989999999994,
-            "networkLatency": 191.22749624332286,
-            "apiProcessingTime": 244.79270156042753,
+            "prediction": "human_written",
+            "confidence": 0.7353585304966243,
+            "processingTime": 407.5461,
+            "networkLatency": 152.16668797007947,
+            "apiProcessingTime": 241.2432971928354,
             "success": true
           },
           {
             "iteration": 3,
-            "prediction": "human_written",
-            "confidence": 0.8605801874046592,
-            "processingTime": 313.5524000000005,
-            "networkLatency": 198.0902642372469,
-            "apiProcessingTime": 111.52876452512174,
+            "prediction": "ai_generated",
+            "confidence": 0.8965627093280008,
+            "processingTime": 232.41489999999976,
+            "networkLatency": 90.69260066748504,
+            "apiProcessingTime": 131.6513259016864,
             "success": true
           },
           {
             "iteration": 4,
             "prediction": "mixed_content",
-            "confidence": 0.8918672704632653,
-            "processingTime": 343.7488999999987,
-            "networkLatency": 139.82627091507675,
-            "apiProcessingTime": 201.00007374641234,
+            "confidence": 0.8221127306822484,
+            "processingTime": 278.2975000000001,
+            "networkLatency": 102.6292647972624,
+            "apiProcessingTime": 163.97639629160395,
             "success": true
           },
           {
             "iteration": 5,
-            "prediction": "mixed_content",
-            "confidence": 0.7994135239381389,
-            "processingTime": 314.70050000000083,
-            "networkLatency": 92.6633273343001,
-            "apiProcessingTime": 205.78358375195307,
+            "prediction": "ai_generated",
+            "confidence": 0.7619558022787507,
+            "processingTime": 263.7818000000002,
+            "networkLatency": 170.2017723820225,
+            "apiProcessingTime": 90.27204202580465,
             "success": true
           },
           {
             "iteration": 6,
             "prediction": "human_written",
-            "confidence": 0.8104937622586964,
-            "processingTime": 339.4300999999996,
-            "networkLatency": 63.01214010288209,
-            "apiProcessingTime": 261.4446170201969,
+            "confidence": 0.8651589167770644,
+            "processingTime": 340.0183000000002,
+            "networkLatency": 161.6631477283604,
+            "apiProcessingTime": 160.12430439165388,
             "success": true
           },
           {
             "iteration": 7,
-            "prediction": "human_written",
-            "confidence": 0.9775943878612672,
-            "processingTime": 262.6424999999999,
-            "networkLatency": 65.77692223459877,
-            "apiProcessingTime": 171.1276879072102,
+            "prediction": "mixed_content",
+            "confidence": 0.9323860069320324,
+            "processingTime": 217.36499999999978,
+            "networkLatency": 82.14402932337869,
+            "apiProcessingTime": 121.63719993713542,
             "success": true
           },
           {
             "iteration": 8,
-            "prediction": "ai_generated",
-            "confidence": 0.9916962486824797,
-            "processingTime": 295.46740000000136,
-            "networkLatency": 126.79771349629165,
-            "apiProcessingTime": 140.01533269786952,
+            "prediction": "mixed_content",
+            "confidence": 0.827426155274593,
+            "processingTime": 267.6252999999997,
+            "networkLatency": 143.62471264912855,
+            "apiProcessingTime": 111.16295008230456,
             "success": true
           },
           {
             "iteration": 9,
-            "prediction": "mixed_content",
-            "confidence": 0.8907983488369307,
-            "processingTime": 187.1309000000001,
-            "networkLatency": 69.2390510042753,
-            "apiProcessingTime": 105.17960271636713,
+            "prediction": "human_written",
+            "confidence": 0.8375412614558227,
+            "processingTime": 235.3123000000005,
+            "networkLatency": 87.71726144614664,
+            "apiProcessingTime": 136.31480421775305,
             "success": true
           },
           {
             "iteration": 10,
-            "prediction": "ai_generated",
-            "confidence": 0.7319600070639263,
-            "processingTime": 341.71320000000014,
-            "networkLatency": 87.22191497182766,
-            "apiProcessingTime": 241.49978872410477,
+            "prediction": "mixed_content",
+            "confidence": 0.7247221894825066,
+            "processingTime": 293.1138000000001,
+            "networkLatency": 65.2251266917237,
+            "apiProcessingTime": 213.56360768572438,
             "success": true
           }
         ],
-        "averageTime": 328.2755000000002,
+        "averageTime": 280.0272800000001,
         "successRate": 1,
-        "accuracy": 0.4
+        "accuracy": 0.2
       },
       {
         "testCase": "Mixed Content",
@@ -647,98 +652,252 @@
         "results": [
           {
             "iteration": 1,
-            "prediction": "ai_generated",
-            "confidence": 0.8611939944691485,
-            "processingTime": 402.53909999999996,
-            "networkLatency": 134.23565458102925,
-            "apiProcessingTime": 252.99763435805374,
+            "prediction": "mixed_content",
+            "confidence": 0.7609608581641447,
+            "processingTime": 264.65440000000035,
+            "networkLatency": 99.28544795933595,
+            "apiProcessingTime": 143.22295050593556,
             "success": true
           },
           {
             "iteration": 2,
             "prediction": "ai_generated",
-            "confidence": 0.9618625035375492,
-            "processingTime": 401.90239999999903,
-            "networkLatency": 190.5884494363201,
-            "apiProcessingTime": 198.50747642519826,
+            "confidence": 0.713901010275057,
+            "processingTime": 156.4920000000002,
+            "networkLatency": 33.18608558764795,
+            "apiProcessingTime": 100.0569447013359,
             "success": true
           },
           {
             "iteration": 3,
-            "prediction": "human_written",
-            "confidence": 0.9718323291925435,
-            "processingTime": 278.6386000000002,
-            "networkLatency": 117.15240715733532,
-            "apiProcessingTime": 152.42772854968123,
+            "prediction": "ai_generated",
+            "confidence": 0.9979693043792989,
+            "processingTime": 124.44999999999982,
+            "networkLatency": 52.70765037258347,
+            "apiProcessingTime": 53.2936934440563,
             "success": true
           },
           {
             "iteration": 4,
-            "prediction": "mixed_content",
-            "confidence": 0.9451890676914589,
-            "processingTime": 341.4923999999992,
-            "networkLatency": 75.20514397717109,
-            "apiProcessingTime": 254.6610343188102,
+            "prediction": "ai_generated",
+            "confidence": 0.7728251934196785,
+            "processingTime": 249.26130000000012,
+            "networkLatency": 89.90232184611662,
+            "apiProcessingTime": 146.02408699038122,
             "success": true
           },
           {
             "iteration": 5,
             "prediction": "mixed_content",
-            "confidence": 0.7195823016943064,
-            "processingTime": 328.7457000000013,
-            "networkLatency": 142.55843169737386,
-            "apiProcessingTime": 170.97878757149311,
+            "confidence": 0.7800042063294239,
+            "processingTime": 139.03569999999945,
+            "networkLatency": 71.56813572560507,
+            "apiProcessingTime": 59.29010650927145,
             "success": true
           },
           {
             "iteration": 6,
-            "prediction": "ai_generated",
-            "confidence": 0.8136622818750665,
-            "processingTime": 358.0048999999999,
-            "networkLatency": 185.10172608613004,
-            "apiProcessingTime": 156.11508561103702,
+            "prediction": "mixed_content",
+            "confidence": 0.8221621053250676,
+            "processingTime": 217.26360000000022,
+            "networkLatency": 87.5128176171059,
+            "apiProcessingTime": 122.49326176893706,
             "success": true
           },
           {
             "iteration": 7,
-            "prediction": "human_written",
-            "confidence": 0.9094841540296635,
-            "processingTime": 309.6905999999999,
-            "networkLatency": 95.50135698537446,
-            "apiProcessingTime": 199.38140654657087,
+            "prediction": "ai_generated",
+            "confidence": 0.8189874203137891,
+            "processingTime": 93.45499999999993,
+            "networkLatency": 27.437385577350685,
+            "apiProcessingTime": 56.279434168941414,
             "success": true
           },
           {
             "iteration": 8,
             "prediction": "mixed_content",
-            "confidence": 0.8496892942273309,
-            "processingTime": 265.10349999999926,
-            "networkLatency": 66.72006360727363,
-            "apiProcessingTime": 183.0298515139392,
+            "confidence": 0.8834563144211889,
+            "processingTime": 200.60000000000036,
+            "networkLatency": 39.927140787782996,
+            "apiProcessingTime": 145.56397751859396,
             "success": true
           },
           {
             "iteration": 9,
-            "prediction": "mixed_content",
-            "confidence": 0.8056232882705172,
-            "processingTime": 250.30179999999928,
-            "networkLatency": 104.57695875827389,
-            "apiProcessingTime": 139.8540627343876,
+            "prediction": "human_written",
+            "confidence": 0.9441441051730547,
+            "processingTime": 108.80819999999949,
+            "networkLatency": 27.05049211447766,
+            "apiProcessingTime": 70.4522568192999,
             "success": true
           },
           {
             "iteration": 10,
             "prediction": "mixed_content",
-            "confidence": 0.8257394396362213,
-            "processingTime": 360.7957000000006,
-            "networkLatency": 63.20003612052459,
-            "apiProcessingTime": 285.6678532098217,
+            "confidence": 0.9297186953905321,
+            "processingTime": 155.6782000000003,
+            "networkLatency": 31.476703672888863,
+            "apiProcessingTime": 115.92001081869736,
             "success": true
           }
         ],
-        "averageTime": 329.72146999999984,
+        "averageTime": 170.96984000000003,
         "successRate": 1,
         "accuracy": 0.5
+      }
+    ],
+    "humanizer": [
+      {
+        "testCase": "Short Text",
+        "results": [
+          {
+            "iteration": 1,
+            "processingTime": 10.789499999999862,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 2,
+            "processingTime": 2.073899999999412,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 3,
+            "processingTime": 1.9594999999999345,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 4,
+            "processingTime": 1.9071999999996478,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 5,
+            "processingTime": 1.6931000000004133,
+            "detectionScore": 0,
+            "success": true
+          }
+        ],
+        "averageTime": 3.684639999999854,
+        "averageScore": 0,
+        "successRate": 1
+      },
+      {
+        "testCase": "Medium Text",
+        "results": [
+          {
+            "iteration": 1,
+            "processingTime": 2.1700000000000728,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 2,
+            "processingTime": 1.5262000000002445,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 3,
+            "processingTime": 1.0950000000002547,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 4,
+            "processingTime": 1.5320000000001528,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 5,
+            "processingTime": 2.1035000000001673,
+            "detectionScore": 0,
+            "success": true
+          }
+        ],
+        "averageTime": 1.6853400000001784,
+        "averageScore": 0,
+        "successRate": 1
+      },
+      {
+        "testCase": "Long Text",
+        "results": [
+          {
+            "iteration": 1,
+            "processingTime": 2.4396000000006097,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 2,
+            "processingTime": 3.110200000000077,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 3,
+            "processingTime": 2.3874000000005253,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 4,
+            "processingTime": 2.3151000000007116,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 5,
+            "processingTime": 2.0296000000007552,
+            "detectionScore": 0,
+            "success": true
+          }
+        ],
+        "averageTime": 2.456380000000536,
+        "averageScore": 0,
+        "successRate": 1
+      },
+      {
+        "testCase": "Mixed Content",
+        "results": [
+          {
+            "iteration": 1,
+            "processingTime": 2.837199999999939,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 2,
+            "processingTime": 1.5864000000001397,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 3,
+            "processingTime": 2.06880000000001,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 4,
+            "processingTime": 1.771600000000035,
+            "detectionScore": 0,
+            "success": true
+          },
+          {
+            "iteration": 5,
+            "processingTime": 1.4107000000003609,
+            "detectionScore": 0,
+            "success": true
+          }
+        ],
+        "averageTime": 1.934940000000097,
+        "averageScore": 0,
+        "successRate": 1
       }
     ]
   },
@@ -746,7 +905,7 @@
     {
       "category": "Performance",
       "recommendation": "On-device detection is significantly faster than API-based detection",
-      "details": "53.7x speedup achieved"
+      "details": "26.4x speedup achieved"
     },
     {
       "category": "Cost",

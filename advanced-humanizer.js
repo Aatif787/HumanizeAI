@@ -1,5 +1,3 @@
-console.log('[AdvancedHumanizer] v1.1.8 loaded - FORCE DEPLOY');
-
 class AdvancedTextHumanizer {
   constructor() {
     this.initializeEngines();
@@ -119,15 +117,15 @@ class AdvancedTextHumanizer {
   extractFacts(text) {
     // Identify and protect facts (dates, numbers, names, specific entities)
     const facts = [];
-    
+
     // Dates
     const dates = text.match(/\b\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\b|\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{1,2},? \d{4}\b/gi) || [];
     dates.forEach(date => facts.push({ type: 'date', value: date }));
-    
+
     // Numbers/Stats
     const numbers = text.match(/\b\d+(?:\.\d+)?%?|\b\d{1,3}(?:,\d{3})+(?:\.\d+)?\b/g) || [];
     numbers.forEach(num => facts.push({ type: 'number', value: num }));
-    
+
     // Proper Nouns (Simplified capitalized word sequences)
     const properNouns = text.match(/\b[A-Z][a-z]+(?:\s+[A-Z][a-z]+)*\b/g) || [];
     properNouns.forEach(name => {
@@ -136,7 +134,7 @@ class AdvancedTextHumanizer {
         facts.push({ type: 'entity', value: name });
       }
     });
-    
+
     return facts;
   }
 
@@ -157,7 +155,7 @@ class AdvancedTextHumanizer {
   async validateOutput(humanizedText) {
     // Real-time analysis using AdvancedAIDetector
     const analysis = this.aiDetector.analyzeText(humanizedText);
-    
+
     // Risk assessment based on real detection metrics
     const confidence = 100 - analysis.overallScore;
     const riskLevel = analysis.riskLevel;
@@ -305,18 +303,18 @@ class SemanticDisassemblyEngine {
     // Analyze how ideas are connected (logical progression vs. human-like associative jumps)
     const sentences = this.segmentSentences(text);
     const flow = [];
-    
+
     for (let i = 0; i < sentences.length - 1; i++) {
       const current = sentences[i];
       const next = sentences[i+1];
-      
+
       flow.push({
         transitionType: this.identifyTransitionType(current, next),
         coherenceScore: this.calculateCoherence(current, next),
         semanticJump: this.calculateSemanticJump(current, next)
       });
     }
-    
+
     return flow;
   }
 
@@ -324,11 +322,11 @@ class SemanticDisassemblyEngine {
     const logicalMarkers = /\b(therefore|consequently|thus|hence|accordingly)\b/gi;
     const additiveMarkers = /\b(furthermore|moreover|additionally|also)\b/gi;
     const contrastMarkers = /\b(however|nevertheless|nonetheless|but|yet)\b/gi;
-    
+
     if (s2.match(logicalMarkers)) return 'logical_consequence';
     if (s2.match(additiveMarkers)) return 'additive_expansion';
     if (s2.match(contrastMarkers)) return 'adversative_contrast';
-    
+
     return 'associative_jump';
   }
 
@@ -658,7 +656,7 @@ class HumanStyleSynthesizer {
 
   applyLinguisticVariation(text, vocabulary) {
     let result = text;
-    
+
     // 1. Synonym Replacement with Weighted Randomness
     Object.entries(vocabulary.replacements).forEach(([original, replacement]) => {
       if (Math.random() < 0.7) { // 70% chance to replace to avoid consistency patterns
@@ -678,7 +676,7 @@ class HumanStyleSynthesizer {
     // Simplified voice toggling logic
     const passivePattern = /\b(is|are|was|were|being|been)\s+(\w+ed)\b/i;
     const match = sentence.match(passivePattern);
-    
+
     if (match) {
       // Try to convert to active (very simplified)
       const verb = match[2].replace(/ed$/, '');
@@ -861,7 +859,7 @@ class StylisticReengineeringEngine {
     // Complexity fluctuation model: cycles through different target complexities
     // to create a "human-like" rhythm (short, medium, long, medium, short, etc.)
     const rhythmPattern = [0.2, 0.5, 0.8, 0.6, 0.3]; // Fluctuating complexity targets
-    
+
     const variedSentences = sentences.map((sentence, index) => {
       const trimmed = sentence.trim();
       if (trimmed === '') return sentence;
@@ -1383,13 +1381,13 @@ class PatternObfuscationEngine {
   applyAdversarialPerturbations(text) {
     // Specifically target AI detection signals with adversarial techniques
     let perturbed = text;
-    
+
     // 1. Break N-gram patterns (common AI detection method)
     perturbed = this.breakNGrams(perturbed);
-    
+
     // 2. Inject adversarial noise (tiny, imperceptible changes that confuse classifiers)
     perturbed = this.injectAdversarialNoise(perturbed);
-    
+
     return perturbed;
   }
 

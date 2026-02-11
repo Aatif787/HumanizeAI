@@ -128,6 +128,30 @@ Based on internal testing with sample texts:
 - **Originality.AI**: 82% evasion rate with casual style
 - **Crossplag**: 79% evasion rate with creative style
 
+### Iterative Model Enhancement Pipeline
+Run the iterative pipeline to progressively improve humanization quality and validate edge and stress scenarios:
+
+```bash
+npm run model:enhance
+npm run model:validate
+```
+
+### Automated Test Matrix
+Run unit, integration, and performance checks:
+
+```bash
+npm run test:unit
+npm run test:integration
+npm run test:performance
+```
+
+### Release and Rollback Readiness
+Generate release metadata with rollback mapping before deployment:
+
+```bash
+npm run model:release
+```
+
 ## 📱 Browser Compatibility
 
 - **Chrome** 80+ ✅

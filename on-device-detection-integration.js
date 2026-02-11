@@ -357,7 +357,7 @@ class AIDetectionDisplay {
      */
   createDetectionInterface() {
     const detectionHTML = `
-            <div id="ai-detection-panel" class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div id="ai-detection-panel" class="mk-card mk-surface bg-white rounded-lg shadow-lg p-6 mb-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-semibold text-gray-800">
                         <i class="fas fa-robot mr-2"></i>
@@ -365,7 +365,7 @@ class AIDetectionDisplay {
                     </h3>
                     <div class="flex items-center space-x-2">
                         <span id="detection-status" class="text-sm text-gray-500">Ready</span>
-                        <button id="clear-detection-cache" class="text-gray-400 hover:text-gray-600">
+                        <button id="clear-detection-cache" class="mk-icon-button text-gray-400 hover:text-gray-600">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
@@ -375,7 +375,7 @@ class AIDetectionDisplay {
                     <textarea 
                         id="detection-text-input" 
                         placeholder="Enter text to analyze for AI content..."
-                        class="w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        class="mk-input w-full p-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         rows="4"
                     ></textarea>
                 </div>
@@ -393,7 +393,7 @@ class AIDetectionDisplay {
                     </div>
                     <button 
                         id="analyze-ai-content" 
-                        class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors"
+                        class="mk-button mk-button-primary bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg transition-colors"
                     >
                         <i class="fas fa-search mr-2"></i>
                         Analyze
@@ -403,7 +403,7 @@ class AIDetectionDisplay {
                 <div id="detection-results" class="hidden">
                     <div class="border-t border-gray-200 pt-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="mk-card bg-gray-50 p-4 rounded-lg">
                                 <h4 class="font-medium text-gray-700 mb-2">Detection Results</h4>
                                 <div class="space-y-2">
                                     <div class="flex justify-between">
@@ -425,7 +425,7 @@ class AIDetectionDisplay {
                                 </div>
                             </div>
                             
-                            <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="mk-card bg-gray-50 p-4 rounded-lg">
                                 <h4 class="font-medium text-gray-700 mb-2">Performance</h4>
                                 <div class="space-y-2">
                                     <div class="flex justify-between">
@@ -448,7 +448,7 @@ class AIDetectionDisplay {
                         
                         <div id="detailed-analysis" class="hidden">
                             <h4 class="font-medium text-gray-700 mb-2">Detailed Analysis</h4>
-                            <div id="analysis-details" class="bg-gray-50 p-4 rounded-lg text-sm"></div>
+                            <div id="analysis-details" class="mk-card bg-gray-50 p-4 rounded-lg text-sm"></div>
                         </div>
                     </div>
                 </div>
