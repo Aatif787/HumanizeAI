@@ -3523,12 +3523,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   try {
-    initializeGalaxyBackground();
-  } catch (error) {
-    console.error('Initialization error (Galaxy):', error);
-  }
-
-  try {
     initializeClassicalHero();
   } catch (error) {
     console.error('Initialization error (Classical Hero):', error);
