@@ -1,3 +1,61 @@
+/* Base Reset & Safety */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Fix for horizontal overflow and narrow templates */
+.container, .mk-container {
+    width: 100% !important;
+    max-width: 1280px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+@media (min-width: 640px) {
+    .container, .mk-container {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container, .mk-container {
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+}
+
+/* Ensure all images scale proportionally */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Responsive typography adjustments */
+@media (max-width: 640px) {
+    .hero-title {
+        font-size: 2.5rem !important;
+        line-height: 1.2 !important;
+    }
+    .hero-subtitle {
+        font-size: 1rem !important;
+        padding: 0 1rem !important;
+    }
+}
+
 /* Enhanced Design System */
 :root {
     /* Primary Palette - Classical Parchment & Deep Earth */
@@ -61,12 +119,7 @@
     --header-height: 80px;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
-}
-
-/* Base Typography */
+ /* Base Typography */
 .font-display {
     font-family: 'Cormorant Garamond', 'Libre Baskerville', serif;
     font-weight: 600;
@@ -94,8 +147,8 @@ html, body {
 @keyframes verticalScroll {
     0%, 45% { transform: translateY(0); opacity: 1; filter: blur(0); }
     48% { opacity: 0; filter: blur(4px); }
-    50% { transform: translateY(-48px); opacity: 0; filter: blur(4px); }
-    52%, 95% { transform: translateY(-48px); opacity: 1; filter: blur(0); }
+    50% { transform: translateY(-64px); opacity: 0; filter: blur(4px); }
+    52%, 95% { transform: translateY(-64px); opacity: 1; filter: blur(0); }
     98% { opacity: 0; filter: blur(4px); }
     100% { transform: translateY(0); opacity: 0; filter: blur(4px); }
 }
