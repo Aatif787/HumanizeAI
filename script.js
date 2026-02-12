@@ -3376,127 +3376,6 @@ function forceUnmuteAllVideos() {
   });
 }
 
-function initializeGalaxyBackground() {
-  const canvas = document.getElementById('galaxy-canvas');
-  const root = document.getElementById('galaxy-root');
-  if (!canvas || !root) return;
-
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-
-  let width, height, dpr;
-  let stars = [];
-  let cosmicParticles = [];
-  const starCount = 150;
-  const particleCount = 40;
-  let isDarkMode = document.documentElement.classList.contains('dark');
-
-  class Star {
-    constructor() {
-      this.reset();
-    }
-    reset() {
-      this.x = Math.random() * width;
-      this.y = Math.random() * height;
-      this.size = Math.random() * 0.6 + 0.2; // Tiny stars
-      this.blinkSpeed = 0.008 + Math.random() * 0.025; // Faster blinking
-      this.alpha = Math.random();
-      this.growing = true;
-      this.color = Math.random() > 0.8 ? '#f4d6a5' : '#ffffff'; // Occasional golden stars
-    }
-    update() {
-      if (this.growing) {
-        this.alpha += this.blinkSpeed;
-        if (this.alpha >= 1) this.growing = false;
-      } else {
-        this.alpha -= this.blinkSpeed;
-        if (this.alpha <= 0.2) this.growing = true;
-      }
-    }
-    draw() {
-      ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  class CosmicParticle {
-    constructor() {
-      this.reset();
-    }
-    reset() {
-      this.x = Math.random() * width;
-      this.y = Math.random() * height;
-      this.vx = (Math.random() - 0.5) * 0.3; // Drifting movement
-      this.vy = (Math.random() - 0.5) * 0.3;
-      this.size = Math.random() * 2 + 1;
-      this.alpha = Math.random() * 0.5;
-    }
-    update() {
-      this.x += this.vx;
-      this.y += this.vy;
-      if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
-        this.reset();
-      }
-    }
-    draw() {
-      ctx.globalAlpha = this.alpha;
-      ctx.fillStyle = 'rgba(182, 138, 43, 0.4)'; // Subtle gold drift
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function resize() {
-    dpr = window.devicePixelRatio || 1;
-    width = window.innerWidth;
-    height = window.innerHeight;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    ctx.scale(dpr, dpr);
-
-    stars = Array.from({ length: starCount }, () => new Star());
-    cosmicParticles = Array.from({ length: particleCount }, () => new CosmicParticle());
-  }
-
-  function animate() {
-    isDarkMode = document.documentElement.classList.contains('dark');
-    if (!isDarkMode) {
-      requestAnimationFrame(animate);
-      return;
-    }
-
-    ctx.clearRect(0, 0, width, height);
-
-    stars.forEach(star => {
-      star.update();
-      star.draw();
-    });
-
-    cosmicParticles.forEach(p => {
-      p.update();
-      p.draw();
-    });
-
-    requestAnimationFrame(animate);
-  }
-
-  // Optimize performance: only animate when in view and in dark mode
-  const observer = new MutationObserver(() => {
-    isDarkMode = document.documentElement.classList.contains('dark');
-  });
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-
-  window.addEventListener('resize', resize);
-  resize();
-  animate();
-}
-
 function initializeClassicalHero() {
   const hero = document.querySelector('.classical-hero');
   const canvas = document.getElementById('hero-particles');
@@ -3791,6 +3670,18 @@ function initializeMainUI() {
   const speechToggle = document.getElementById('speech-enabled');
   const toneImageInput = document.getElementById('tone-image');
   const statusMessage = document.getElementById('status-message');
+
+  // Humanization Level Slider Logic
+  const humanizationSlider = document.getElementById('humanization-level-slider');
+  const humanizationSelect = document.getElementById('humanization-level');
+  if (humanizationSlider && humanizationSelect) {
+    const levels = ['light', 'moderate', 'deep', 'extreme'];
+    humanizationSlider.addEventListener('input', (e) => {
+      const val = parseInt(e.target.value);
+      humanizationSelect.value = levels[val];
+      console.log('[UI] Humanization level updated via slider:', levels[val]);
+    });
+  }
 
   // Add status event listener
   document.addEventListener('humanizerStatus', (event) => {
@@ -4386,7 +4277,39 @@ function initializeEnhancedAnimations() {
   sections.forEach(section => {
     observer.observe(section);
   });
+
+  // Ensure navbar video plays
+  const navVideo = document.getElementById('nav-video');
+  if (navVideo) {
+    navVideo.play().catch(() => {
+      console.log('Video autoplay prevented, will play on first interaction');
+      document.addEventListener('click', () => navVideo.play(), { once: true });
+    });
+  }
+
+  // Initialize Navbar Carousel
+  initializeNavCarousel();
 }
+
+/**
+ * Initialize Navbar Text Carousel
+ */
+function initializeNavCarousel() {
+  const track = document.getElementById('carousel-track');
+  if (!track) return;
+
+  // CSS animation handles this now for better performance and smoothness
+  /*
+  let currentStep = 0;
+  const totalSteps = 2;
+
+  setInterval(() => {
+    currentStep = (currentStep + 1) % totalSteps;
+    track.style.transform = `translateY(-${currentStep * 64}px)`;
+  }, 4000); // Change text every 4 seconds
+  */
+}
+
 
 // Initialize enhanced animations when DOM is ready
 if (document.readyState === 'loading') {

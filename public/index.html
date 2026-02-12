@@ -132,17 +132,16 @@
             .animate-shimmer { animation: shimmer 2s infinite; }
             
             @keyframes fadeIn { 
-                0% { opacity: 0; transform: translateY(20px); } 
-                100% { opacity: 1; transform: translateY(0); } 
+                0% { opacity: 0; } 
+                100% { opacity: 1; } 
             }
             @keyframes slideUp { 
-                0% { transform: translateY(15px); opacity: 0; } 
-                100% { transform: translateY(0); opacity: 1; } 
+                0% { opacity: 0; } 
+                100% { opacity: 1; } 
             }
             @keyframes float {
-                0%, 100% { transform: translateY(0px) rotate(0deg); }
-                25% { transform: translateY(-8px) rotate(2deg); }
-                75% { transform: translateY(-4px) rotate(-2deg); }
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.02); }
             }
             @keyframes shimmer {
                 0% { background-position: -1000px 0; }
@@ -184,7 +183,7 @@
             }
             
             .hover-lift:hover {
-                transform: translateY(-4px);
+                transform: scale(1.02);
                 box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
             }
             
@@ -231,11 +230,11 @@
 </head>
 <body class="mk-theme bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-body transition-colors duration-300" data-ui-template="modern">
     <!-- Header -->
-    <header class="sticky top-0 z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 transition-all duration-300">
+    <header class="site-header sticky top-0 z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 transition-all duration-300">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="site-header__row flex items-center justify-between h-20">
                 <!-- Brand & Video & Text Carousel Group -->
-                <div class="flex items-center space-x-8">
+                <div class="site-header__brand flex items-center space-x-8">
                     <!-- Brand -->
                     <div class="flex items-center space-x-4">
                         <div class="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-primary-600 to-secondary-500 shadow-lg shadow-primary-500/20 group cursor-pointer hover:scale-110 transition-transform duration-300">
@@ -250,20 +249,20 @@
                     </div>
 
                     <!-- Video and Text Carousel -->
-                    <div class="hidden lg:flex items-center space-x-4 bg-neutral-100 dark:bg-neutral-800/50 rounded-2xl px-5 py-2.5 border border-neutral-200 dark:border-neutral-700 max-w-[500px] overflow-hidden shadow-sm">
-                        <div class="flex-shrink-0 w-14 h-14 rounded-xl overflow-hidden bg-black shadow-inner border border-neutral-200 dark:border-neutral-700">
-                            <video id="nav-video" class="w-full h-full object-cover opacity-90" autoplay loop muted playsinline>
+                    <div class="flex items-center space-x-4 bg-neutral-100 dark:bg-neutral-800/50 rounded-2xl px-5 py-2.5 border border-neutral-200 dark:border-neutral-700 max-w-[500px] overflow-hidden shadow-sm scale-90 sm:scale-100">
+                        <div class="nav-video-shell flex-shrink-0 w-10 h-10 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-black shadow-inner border border-neutral-200 dark:border-neutral-700">
+                            <video id="nav-video" class="nav-video w-full h-full object-cover opacity-90" autoplay loop muted playsinline preload="metadata" poster="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='90'><rect width='100%25' height='100%25' fill='%230b0f19'/></svg>">
                                 <source src="video.mp4" type="video/mp4">
                             </video>
                         </div>
-                        <div class="flex flex-col justify-center overflow-hidden min-w-[300px]">
-                            <div id="nav-carousel" class="relative h-16 overflow-hidden">
+                        <div class="flex flex-col justify-center overflow-hidden min-w-[150px] sm:min-w-[300px]">
+                            <div id="nav-carousel" class="relative h-10 sm:h-16 overflow-hidden">
                                 <div id="carousel-track" class="transition-all duration-700 ease-in-out">
-                                    <div class="h-16 flex flex-col justify-center items-center text-center px-4">
-                                        <span class="text-lg font-display font-black uppercase tracking-[0.3em] text-primary-600 dark:text-primary-400 truncate super-text-animation">MOTI WEIGHT</span>
+                                    <div class="h-10 sm:h-16 flex flex-col justify-center items-center text-center px-2 sm:px-4">
+                                        <span class="text-xs sm:text-lg font-display font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary-600 dark:text-primary-400 truncate super-text-animation">MOTI WEIGHT</span>
                                     </div>
-                                    <div class="h-16 flex flex-col justify-center items-center text-center px-4">
-                                        <span class="text-[13px] font-display font-bold leading-tight text-neutral-800 dark:text-neutral-200 line-clamp-2 italic super-text-animation">"Some people only recognize sincerity when it becomes absence… I just didn’t think you’d be one of them"</span>
+                                    <div class="h-10 sm:h-16 flex flex-col justify-center items-center text-center px-2 sm:px-4">
+                                        <span class="text-[10px] sm:text-[13px] font-display font-bold leading-tight text-neutral-800 dark:text-neutral-200 line-clamp-2 italic super-text-animation">"Some people only recognize sincerity when it becomes absence… I just didn’t think you’d be one of them"</span>
                                     </div>
                                 </div>
                             </div>
@@ -272,10 +271,10 @@
                 </div>
 
                 <!-- Desktop Navigation & Actions -->
-                <div class="flex items-center space-x-6">
+                <div class="site-header__actions flex items-center space-x-3 sm:space-x-6">
                     <!-- Style Selector (Redesigned) -->
-                    <div class="hidden md:flex items-center bg-neutral-100 dark:bg-neutral-800/50 rounded-xl p-1 border border-neutral-200 dark:border-neutral-700">
-                        <select id="style-selector" class="bg-transparent text-sm font-medium text-neutral-700 dark:text-neutral-300 px-4 py-1.5 focus:outline-none cursor-pointer">
+                    <div class="hidden sm:flex items-center bg-neutral-100 dark:bg-neutral-800/50 rounded-xl p-1 border border-neutral-200 dark:border-neutral-700">
+                        <select id="style-selector" class="nav-touch bg-transparent text-sm font-medium text-neutral-700 dark:text-neutral-300 px-4 py-1.5 focus:outline-none cursor-pointer">
                             <option value="conversational" selected>Conversational</option>
                             <option value="academic">Academic</option>
                             <option value="casual">Casual</option>
@@ -285,40 +284,9 @@
                         </select>
                     </div>
 
-                    <div class="flex items-center space-x-3 border-l border-neutral-200 dark:border-neutral-800 pl-6">
-                        <!-- Export Button -->
-                        <div class="relative group">
-                            <button id="export-button" class="flex items-center space-x-2 px-5 py-2.5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 rounded-xl text-sm font-bold hover:scale-105 transition-all duration-300 shadow-lg shadow-neutral-900/10 dark:shadow-white/5">
-                                <i class="fa-solid fa-download text-xs"></i>
-                                <span>Export</span>
-                            </button>
-                            <!-- Dropdown -->
-                            <div id="export-dropdown" class="hidden absolute right-0 mt-3 w-56 bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-700 z-50 overflow-hidden transform origin-top-right transition-all duration-200">
-                                <div class="p-2 space-y-1">
-                                    <button class="export-option w-full flex items-center space-x-3 px-4 py-3 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 rounded-xl transition-colors text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                                        <div class="w-8 h-8 flex items-center justify-center rounded-lg bg-neutral-100 dark:bg-neutral-800 text-neutral-500">
-                                            <i class="fa-solid fa-file-lines"></i>
-                                        </div>
-                                        <span>Plain Text</span>
-                                    </button>
-                                    <button class="export-option w-full flex items-center space-x-3 px-4 py-3 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 rounded-xl transition-colors text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                                        <div class="w-8 h-8 flex items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-500">
-                                            <i class="fa-solid fa-file-word"></i>
-                                        </div>
-                                        <span>Word Document</span>
-                                    </button>
-                                    <button class="export-option w-full flex items-center space-x-3 px-4 py-3 hover:bg-neutral-50 dark:hover:bg-neutral-700/50 rounded-xl transition-colors text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                                        <div class="w-8 h-8 flex items-center justify-center rounded-lg bg-red-50 dark:bg-red-900/20 text-red-500">
-                                            <i class="fa-solid fa-file-pdf"></i>
-                                        </div>
-                                        <span>PDF Document</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="flex items-center space-x-3 sm:border-l sm:border-neutral-200 sm:dark:border-neutral-800 sm:pl-6">
                         <!-- Dark Mode Toggle -->
-                        <button id="dark-mode-toggle" class="w-10 h-10 flex items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-yellow-400 hover:scale-110 transition-all duration-300">
+                        <button id="dark-mode-toggle" class="nav-touch w-10 h-10 flex items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-yellow-400 hover:scale-110 transition-all duration-300">
                             <i class="fa-solid fa-moon dark:hidden"></i>
                             <i class="fa-solid fa-sun hidden dark:block"></i>
                         </button>
@@ -329,18 +297,10 @@
     </header>
 
     <!-- Main Content -->
-    <div id="galaxy-root" class="galaxy-root">
-        <div class="galaxy-static-layers">
-            <div class="galaxy-nebula-layer"></div>
-            <div class="galaxy-constellation-layer"></div>
-        </div>
-        <canvas id="galaxy-canvas" class="galaxy-canvas"></canvas>
-    </div>
-    
     <div id="ui-template-root" class="ui-template-root">
-        <main class="mk-container mk-main container mx-auto px-4 sm:px-6 lg:px-8 py-0 -mt-20">
+        <main class="main-content mk-container mk-main container mx-auto px-4 sm:px-6 lg:px-8 py-0">
             <!-- Redesigned Hero Section -->
-            <section class="relative pt-0 pb-16 overflow-hidden">
+            <section class="hero-shell relative pt-0 pb-16 overflow-hidden">
                 <!-- Advanced Background Layer -->
                 <div class="absolute inset-0 z-0">
                     <!-- Modern Grid Effect -->
@@ -363,19 +323,19 @@
                         <span class="text-xs font-bold text-primary-700 dark:text-primary-300 uppercase tracking-wider">Next-Gen AI Humanizer</span>
                     </div>
 
-                    <h1 class="text-6xl md:text-8xl font-display font-extrabold text-neutral-900 dark:text-white mb-8 tracking-tight leading-[1.1] animate-slide-up">
+                    <h1 class="hero-title text-6xl md:text-8xl font-display font-extrabold text-neutral-900 dark:text-white mb-8 tracking-tight leading-[1.1] animate-slide-up">
                         Transform AI into <br/>
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-secondary-500 to-primary-600 bg-[length:200%_auto] animate-shimmer">Pure Humanity</span>
                     </h1>
                     
-                    <p class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto mb-12 leading-relaxed animate-fade-in" style="animation-delay: 0.2s">
+                    <p class="hero-subtitle text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto mb-12 leading-relaxed animate-fade-in" style="animation-delay: 0.2s">
                         Bypass AI detectors with clinical precision. Our advanced neural engine re-textures machine output into authentic, soulful human expression.
                     </p>
                     
                     <!-- Modern Statistics Grid -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-5xl mx-auto animate-slide-up" style="animation-delay: 0.4s">
+                    <div class="hero-stats grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-5xl mx-auto animate-slide-up" style="animation-delay: 0.4s">
                         <!-- Accuracy Card -->
-                        <div class="group relative p-8 rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-primary-500/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                        <div class="group relative p-8 rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-primary-500/20 transition-all duration-500 hover:scale-[1.02] overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <div class="relative">
                                 <div class="text-4xl font-display font-black text-primary-600 dark:text-primary-400 mb-2 tracking-tighter">99.7%</div>
@@ -387,7 +347,7 @@
                         </div>
                         
                         <!-- Latency Card -->
-                        <div class="group relative p-8 rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-secondary-500/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                        <div class="group relative p-8 rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-secondary-500/20 transition-all duration-500 hover:scale-[1.02] overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-br from-secondary-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <div class="relative">
                                 <div class="text-4xl font-display font-black text-secondary-500 dark:text-secondary-400 mb-2 tracking-tighter">&lt; 1s</div>
@@ -399,7 +359,7 @@
                         </div>
                         
                         <!-- Creators Card -->
-                        <div class="group relative p-8 rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-primary-500/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                        <div class="group relative p-8 rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-primary-500/20 transition-all duration-500 hover:scale-[1.02] overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <div class="relative">
                                 <div class="text-4xl font-display font-black text-primary-500 dark:text-primary-400 mb-2 tracking-tighter">50K+</div>
@@ -411,7 +371,7 @@
                         </div>
                         
                         <!-- Privacy Card -->
-                        <div class="group relative p-8 rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-success-500/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                        <div class="group relative p-8 rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-success-500/20 transition-all duration-500 hover:scale-[1.02] overflow-hidden">
                             <div class="absolute inset-0 bg-gradient-to-br from-success-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <div class="relative">
                                 <div class="text-4xl font-display font-black text-success-500 dark:text-success-400 mb-2 tracking-tighter">100%</div>
