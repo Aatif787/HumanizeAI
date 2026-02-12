@@ -904,18 +904,27 @@
                 canvas.width = width;
                 canvas.height = height;
                 stars = [];
-                for (let i = 0; i < 400; i++) {
+                const starCount = 600; // Increased count for finer stars
+                for (let i = 0; i < starCount; i++) {
                     stars.push({
                         x: Math.random() * width,
                         y: Math.random() * height,
-                        size: Math.random() * 1.5,
-                        speedX: (Math.random() - 0.5) * 0.1,
-                        speedY: (Math.random() - 0.5) * 0.1,
+                        size: Math.random() * 0.8 + 0.1, // Significantly smaller stars
+                        speedX: (Math.random() - 0.5) * 0.05, // Slower, more subtle movement
+                        speedY: (Math.random() - 0.5) * 0.05,
                         opacity: Math.random(),
-                        twinkleSpeed: Math.random() * 0.02,
-                        color: Math.random() > 0.8 ? '#a5f3fc' : (Math.random() > 0.8 ? '#fef08a' : '#ffffff')
+                        twinkleSpeed: Math.random() * 0.01 + 0.005,
+                        color: getStarColor()
                     });
                 }
+            }
+
+            function getStarColor() {
+                const rand = Math.random();
+                if (rand > 0.95) return '#cbd5e1'; // Blue-ish white
+                if (rand > 0.90) return '#fef08a'; // Soft yellow
+                if (rand > 0.85) return '#fecaca'; // Soft red/pink
+                return '#ffffff'; // Pure white
             }
 
             function draw() {
@@ -925,7 +934,7 @@
                     star.y += star.speedY;
                     star.opacity += star.twinkleSpeed;
 
-                    if (star.opacity > 1 || star.opacity < 0) {
+                    if (star.opacity > 0.8 || star.opacity < 0.1) {
                         star.twinkleSpeed = -star.twinkleSpeed;
                     }
 
@@ -936,14 +945,18 @@
 
                     ctx.globalAlpha = star.opacity;
                     ctx.fillStyle = star.color;
+                    
+                    // Draw main star
                     ctx.beginPath();
                     ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
                     ctx.fill();
                     
-                    // Add a subtle glow to larger stars
-                    if (star.size > 1) {
-                        ctx.shadowBlur = 4;
+                    // Enhanced realistic glow for specific stars
+                    if (star.size > 0.6) {
+                        ctx.shadowBlur = star.size * 4;
                         ctx.shadowColor = star.color;
+                        ctx.beginPath();
+                        ctx.arc(star.x, star.y, star.size * 0.5, 0, Math.PI * 2);
                         ctx.fill();
                         ctx.shadowBlur = 0;
                     }
