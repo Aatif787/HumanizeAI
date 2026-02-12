@@ -147,14 +147,28 @@ img {
 @keyframes verticalScroll {
     0%, 45% { transform: translateY(0); opacity: 1; filter: blur(0); }
     48% { opacity: 0; filter: blur(4px); }
-    50% { transform: translateY(-64px); opacity: 0; filter: blur(4px); }
-    52%, 95% { transform: translateY(-64px); opacity: 1; filter: blur(0); }
+    50% { transform: translateY(-72px); opacity: 0; filter: blur(4px); }
+    52%, 95% { transform: translateY(-72px); opacity: 1; filter: blur(0); }
     98% { opacity: 0; filter: blur(4px); }
     100% { transform: translateY(0); opacity: 0; filter: blur(4px); }
 }
 
+@keyframes verticalScrollSlow {
+    0%, 45% { transform: translateY(0); opacity: 1; filter: blur(0); }
+    48% { opacity: 0; filter: blur(4px); }
+    50% { transform: translateY(-72px); opacity: 0; filter: blur(4px); }
+    52%, 95% { transform: translateY(-72px); opacity: 1; filter: blur(0); }
+    98% { opacity: 0; filter: blur(4px); }
+    100% { transform: translateY(0); opacity: 0; filter: blur(4px); }
+}
+
+/* Custom classes for height */
+.h-18 {
+    height: 4.5rem; /* 72px */
+}
+
 @media (min-width: 640px) {
-    @keyframes verticalScroll {
+    @keyframes verticalScrollSlow {
         0%, 45% { transform: translateY(0); opacity: 1; filter: blur(0); }
         48% { opacity: 0; filter: blur(4px); }
         50% { transform: translateY(-80px); opacity: 0; filter: blur(4px); }
@@ -165,7 +179,7 @@ img {
 }
 
 .carousel-animate {
-    animation: verticalScroll 12s cubic-bezier(0.7, 0, 0.3, 1) infinite;
+    animation: verticalScrollSlow 15s cubic-bezier(0.7, 0, 0.3, 1) infinite;
 }
 
 .super-text-animation {
