@@ -78,12 +78,6 @@
     100% { transform: translate(100vw, 100vh) rotate(45deg) scale(0); opacity: 0; }
 }
 
-/* Force transparency to show galaxy background */
-html, body, .mk-theme, .ui-template-root, .main-content {
-    background-color: transparent !important;
-    background-image: none !important;
-}
-
 #ui-template-root {
     min-height: 100vh;
     display: flex;
@@ -102,55 +96,64 @@ body {
     z-index: 1;
 }
 
-/* Ensure existing sections have glassmorphism for better look */
-.hero-stats > div, 
-#app-interface > div > div.relative.group > textarea,
-#app-interface > div > div.relative.group > div#processing-overlay,
-#quality-indicators > div,
-.advanced-option-card,
-.trust-indicator-card,
-.site-header {
-    background-color: rgba(255, 255, 255, 0.03) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
-}
+/* Galaxy Theme Styles - Only for Desktop/Large Screens */
+@media (min-width: 769px) {
+    /* Force transparency to show galaxy background */
+    html, body, .mk-theme, .ui-template-root, .main-content {
+        background-color: transparent !important;
+        background-image: none !important;
+    }
 
-.dark .hero-stats > div, 
-.dark #app-interface > div > div.relative.group > textarea,
-.dark #app-interface > div > div.relative.group > div#processing-overlay,
-.dark #quality-indicators > div,
-.dark .advanced-option-card,
-.dark .trust-indicator-card,
-.dark .site-header {
-    background-color: rgba(0, 0, 0, 0.2) !important;
-    border-color: rgba(255, 255, 255, 0.05) !important;
-}
+    /* Ensure existing sections have glassmorphism for better look */
+    .hero-stats > div, 
+    #app-interface > div > div.relative.group > textarea,
+    #app-interface > div > div.relative.group > div#processing-overlay,
+    #quality-indicators > div,
+    .advanced-option-card,
+    .trust-indicator-card,
+    .site-header {
+        background-color: rgba(255, 255, 255, 0.03) !important;
+        backdrop-filter: blur(12px) !important;
+        -webkit-backdrop-filter: blur(12px) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
 
-/* Adjust text colors for dark galaxy background */
-body, h1, h2, h3, h4, p, span, div, textarea {
-    color: #e2e8f0;
-}
+    .dark .hero-stats > div, 
+    .dark #app-interface > div > div.relative.group > textarea,
+    .dark #app-interface > div > div.relative.group > div#processing-overlay,
+    .dark #quality-indicators > div,
+    .dark .advanced-option-card,
+    .dark .trust-indicator-card,
+    .dark .site-header {
+        background-color: rgba(0, 0, 0, 0.2) !important;
+        border-color: rgba(255, 255, 255, 0.05) !important;
+    }
 
-.text-neutral-900, .text-neutral-600, .text-neutral-500 {
-    color: #cbd5e1 !important;
-}
+    /* Adjust text colors for dark galaxy background */
+    body, h1, h2, h3, h4, p, span, div, textarea {
+        color: #e2e8f0;
+    }
 
-.dark .text-white {
-    color: #f8fafc !important;
-}
+    .text-neutral-900, .text-neutral-600, .text-neutral-500 {
+        color: #cbd5e1 !important;
+    }
 
-.dark .text-neutral-400, .dark .text-neutral-500 {
-    color: #94a3b8 !important;
-}
+    .dark .text-white {
+        color: #f8fafc !important;
+    }
 
-/* Fix for specific elements that might have solid backgrounds */
-.bg-white, .bg-neutral-50, .bg-neutral-100, .bg-neutral-800, .bg-neutral-900 {
-    background-color: rgba(255, 255, 255, 0.02) !important;
-}
+    .dark .text-neutral-400, .dark .text-neutral-500 {
+        color: #94a3b8 !important;
+    }
 
-.dark .bg-neutral-900, .dark .bg-neutral-800 {
-    background-color: rgba(0, 0, 0, 0.1) !important;
+    /* Fix for specific elements that might have solid backgrounds */
+    .bg-white, .bg-neutral-50, .bg-neutral-100, .bg-neutral-800, .bg-neutral-900 {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+    }
+
+    .dark .bg-neutral-900, .dark .bg-neutral-800 {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+    }
 }
 
 /* Base Reset & Safety */
@@ -2302,58 +2305,43 @@ body[data-ui-template="classic"] {
     }
 }
 
-/* Aggressive Mobile Fixes for Galaxy Background Alignment */
+/* Mobile Fixes - Hide Galaxy Background */
 @media (max-width: 768px) {
-    html, body {
-        background-color: #020205 !important; /* Match galaxy bg */
-        min-height: 100vh !important;
-        overflow-x: hidden !important;
-        position: relative !important;
+    .galaxy-bg {
+        display: none !important;
     }
 
-    .galaxy-bg {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100vw !important;
-        height: 100vh !important;
-        z-index: -999 !important;
-        pointer-events: none !important;
+    html, body {
+        background-color: #f8fafc !important; /* Standard neutral-50 light mode */
+    }
+
+    .dark html, .dark body {
+        background-color: #0f172a !important; /* Standard neutral-900 dark mode */
     }
 
     .site-header {
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 100 !important;
-        background: rgba(2, 2, 5, 0.7) !important; /* Semi-transparent dark */
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        backdrop-filter: blur(8px) !important;
     }
 
-    #ui-template-root, .main-content, .hero-shell {
-        position: relative !important;
-        z-index: 1 !important;
-        background: transparent !important;
-        margin-top: 0 !important;
-        padding-top: 0 !important;
+    .dark .site-header {
+        background-color: rgba(15, 23, 42, 0.9) !important;
     }
 
-    /* Fix for content being pushed down */
-    .hero-shell {
-        padding-top: 1rem !important;
+    /* Restore text colors for standard background */
+    .text-neutral-900, .text-neutral-800, .text-neutral-700 {
+        color: inherit !important;
     }
 
-    /* Ensure all containers are transparent */
+    .dark .text-neutral-900, .dark .text-neutral-800, .dark .text-neutral-700 {
+        color: #f8fafc !important;
+    }
+
+    /* Remove the aggressive transparency for mobile containers */
     div[class*="bg-white"], 
     div[class*="bg-neutral"], 
     section[class*="bg-"] {
-        background-color: transparent !important;
-    }
-
-    /* Force text to be light on mobile for the dark background */
-    .text-neutral-900, .text-neutral-800, .text-neutral-700 {
-        color: #f8fafc !important;
+        background-color: revert !important;
     }
 }
 
