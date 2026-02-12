@@ -92,9 +92,17 @@ html, body {
 }
 
 @keyframes verticalScroll {
-    0%, 40% { transform: translateY(0); }
-    50%, 90% { transform: translateY(-64px); }
+    0%, 45% { transform: translateY(0); }
+    50%, 95% { transform: translateY(-40px); }
     100% { transform: translateY(0); }
+}
+
+@media (min-width: 640px) {
+    @keyframes verticalScroll {
+        0%, 45% { transform: translateY(0); }
+        50%, 95% { transform: translateY(-64px); }
+        100% { transform: translateY(0); }
+    }
 }
 
 .carousel-animate {
