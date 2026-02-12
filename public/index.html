@@ -231,9 +231,7 @@
 <body class="mk-theme bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 font-body transition-colors duration-300" data-ui-template="modern">
     <!-- Galaxy Background -->
     <div class="galaxy-bg">
-        <div class="stars-static"></div>
-        <div class="stars-twinkle"></div>
-        <div class="stars-moving"></div>
+        <canvas id="stars-canvas"></canvas>
         <div class="nebula"></div>
     </div>
     <!-- Header -->
@@ -893,6 +891,71 @@
     </div>
 
     <!-- Scripts -->
+    <script>
+        (function() {
+            const canvas = document.getElementById('stars-canvas');
+            const ctx = canvas.getContext('2d');
+            let stars = [];
+            let width, height;
+
+            function init() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                stars = [];
+                for (let i = 0; i < 400; i++) {
+                    stars.push({
+                        x: Math.random() * width,
+                        y: Math.random() * height,
+                        size: Math.random() * 1.5,
+                        speedX: (Math.random() - 0.5) * 0.1,
+                        speedY: (Math.random() - 0.5) * 0.1,
+                        opacity: Math.random(),
+                        twinkleSpeed: Math.random() * 0.02,
+                        color: Math.random() > 0.8 ? '#a5f3fc' : (Math.random() > 0.8 ? '#fef08a' : '#ffffff')
+                    });
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                stars.forEach(star => {
+                    star.x += star.speedX;
+                    star.y += star.speedY;
+                    star.opacity += star.twinkleSpeed;
+
+                    if (star.opacity > 1 || star.opacity < 0) {
+                        star.twinkleSpeed = -star.twinkleSpeed;
+                    }
+
+                    if (star.x < 0) star.x = width;
+                    if (star.x > width) star.x = 0;
+                    if (star.y < 0) star.y = height;
+                    if (star.y > height) star.y = 0;
+
+                    ctx.globalAlpha = star.opacity;
+                    ctx.fillStyle = star.color;
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // Add a subtle glow to larger stars
+                    if (star.size > 1) {
+                        ctx.shadowBlur = 4;
+                        ctx.shadowColor = star.color;
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
+                });
+                requestAnimationFrame(draw);
+            }
+
+            window.addEventListener('resize', init);
+            init();
+            draw();
+        })();
+    </script>
     <script src="advanced-humanizer.js?v=1.1.7-ts1739119500"></script>
     <script src="script.js?v=1.1.7-ts1739119500"></script>
 </body>

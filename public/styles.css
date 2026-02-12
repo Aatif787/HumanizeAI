@@ -6,79 +6,16 @@
     width: 100%;
     height: 100%;
     z-index: -2;
-    background: radial-gradient(circle at center, #0a0a12 0%, #020205 100%);
+    background: #020205;
     overflow: hidden;
 }
 
-.stars-static, .stars-twinkle, .stars-moving {
+#stars-canvas {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-}
-
-.stars-static {
-    background-image: 
-        radial-gradient(1px 1px at 10% 10%, #fff, transparent),
-        radial-gradient(1px 1px at 20% 30%, #fff, transparent),
-        radial-gradient(1px 1px at 30% 50%, #fff, transparent),
-        radial-gradient(1px 1px at 40% 80%, #fff, transparent),
-        radial-gradient(1px 1px at 50% 20%, #fff, transparent),
-        radial-gradient(1px 1px at 60% 60%, #fff, transparent),
-        radial-gradient(1px 1px at 70% 40%, #fff, transparent),
-        radial-gradient(1px 1px at 80% 90%, #fff, transparent),
-        radial-gradient(1px 1px at 90% 10%, #fff, transparent),
-        radial-gradient(1px 1px at 15% 75%, #fff, transparent),
-        radial-gradient(1px 1px at 25% 15%, #fff, transparent),
-        radial-gradient(1px 1px at 35% 85%, #fff, transparent),
-        radial-gradient(1px 1px at 45% 35%, #fff, transparent),
-        radial-gradient(1px 1px at 55% 55%, #fff, transparent),
-        radial-gradient(1px 1px at 65% 25%, #fff, transparent),
-        radial-gradient(1px 1px at 75% 95%, #fff, transparent),
-        radial-gradient(1px 1px at 85% 45%, #fff, transparent),
-        radial-gradient(1px 1px at 95% 65%, #fff, transparent),
-        radial-gradient(1px 1px at 5% 5%, #fff, transparent),
-        radial-gradient(1px 1px at 12% 45%, #fff, transparent),
-        radial-gradient(1px 1px at 28% 72%, #fff, transparent),
-        radial-gradient(1px 1px at 33% 18%, #fff, transparent),
-        radial-gradient(1px 1px at 47% 63%, #fff, transparent),
-        radial-gradient(1px 1px at 58% 89%, #fff, transparent),
-        radial-gradient(1px 1px at 62% 12%, #fff, transparent),
-        radial-gradient(1px 1px at 77% 37%, #fff, transparent),
-        radial-gradient(1px 1px at 89% 54%, #fff, transparent),
-        radial-gradient(1px 1px at 94% 22%, #fff, transparent);
-    background-size: 50% 50%;
-}
-
-.stars-twinkle {
-    background-image: 
-        radial-gradient(2px 2px at 15% 15%, #fff, transparent),
-        radial-gradient(2px 2px at 35% 35%, #fff, transparent),
-        radial-gradient(2px 2px at 55% 55%, #fff, transparent),
-        radial-gradient(2px 2px at 75% 75%, #fff, transparent),
-        radial-gradient(2px 2px at 95% 95%, #fff, transparent),
-        radial-gradient(2px 2px at 5% 85%, #fff, transparent),
-        radial-gradient(2px 2px at 25% 65%, #fff, transparent),
-        radial-gradient(2px 2px at 45% 45%, #fff, transparent),
-        radial-gradient(2px 2px at 65% 25%, #fff, transparent),
-        radial-gradient(2px 2px at 85% 5%, #fff, transparent);
-    background-size: 40% 40%;
-    animation: starTwinkle 4s ease-in-out infinite;
-}
-
-.stars-moving {
-    background-image: 
-        radial-gradient(1px 1px at 12% 88%, #fff, transparent),
-        radial-gradient(1px 1px at 24% 76%, #fff, transparent),
-        radial-gradient(1px 1px at 36% 64%, #fff, transparent),
-        radial-gradient(1px 1px at 48% 52%, #fff, transparent),
-        radial-gradient(1px 1px at 60% 40%, #fff, transparent),
-        radial-gradient(1px 1px at 72% 28%, #fff, transparent),
-        radial-gradient(1px 1px at 84% 16%, #fff, transparent),
-        radial-gradient(1px 1px at 96% 4%, #fff, transparent);
-    background-size: 100% 100%;
-    animation: starsMove 200s linear infinite;
 }
 
 .nebula {
@@ -88,11 +25,12 @@
     width: 200%;
     height: 200%;
     background: 
-        radial-gradient(circle at 30% 40%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 70% 60%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.1) 0%, transparent 50%);
-    filter: blur(80px);
-    animation: nebulaRotate 100s linear infinite;
+        radial-gradient(circle at 30% 40%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.05) 0%, transparent 50%);
+    filter: blur(100px);
+    animation: nebulaRotate 120s linear infinite;
+    pointer-events: none;
 }
 
 /* Shooting Star Effect */
