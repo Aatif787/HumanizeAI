@@ -1,8 +1,199 @@
+/* Galaxy Background */
+.galaxy-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    background: radial-gradient(circle at center, #0a0a12 0%, #020205 100%);
+    overflow: hidden;
+}
+
+.stars-static, .stars-twinkle, .stars-moving {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.stars-static {
+    background-image: 
+        radial-gradient(1px 1px at 10% 10%, #fff, transparent),
+        radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+        radial-gradient(1px 1px at 30% 50%, #fff, transparent),
+        radial-gradient(1px 1px at 40% 80%, #fff, transparent),
+        radial-gradient(1px 1px at 50% 20%, #fff, transparent),
+        radial-gradient(1px 1px at 60% 60%, #fff, transparent),
+        radial-gradient(1px 1px at 70% 40%, #fff, transparent),
+        radial-gradient(1px 1px at 80% 90%, #fff, transparent),
+        radial-gradient(1px 1px at 90% 10%, #fff, transparent),
+        radial-gradient(1px 1px at 15% 75%, #fff, transparent),
+        radial-gradient(1px 1px at 25% 15%, #fff, transparent),
+        radial-gradient(1px 1px at 35% 85%, #fff, transparent),
+        radial-gradient(1px 1px at 45% 35%, #fff, transparent),
+        radial-gradient(1px 1px at 55% 55%, #fff, transparent),
+        radial-gradient(1px 1px at 65% 25%, #fff, transparent),
+        radial-gradient(1px 1px at 75% 95%, #fff, transparent),
+        radial-gradient(1px 1px at 85% 45%, #fff, transparent),
+        radial-gradient(1px 1px at 95% 65%, #fff, transparent),
+        radial-gradient(1px 1px at 5% 5%, #fff, transparent),
+        radial-gradient(1px 1px at 12% 45%, #fff, transparent),
+        radial-gradient(1px 1px at 28% 72%, #fff, transparent),
+        radial-gradient(1px 1px at 33% 18%, #fff, transparent),
+        radial-gradient(1px 1px at 47% 63%, #fff, transparent),
+        radial-gradient(1px 1px at 58% 89%, #fff, transparent),
+        radial-gradient(1px 1px at 62% 12%, #fff, transparent),
+        radial-gradient(1px 1px at 77% 37%, #fff, transparent),
+        radial-gradient(1px 1px at 89% 54%, #fff, transparent),
+        radial-gradient(1px 1px at 94% 22%, #fff, transparent);
+    background-size: 50% 50%;
+}
+
+.stars-twinkle {
+    background-image: 
+        radial-gradient(2px 2px at 15% 15%, #fff, transparent),
+        radial-gradient(2px 2px at 35% 35%, #fff, transparent),
+        radial-gradient(2px 2px at 55% 55%, #fff, transparent),
+        radial-gradient(2px 2px at 75% 75%, #fff, transparent),
+        radial-gradient(2px 2px at 95% 95%, #fff, transparent),
+        radial-gradient(2px 2px at 5% 85%, #fff, transparent),
+        radial-gradient(2px 2px at 25% 65%, #fff, transparent),
+        radial-gradient(2px 2px at 45% 45%, #fff, transparent),
+        radial-gradient(2px 2px at 65% 25%, #fff, transparent),
+        radial-gradient(2px 2px at 85% 5%, #fff, transparent);
+    background-size: 40% 40%;
+    animation: starTwinkle 4s ease-in-out infinite;
+}
+
+.stars-moving {
+    background-image: 
+        radial-gradient(1px 1px at 12% 88%, #fff, transparent),
+        radial-gradient(1px 1px at 24% 76%, #fff, transparent),
+        radial-gradient(1px 1px at 36% 64%, #fff, transparent),
+        radial-gradient(1px 1px at 48% 52%, #fff, transparent),
+        radial-gradient(1px 1px at 60% 40%, #fff, transparent),
+        radial-gradient(1px 1px at 72% 28%, #fff, transparent),
+        radial-gradient(1px 1px at 84% 16%, #fff, transparent),
+        radial-gradient(1px 1px at 96% 4%, #fff, transparent);
+    background-size: 100% 100%;
+    animation: starsMove 200s linear infinite;
+}
+
+.nebula {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(14, 165, 233, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.1) 0%, transparent 50%);
+    filter: blur(80px);
+    animation: nebulaRotate 100s linear infinite;
+}
+
+/* Shooting Star Effect */
+.galaxy-bg::after {
+    content: "";
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px #fff, 0 0 20px 4px rgba(255,255,255,0.5);
+    animation: shootingStar 10s linear infinite;
+    opacity: 0;
+}
+
+@keyframes starTwinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes starsMove {
+    from { transform: translateY(0); }
+    to { transform: translateY(-100%); }
+}
+
+@keyframes nebulaRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes shootingStar {
+    0% { transform: translate(0, 0) rotate(45deg) scale(0); opacity: 0; }
+    5% { opacity: 1; transform: translate(0, 0) rotate(45deg) scale(1); }
+    15% { transform: translate(100vw, 100vh) rotate(45deg) scale(1); opacity: 0; }
+    100% { transform: translate(100vw, 100vh) rotate(45deg) scale(0); opacity: 0; }
+}
+
+/* Force transparency to show galaxy background */
+body, .mk-theme, .ui-template-root, .main-content {
+    background-color: transparent !important;
+}
+
+/* Ensure existing sections have glassmorphism for better look */
+.hero-stats > div, 
+#app-interface > div > div.relative.group > textarea,
+#app-interface > div > div.relative.group > div#processing-overlay,
+#quality-indicators > div,
+.advanced-option-card,
+.trust-indicator-card,
+.site-header {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .hero-stats > div, 
+.dark #app-interface > div > div.relative.group > textarea,
+.dark #app-interface > div > div.relative.group > div#processing-overlay,
+.dark #quality-indicators > div,
+.dark .advanced-option-card,
+.dark .trust-indicator-card,
+.dark .site-header {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Adjust text colors for dark galaxy background */
+body, h1, h2, h3, h4, p, span, div, textarea {
+    color: #e2e8f0;
+}
+
+.text-neutral-900, .text-neutral-600, .text-neutral-500 {
+    color: #cbd5e1 !important;
+}
+
+.dark .text-white {
+    color: #f8fafc !important;
+}
+
+.dark .text-neutral-400, .dark .text-neutral-500 {
+    color: #94a3b8 !important;
+}
+
+/* Fix for specific elements that might have solid backgrounds */
+.bg-white, .bg-neutral-50, .bg-neutral-100, .bg-neutral-800, .bg-neutral-900 {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+.dark .bg-neutral-900, .dark .bg-neutral-800 {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
 /* Base Reset & Safety */
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
+
 
 html, body {
     margin: 0;
