@@ -92,21 +92,27 @@ html, body {
 }
 
 @keyframes verticalScroll {
-    0%, 45% { transform: translateY(0); }
-    50%, 95% { transform: translateY(-40px); }
-    100% { transform: translateY(0); }
+    0%, 45% { transform: translateY(0); opacity: 1; filter: blur(0); }
+    48% { opacity: 0; filter: blur(4px); }
+    50% { transform: translateY(-48px); opacity: 0; filter: blur(4px); }
+    52%, 95% { transform: translateY(-48px); opacity: 1; filter: blur(0); }
+    98% { opacity: 0; filter: blur(4px); }
+    100% { transform: translateY(0); opacity: 0; filter: blur(4px); }
 }
 
 @media (min-width: 640px) {
     @keyframes verticalScroll {
-        0%, 45% { transform: translateY(0); }
-        50%, 95% { transform: translateY(-64px); }
-        100% { transform: translateY(0); }
+        0%, 45% { transform: translateY(0); opacity: 1; filter: blur(0); }
+        48% { opacity: 0; filter: blur(4px); }
+        50% { transform: translateY(-80px); opacity: 0; filter: blur(4px); }
+        52%, 95% { transform: translateY(-80px); opacity: 1; filter: blur(0); }
+        98% { opacity: 0; filter: blur(4px); }
+        100% { transform: translateY(0); opacity: 0; filter: blur(4px); }
     }
 }
 
 .carousel-animate {
-    animation: verticalScroll 8s cubic-bezier(0.85, 0, 0.15, 1) infinite;
+    animation: verticalScroll 12s cubic-bezier(0.7, 0, 0.3, 1) infinite;
 }
 
 .super-text-animation {
