@@ -247,10 +247,27 @@ html, body {
 @media (max-width: 768px) {
     html, body {
         overflow-x: hidden !important;
-        position: relative;
         width: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
+    }
+
+    /* Force background visibility on mobile */
+    .galaxy-bg {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: -100 !important;
+    }
+
+    #stars-canvas {
+        display: block !important;
+        z-index: -101 !important;
+    }
+
+    .nebula {
+        display: block !important;
+        z-index: -102 !important;
     }
 
     .container, .mk-container {
