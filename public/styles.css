@@ -44,59 +44,32 @@
     flex-direction: column;
 }
 
+/* Base Layering & Stacking Context */
+html {
+    background-color: #020205 !important;
+}
+
 body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
     position: relative;
-}
-
-.site-header, #ui-template-root {
-    position: relative;
-    z-index: 1;
-}
-
-/* Darker background for mobile and desktop */
-body, html, #ui-template-root, .ui-template-root, .mk-theme {
-    background-color: #020205 !important;
-}
-
-/* Galaxy Theme Styles - For All Devices */
-/* Force transparency on ALL containers to show the background */
-html, body, .mk-theme, .ui-template-root, #ui-template-root, 
-.main-content, main, section, footer, header, .hero-shell {
     background-color: transparent !important;
-    background-image: none !important;
+    isolation: isolate !important; /* Creates a clean stacking context for all children */
 }
 
-/* Ensure content stays on top of the background */
-/* Redundant - replaced by more comprehensive selector above */
-
+/* Dynamic Plexus Background - Locked at the bottom of the body's stacking context */
 .galaxy-bg {
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    z-index: -999 !important;
+    z-index: -1 !important; /* Behind everything that has z-index auto or higher */
     background-color: #020205 !important;
     overflow: hidden;
-    pointer-events: none !important; /* Ensure background never blocks clicks/selection */
-    display: block !important;
-    isolation: isolate !important; /* Creates a new stacking context to keep background layers deep */
-}
-
-#stars-canvas, .nebula {
     pointer-events: none !important;
-}
-
-/* Ensure ALL website content is explicitly forced above the background */
-#ui-template-root, .ui-template-root, .main-content, 
-.site-header, .site-footer, section, div.container {
-    position: relative !important;
-    z-index: 10 !important;
+    display: block !important;
 }
 
 #stars-canvas {
@@ -105,7 +78,7 @@ html, body, .mk-theme, .ui-template-root, #ui-template-root,
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    z-index: -998 !important;
+    z-index: -2 !important;
 }
 
 .nebula {
@@ -114,7 +87,7 @@ html, body, .mk-theme, .ui-template-root, #ui-template-root,
     left: -50% !important;
     width: 200% !important;
     height: 200% !important;
-    z-index: -997 !important;
+    z-index: -3 !important;
     background: 
         radial-gradient(circle at 30% 40%, rgba(20, 184, 166, 0.2) 0%, transparent 50%),
         radial-gradient(circle at 70% 60%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
@@ -122,6 +95,19 @@ html, body, .mk-theme, .ui-template-root, #ui-template-root,
     filter: blur(100px);
     animation: nebulaRotate 120s linear infinite;
     pointer-events: none;
+}
+
+/* Force ALL top-level content containers to be in front of the background */
+body > *:not(.galaxy-bg) {
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Global transparency for sections and containers */
+.mk-theme, .ui-template-root, #ui-template-root, 
+.main-content, main, section, footer, header, .hero-shell {
+    background-color: transparent !important;
+    background-image: none !important;
 }
 
 /* Ensure existing sections have glassmorphism for better look */
@@ -167,11 +153,11 @@ body, h1, h2, h3, h4, p, span, div, textarea {
 }
 
 /* Fix for specific elements that might have solid backgrounds */
-.bg-white, .bg-neutral-50, .bg-neutral-100, .bg-neutral-800, .bg-neutral-900 {
+.bg-white, .bg-neutral-50, .bg-neutral-100, .bg-neutral-800, .bg-neutral-900, .bg-black {
     background-color: rgba(255, 255, 255, 0.02) !important;
 }
 
-.dark .bg-neutral-900, .dark .bg-neutral-800 {
+.dark .bg-neutral-900, .dark .bg-neutral-800, .dark .bg-black {
     background-color: rgba(0, 0, 0, 0.1) !important;
 }
 
