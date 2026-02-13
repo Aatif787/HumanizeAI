@@ -70,10 +70,7 @@ html, body, .mk-theme, .ui-template-root, #ui-template-root,
 }
 
 /* Ensure content stays on top of the background */
-.site-header, #ui-template-root, .ui-template-root, .main-content, .site-footer {
-    position: relative !important;
-    z-index: 10 !important;
-}
+/* Redundant - replaced by more comprehensive selector above */
 
 .galaxy-bg {
     position: fixed !important;
@@ -86,8 +83,20 @@ html, body, .mk-theme, .ui-template-root, #ui-template-root,
     z-index: -999 !important;
     background-color: #020205 !important;
     overflow: hidden;
-    pointer-events: none;
+    pointer-events: none !important; /* Ensure background never blocks clicks/selection */
     display: block !important;
+    isolation: isolate !important; /* Creates a new stacking context to keep background layers deep */
+}
+
+#stars-canvas, .nebula {
+    pointer-events: none !important;
+}
+
+/* Ensure ALL website content is explicitly forced above the background */
+#ui-template-root, .ui-template-root, .main-content, 
+.site-header, .site-footer, section, div.container {
+    position: relative !important;
+    z-index: 10 !important;
 }
 
 #stars-canvas {
