@@ -96,6 +96,13 @@ body {
     z-index: 1;
 }
 
+/* Ensure mobile has a consistent blackish background */
+@media (max-width: 768px) {
+    body, html, #ui-template-root {
+        background-color: #050505 !important;
+    }
+}
+
 /* Galaxy Theme Styles - Only for Desktop/Large Screens */
 @media (min-width: 769px) {
     /* Force transparency to show galaxy background */
