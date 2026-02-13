@@ -268,18 +268,30 @@
                             <div id="nav-carousel" class="relative h-18 sm:h-20 overflow-hidden">
                                 <div id="carousel-track" class="carousel-animate transition-all duration-1000 ease-in-out">
                                     <div class="h-18 sm:h-20 flex flex-row justify-center items-center text-center px-2 sm:px-4 space-x-2 sm:space-x-4">
+                                        <span class="text-[9px] sm:text-lg font-display font-black uppercase tracking-[0.15em] sm:tracking-[0.3em] text-primary-600 dark:text-primary-400 truncate super-text-animation">MOTI WEIGHT</span>
+                                        
                                         <div class="saniya-container flex items-center space-x-1 sm:space-x-2">
-                                            <!-- Left Wing -->
-                                            <svg class="saniya-wing wing-left w-6 h-6 sm:w-12 sm:h-12" viewBox="0 0 100 100" fill="currentColor">
-                                                <path d="M90,30c-5-12-20-20-40-18c-15,2-28,12-32,28c-2,8,2,16,8,20c12,8,32,4,48-12c8-8,16-16,16-24H90z M65,38 c-12,8-28,12-36,4c-4-4-4-12,0-16c8-8,20-8,32-4C69,26,73,34,65,38z"/>
+                                            <svg class="hidden">
+                                                <defs>
+                                                    <linearGradient id="wing-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                        <stop offset="0%" style="stop-color:rgba(255,255,255,0.95);stop-opacity:1" />
+                                                        <stop offset="50%" style="stop-color:rgba(200,210,255,0.4);stop-opacity:0.8" />
+                                                        <stop offset="100%" style="stop-color:rgba(255,255,255,0.95);stop-opacity:1" />
+                                                    </linearGradient>
+                                                </defs>
                                             </svg>
-                                            <span class="glassy-text-saniya text-[10px] sm:text-2xl font-display font-black tracking-tight">SANIYA</span>
-                                            <!-- Right Wing -->
-                                            <svg class="saniya-wing wing-right w-6 h-6 sm:w-12 sm:h-12" viewBox="0 0 100 100" fill="currentColor" style="transform: scaleX(-1);">
-                                                <path d="M90,30c-5-12-20-20-40-18c-15,2-28,12-32,28c-2,8,2,16,8,20c12,8,32,4,48-12c8-8,16-16,16-24H90z M65,38 c-12,8-28,12-36,4c-4-4-4-12,0-16c8-8,20-8,32-4C69,26,73,34,65,38z"/>
+                                            <!-- Realistic Left Wing -->
+                                            <svg class="saniya-wing wing-left w-8 h-8 sm:w-16 sm:h-16" viewBox="0 0 200 200">
+                                                <path class="wing-path" d="M180,40c-20-15-50-20-80-15c-30,5-55,25-65,55c-5,15,5,30,20,35c25,10,60,5,90-25c15-15,30-30,35-50L180,40z M140,60 c-25,15-55,25-75,10c-10-10-10-25,0-35c15-15,40-15,65-5C150,40,155,55,140,60z" />
+                                                <path class="wing-path" d="M160,80c-15-10-35-15-55-10c-20,5-35,20-40,40c-3,10,3,20,12,25c15,8,40,5,60-15c10-10,20-20,23-35L160,80z" opacity="0.7" />
+                                            </svg>
+                                            <span class="glassy-text-saniya text-[12px] sm:text-3xl tracking-tighter">SANIYA</span>
+                                            <!-- Realistic Right Wing -->
+                                            <svg class="saniya-wing wing-right w-8 h-8 sm:w-16 sm:h-16" viewBox="0 0 200 200" style="transform: scaleX(-1);">
+                                                <path class="wing-path" d="M180,40c-20-15-50-20-80-15c-30,5-55,25-65,55c-5,15,5,30,20,35c25,10,60,5,90-25c15-15,30-30,35-50L180,40z M140,60 c-25,15-55,25-75,10c-10-10-10-25,0-35c15-15,40-15,65-5C150,40,155,55,140,60z" />
+                                                <path class="wing-path" d="M160,80c-15-10-35-15-55-10c-20,5-35,20-40,40c-3,10,3,20,12,25c15,8,40,5,60-15c10-10,20-20,23-35L160,80z" opacity="0.7" />
                                             </svg>
                                         </div>
-                                        <span class="text-[9px] sm:text-lg font-display font-black uppercase tracking-[0.15em] sm:tracking-[0.3em] text-primary-600 dark:text-primary-400 truncate super-text-animation">MOTI WEIGHT</span>
                                     </div>
                                     <div class="h-18 sm:h-20 flex flex-col justify-center items-center text-center px-2 sm:px-4">
                                         <span class="text-[8px] sm:text-[12px] font-display font-bold leading-tight text-neutral-800 dark:text-neutral-200 italic super-text-animation whitespace-normal overflow-visible">"Some people only recognize sincerity when it becomes absence… I just didn’t think you’d be one of them"</span>
