@@ -62,10 +62,17 @@ body, html, #ui-template-root, .ui-template-root, .mk-theme {
 }
 
 /* Galaxy Theme Styles - For All Devices */
-/* Force transparency to show galaxy background */
-html, body, .mk-theme, .ui-template-root, .main-content, #ui-template-root {
+/* Force transparency on ALL containers to show the background */
+html, body, .mk-theme, .ui-template-root, #ui-template-root, 
+.main-content, main, section, footer, header, .hero-shell {
     background-color: transparent !important;
     background-image: none !important;
+}
+
+/* Ensure content stays on top of the background */
+.site-header, #ui-template-root, .ui-template-root, .main-content, .site-footer {
+    position: relative !important;
+    z-index: 10 !important;
 }
 
 .galaxy-bg {
@@ -76,13 +83,11 @@ html, body, .mk-theme, .ui-template-root, .main-content, #ui-template-root {
     bottom: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    z-index: -999 !important; /* Move deep behind everything */
+    z-index: -999 !important;
     background-color: #020205 !important;
     overflow: hidden;
     pointer-events: none;
     display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
 }
 
 #stars-canvas {
@@ -108,12 +113,6 @@ html, body, .mk-theme, .ui-template-root, .main-content, #ui-template-root {
     filter: blur(100px);
     animation: nebulaRotate 120s linear infinite;
     pointer-events: none;
-}
-
-/* Ensure content stays on top */
-.site-header, #ui-template-root, .ui-template-root, .main-content {
-    position: relative !important;
-    z-index: 10 !important;
 }
 
 /* Ensure existing sections have glassmorphism for better look */
