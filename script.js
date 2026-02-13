@@ -3540,62 +3540,68 @@ document.addEventListener('DOMContentLoaded', function() {
  * Initialize Scroll Motion and Reveal Effects
  */
 function initializeScrollMotion() {
-  // Parallax Effect for Background Elements
   const starsCanvas = document.getElementById('stars-canvas');
   const nebulae = document.querySelectorAll('.nebula');
-
-  // Intersection Observer for revealing elements on scroll
-  const revealCallback = (entries, observer) => {
-    entries.forEach(entry => {
-      // Use intersectionRatio for more reliable detection
-      if (entry.isIntersecting || entry.intersectionRatio > 0) {
-        entry.target.classList.add('active');
-        observer.unobserve(entry.target);
-      }
-    });
-  };
-
-  const revealObserver = new IntersectionObserver(revealCallback, {
-    root: null,
-    threshold: 0.01, // Trigger as soon as 1% is visible
-    rootMargin: '0px 0px -20px 0px'
-  });
-
-  // Observe elements with reveal-on-scroll class
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
-  revealElements.forEach(el => {
-    revealObserver.observe(el);
-  });
+  
+  let isScrolling = false;
+  let lastScrollY = window.scrollY;
 
-  // Fallback: If observer doesn't trigger, show elements on scroll anyway
-  window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
+  // Optimized reveal logic
+  const checkReveal = () => {
     const windowHeight = window.innerHeight;
-
     revealElements.forEach(el => {
       if (!el.classList.contains('active')) {
         const rect = el.getBoundingClientRect();
-        if (rect.top < windowHeight * 0.95) {
+        if (rect.top < windowHeight * 0.9) {
           el.classList.add('active');
         }
       }
     });
+  };
+
+  // Optimized parallax logic
+  const updateParallax = () => {
+    const scrollY = window.scrollY;
     
     // Deeper Parallax for stars
     if (starsCanvas) {
-      starsCanvas.style.transform = `translateY(${scrollY * 0.25}px)`;
+      starsCanvas.style.transform = `translate3d(0, ${scrollY * 0.15}px, 0)`;
     }
 
     // Move nebulae for deeper parallax
     nebulae.forEach((nebula, index) => {
-      const speed = 0.08 + (index * 0.04);
-      const rotationSpeed = 0.03 + (index * 0.01);
-      nebula.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY * rotationSpeed}deg)`;
+      const speed = 0.05 + (index * 0.02);
+      const rotationSpeed = 0.01 + (index * 0.005);
+      nebula.style.transform = `translate3d(0, ${scrollY * speed}px, 0) rotate(${scrollY * rotationSpeed}deg)`;
     });
-  });
+    
+    checkReveal();
+    isScrolling = false;
+  };
 
-  // Trigger once on load for elements already in view
-  window.dispatchEvent(new Event('scroll'));
+  // Use IntersectionObserver as primary with low threshold
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
+
+  revealElements.forEach(el => revealObserver.observe(el));
+
+  // Throttled scroll listener using requestAnimationFrame
+  window.addEventListener('scroll', () => {
+    if (!isScrolling) {
+      window.requestAnimationFrame(updateParallax);
+      isScrolling = true;
+    }
+  }, { passive: true });
+
+  // Initial trigger
+  updateParallax();
 }
 
 /**
