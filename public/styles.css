@@ -175,6 +175,44 @@ html, body {
     position: relative;
     -webkit-font-smoothing: antialiased;
     background: transparent !important;
+    scroll-behavior: smooth;
+}
+
+/* Scroll Reveal Animations */
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform, opacity;
+}
+
+.reveal-on-scroll.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.reveal-left {
+    transform: translateX(-50px);
+}
+
+.reveal-right {
+    transform: translateX(50px);
+}
+
+.reveal-left.active, .reveal-right.active {
+    transform: translateX(0);
+}
+
+/* Staggered Delay Classes */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+.delay-500 { transition-delay: 500ms; }
+
+/* Parallax Elements */
+.parallax-layer {
+    transition: transform 0.1s linear;
 }
 
 /* Fix for horizontal overflow and narrow templates */

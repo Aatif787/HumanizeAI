@@ -3530,8 +3530,57 @@ document.addEventListener('DOMContentLoaded', function() {
     console.error('Initialization error (Comprehensive Testing):', error);
   }
 
+  // Initialize Scroll Motion Effects
+  initializeScrollMotion();
+
   console.log('AI Text Humanizer and Detector initialized successfully');
 });
+
+/**
+ * Initialize Scroll Motion and Reveal Effects
+ */
+function initializeScrollMotion() {
+  // Intersection Observer for revealing elements on scroll
+  const revealCallback = (entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        // Once revealed, we can stop observing this element
+        observer.unobserve(entry.target);
+      }
+    });
+  };
+
+  const revealObserver = new IntersectionObserver(revealCallback, {
+    root: null,
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  // Observe elements with reveal-on-scroll class
+  document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+    revealObserver.observe(el);
+  });
+
+  // Parallax Effect for Background Elements
+  const starsCanvas = document.getElementById('stars-canvas');
+  const nebulae = document.querySelectorAll('.nebula');
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    
+    // Move stars canvas slightly based on scroll
+    if (starsCanvas) {
+      starsCanvas.style.transform = `translateY(${scrollY * 0.15}px)`;
+    }
+
+    // Move nebulae for deeper parallax
+    nebulae.forEach((nebula, index) => {
+      const speed = 0.05 + (index * 0.02);
+      nebula.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY * 0.02}deg)`;
+    });
+  });
+}
 
 /**
  * Initialize navigation video functionality
