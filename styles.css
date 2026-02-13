@@ -370,15 +370,6 @@
     box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
 }
 
-/* Dark mode toggle animation */
-.dark-mode-toggle {
-    transition: all var(--transition-speed) ease;
-    transform: rotate(0deg);
-}
-
-.dark-mode-toggle:hover {
-    transform: rotate(180deg);
-}
 
 /* Export dropdown animation */
 .export-dropdown {

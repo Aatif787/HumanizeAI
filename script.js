@@ -3287,37 +3287,6 @@ class AIDetectionUI {
   }
 }
 
-function initializeThemeToggle() {
-  const toggle = document.getElementById('dark-mode-toggle');
-  if (!toggle) return;
-
-  const applyTheme = (theme) => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
-
-  let storedTheme = null;
-  try {
-    storedTheme = localStorage.getItem('theme');
-  } catch (error) {
-    storedTheme = null;
-  }
-  if (storedTheme === 'light' || storedTheme === 'dark') {
-    applyTheme(storedTheme);
-  }
-
-  toggle.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    try {
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    } catch (error) {
-      return;
-    }
-  });
-}
 
 function initializeTemplateToggle() {
   const toggle = document.getElementById('ui-template-toggle');
@@ -3489,7 +3458,7 @@ function initializeClassicalHero() {
 
 document.addEventListener('DOMContentLoaded', function() {
   console.log('DOM Content Loaded - Initializing UI...');
-  initializeThemeToggle();
+
   initializeTemplateToggle();
 
   try {
@@ -3947,7 +3916,7 @@ function initializeMainUI() {
   // Export functionality
   initializeExportFunctionality();
 
-  initializeThemeToggle();
+
 
   // Add real-time preview to style selector changes
 
