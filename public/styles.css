@@ -148,6 +148,21 @@ body, h1, h2, h3, h4, p, span, div, textarea {
     color: #e2e8f0;
 }
 
+/* Force dark mode colors on mobile regardless of theme class */
+@media (max-width: 1023px) {
+    body, h1, h2, h3, h4, p, span, div, textarea {
+        color: #f8fafc !important;
+    }
+    
+    .text-neutral-900, .text-neutral-600, .text-neutral-500, .text-neutral-400 {
+        color: #cbd5e1 !important;
+    }
+    
+    .bg-white, .bg-neutral-50, .bg-neutral-100 {
+        background-color: rgba(2, 6, 23, 0.85) !important;
+    }
+}
+
 .text-neutral-900, .text-neutral-600, .text-neutral-500 {
     color: #cbd5e1 !important;
 }
@@ -2626,3 +2641,29 @@ body[data-ui-template="classic"] {
     0%, 100% { filter: brightness(1) contrast(1); }
     50% { filter: brightness(1.2) contrast(1.1); }
 }
+
+/* Force dark mode colors on mobile regardless of theme class */
+@media (max-width: 1023px) {
+    body, h1, h2, h3, h4, p, span, div, textarea {
+        color: #f8fafc !important;
+    }
+    
+    .text-neutral-900, .text-neutral-600, .text-neutral-500, .text-neutral-400 {
+        color: #cbd5e1 !important;
+    }
+    
+    .bg-white, .bg-neutral-50, .bg-neutral-100 {
+        background-color: rgba(2, 6, 23, 0.85) !important;
+    }
+
+    .dark .bg-white, .dark .bg-neutral-50, .dark .bg-neutral-100 {
+        background-color: rgba(2, 6, 23, 0.95) !important;
+    }
+
+    /* Fix for specific sections that might still use light theme colors */
+    .site-header, .site-footer, .input-container, .output-container {
+        background-color: rgba(15, 23, 42, 0.9) !important;
+        border-color: rgba(51, 65, 85, 0.5) !important;
+    }
+}
+

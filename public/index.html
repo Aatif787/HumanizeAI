@@ -219,8 +219,12 @@
         } catch (error) {
             storedTheme = null;
         }
+
+        // Mobile-first theme logic: Force dark mode on mobile devices (< 1024px)
+        const isMobile = window.innerWidth < 1024;
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+        
+        if (isMobile || storedTheme === 'dark' || (!storedTheme && prefersDark)) {
             document.documentElement.classList.add('dark');
         } else if (storedTheme === 'light' || !prefersDark) {
             document.documentElement.classList.remove('dark');
