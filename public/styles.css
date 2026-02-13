@@ -7,7 +7,7 @@
     bottom: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    z-index: -999 !important;
+    z-index: -10 !important;
     background: #020205 !important;
     overflow: hidden;
     pointer-events: none;
@@ -22,7 +22,7 @@
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    z-index: -998 !important;
+    z-index: -9 !important;
 }
 
 .nebula {
@@ -31,11 +31,11 @@
     left: -50% !important;
     width: 200% !important;
     height: 200% !important;
-    z-index: -997 !important;
+    z-index: -8 !important;
     background: 
-        radial-gradient(circle at 30% 40%, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
-        radial-gradient(circle at 70% 60%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(13, 148, 136, 0.08) 0%, transparent 50%);
+        radial-gradient(circle at 30% 40%, rgba(20, 184, 166, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(13, 148, 136, 0.1) 0%, transparent 50%);
     filter: blur(100px);
     animation: nebulaRotate 120s linear infinite;
     pointer-events: none;
