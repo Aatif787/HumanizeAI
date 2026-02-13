@@ -2395,62 +2395,52 @@ body[data-ui-template="classic"] {
     }
 }
 
-/* Metal Text Effect */
-.metal-text {
-    font-family: 'Orbitron', sans-serif !important;
-    font-weight: 900 !important;
-    letter-spacing: 0.05em;
-    background: linear-gradient(
-        to bottom,
-        #e2e8f0 0%,
-        #ffffff 15%,
-        #94a3b8 45%,
-        #475569 50%,
-        #1e293b 51%,
-        #64748b 65%,
-        #94a3b8 85%,
-        #e2e8f0 100%
-    ) !important;
+/* Glass Text Effect */
+.glass-text {
+    font-family: 'Fredoka', sans-serif !important;
+    font-weight: 700 !important;
+    color: transparent !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
-    color: transparent !important;
     position: relative;
     display: inline-block;
-    filter: drop-shadow(0 0 1px rgba(255,255,255,0.8))
-            drop-shadow(0 2px 0 #111)
-            drop-shadow(0 4px 0 #000)
-            drop-shadow(0 8px 15px rgba(0,0,0,0.5)) !important;
-    padding: 0 0.1em;
+    line-height: 1.2;
+    
+    /* Liquid Glass Gradient */
+    background-image: linear-gradient(
+        to bottom,
+        #ffffff 0%,
+        #e2e8f0 15%,
+        #cbd5e1 39%,
+        #00d2ff 40%,
+        #0099ff 65%,
+        #0066cc 90%,
+        #004499 100%
+    ) !important;
+    
+    /* Glass Depth & Reflections */
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2))
+            brightness(1.1)
+            contrast(1.1) !important;
+            
+    /* Text stroke for glass outline */
+    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.3);
+    
+    padding: 0.1em 0;
+    transition: all 0.3s ease;
 }
 
-.metal-text::before,
-.metal-text::after {
-    content: '✦';
+.glass-text::after {
+    content: '';
     position: absolute;
-    color: #fff;
-    font-size: 1.2rem;
-    text-shadow: 0 0 10px #fff, 0 0 20px #fff;
-    animation: metal-sparkle 4s infinite linear;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, transparent 20%);
     pointer-events: none;
-    opacity: 0;
-    z-index: 10;
+    mix-blend-mode: overlay;
 }
 
-.metal-text::before {
-    top: -10%;
-    left: 5%;
-    animation-delay: 0s;
-}
-
-.metal-text::after {
-    bottom: -10%;
-    right: 5%;
-    animation-delay: 1.3s;
-}
-
-@keyframes metal-sparkle {
-    0% { transform: scale(0) rotate(0deg); opacity: 0; }
-    10% { transform: scale(1.2) rotate(90deg); opacity: 1; }
-    20% { transform: scale(0) rotate(180deg); opacity: 0; }
-    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+@keyframes liquid-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
