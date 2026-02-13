@@ -2667,76 +2667,96 @@ body[data-ui-template="classic"] {
     }
 }
 
-/* Super Realistic Glassy 3D Text Effect for SANIYA */
+/* Ultra-Stylish Hyper-Realistic Glassy 3D Text Effect for SANIYA */
 .glassy-text-saniya {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-weight: 900;
-    font-size: 2rem;
+    font-size: 2.5rem;
     background: linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.9) 0%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0.8) 100%
+        rgba(255, 255, 255, 1) 0%,
+        rgba(255, 255, 255, 0.4) 45%,
+        rgba(255, 255, 255, 0.2) 55%,
+        rgba(255, 255, 255, 1) 100%
     );
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent !important;
     position: relative;
     display: inline-block;
-    filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+    letter-spacing: -0.02em;
     
-    /* Advanced Glass Shading */
+    /* Hyper-Realistic Glass Shading & Bevel */
     text-shadow: 
         0 1px 0 rgba(255, 255, 255, 1),
-        0 2px 0 rgba(255, 255, 255, 0.5),
-        0 3px 0 rgba(200, 200, 255, 0.3),
-        0 4px 0 rgba(150, 150, 200, 0.2),
-        0 10px 20px rgba(0, 0, 0, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.8);
+        0 2px 0 rgba(255, 255, 255, 0.8),
+        0 3px 0 rgba(220, 220, 255, 0.5),
+        0 4px 1px rgba(0, 0, 0, 0.2),
+        0 6px 1px rgba(0, 0, 0, 0.1),
+        0 12px 24px rgba(0, 0, 0, 0.4);
         
-    animation: glassy-reflection 4s infinite ease-in-out;
+    animation: glassy-shine 5s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95);
     background-size: 200% auto;
 }
 
-@keyframes glassy-reflection {
+@keyframes glassy-shine {
     0%, 100% {
         background-position: 0% 50%;
-        filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4)) brightness(1);
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5)) brightness(1);
+        transform: rotateX(0deg);
     }
     50% {
         background-position: 100% 50%;
-        filter: drop-shadow(0 8px 25px rgba(255, 255, 255, 0.2)) brightness(1.2);
+        filter: drop-shadow(0 15px 30px rgba(255, 255, 255, 0.15)) brightness(1.15);
+        transform: rotateX(5deg);
     }
 }
 
-/* Super Realistic 3D Wings */
+/* Hyper-Realistic 3D Wings with Animation */
 .saniya-wing {
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+    transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .wing-path {
-    fill: url(#wing-gradient);
-    stroke: rgba(255, 255, 255, 0.3);
-    stroke-width: 0.5px;
+    fill: url(#wing-gradient-ultra);
+    stroke: rgba(255, 255, 255, 0.5);
+    stroke-width: 0.25px;
+}
+
+.wing-detail {
+    fill: rgba(255, 255, 255, 0.15);
+    mix-blend-mode: overlay;
 }
 
 .saniya-container:hover .saniya-wing {
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.4));
 }
 
 .saniya-container:hover .wing-left {
-    transform: translateX(-8px) translateY(-4px) rotate(-15deg) scale(1.15);
+    transform: translateX(-15px) translateY(-8px) rotate(-20deg) scale(1.2);
 }
 
 .saniya-container:hover .wing-right {
-    transform: translateX(8px) translateY(-4px) rotate(15deg) scale(1.15) scaleX(-1);
+    transform: translateX(15px) translateY(-8px) rotate(20deg) scale(1.2) scaleX(-1);
 }
 
 .saniya-container {
-    perspective: 1000px;
-    padding: 10px 20px;
+    perspective: 1200px;
+    padding: 20px 40px;
+    cursor: pointer;
 }
+
+.wing-animation {
+    animation: wing-float 4s infinite ease-in-out;
+}
+
+@keyframes wing-float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-5px) rotate(2deg); }
+}
+
 
 
 

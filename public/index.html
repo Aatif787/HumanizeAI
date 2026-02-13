@@ -267,36 +267,43 @@
                         <div class="flex flex-col justify-center overflow-hidden min-w-[140px] sm:min-w-[400px]">
                             <div id="nav-carousel" class="relative h-18 sm:h-20 overflow-hidden">
                                 <div id="carousel-track" class="carousel-animate transition-all duration-1000 ease-in-out">
-                                    <div class="h-18 sm:h-20 flex flex-row justify-center items-center text-center px-2 sm:px-4 space-x-2 sm:space-x-4">
-                                        <span class="text-[9px] sm:text-lg font-display font-black uppercase tracking-[0.15em] sm:tracking-[0.3em] text-primary-600 dark:text-primary-400 truncate super-text-animation">MOTI WEIGHT</span>
-                                        
-                                        <div class="saniya-container flex items-center space-x-1 sm:space-x-2">
+                                    <div class="h-18 sm:h-20 flex flex-row justify-center items-center text-center px-2 sm:px-4">
+                                        <div class="saniya-container flex items-center space-x-2 sm:space-x-4">
                                             <svg class="hidden">
                                                 <defs>
-                                                    <linearGradient id="wing-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                        <stop offset="0%" style="stop-color:rgba(255,255,255,0.95);stop-opacity:1" />
-                                                        <stop offset="50%" style="stop-color:rgba(200,210,255,0.4);stop-opacity:0.8" />
-                                                        <stop offset="100%" style="stop-color:rgba(255,255,255,0.95);stop-opacity:1" />
+                                                    <linearGradient id="wing-gradient-ultra" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                        <stop offset="0%" style="stop-color:rgba(255,255,255,1);stop-opacity:1" />
+                                                        <stop offset="30%" style="stop-color:rgba(230,235,255,0.6);stop-opacity:0.9" />
+                                                        <stop offset="70%" style="stop-color:rgba(200,210,255,0.4);stop-opacity:0.8" />
+                                                        <stop offset="100%" style="stop-color:rgba(255,255,255,1);stop-opacity:1" />
                                                     </linearGradient>
                                                 </defs>
                                             </svg>
-                                            <!-- Realistic Left Wing -->
-                                            <svg class="saniya-wing wing-left w-8 h-8 sm:w-16 sm:h-16" viewBox="0 0 200 200">
-                                                <path class="wing-path" d="M180,40c-20-15-50-20-80-15c-30,5-55,25-65,55c-5,15,5,30,20,35c25,10,60,5,90-25c15-15,30-30,35-50L180,40z M140,60 c-25,15-55,25-75,10c-10-10-10-25,0-35c15-15,40-15,65-5C150,40,155,55,140,60z" />
-                                                <path class="wing-path" d="M160,80c-15-10-35-15-55-10c-20,5-35,20-40,40c-3,10,3,20,12,25c15,8,40,5,60-15c10-10,20-20,23-35L160,80z" opacity="0.7" />
-                                            </svg>
-                                            <span class="glassy-text-saniya text-[12px] sm:text-3xl tracking-tighter">SANIYA</span>
-                                            <!-- Realistic Right Wing -->
-                                            <svg class="saniya-wing wing-right w-8 h-8 sm:w-16 sm:h-16" viewBox="0 0 200 200" style="transform: scaleX(-1);">
-                                                <path class="wing-path" d="M180,40c-20-15-50-20-80-15c-30,5-55,25-65,55c-5,15,5,30,20,35c25,10,60,5,90-25c15-15,30-30,35-50L180,40z M140,60 c-25,15-55,25-75,10c-10-10-10-25,0-35c15-15,40-15,65-5C150,40,155,55,140,60z" />
-                                                <path class="wing-path" d="M160,80c-15-10-35-15-55-10c-20,5-35,20-40,40c-3,10,3,20,12,25c15,8,40,5,60-15c10-10,20-20,23-35L160,80z" opacity="0.7" />
-                                            </svg>
+                                            <!-- Hyper-Realistic Left Wing -->
+                                            <div class="wing-animation">
+                                                <svg class="saniya-wing wing-left w-10 h-10 sm:w-20 sm:h-20" viewBox="0 0 200 200">
+                                                    <path class="wing-path" d="M180,40c-20-15-50-20-80-15c-30,5-55,25-65,55c-5,15,5,30,20,35c25,10,60,5,90-25c15-15,30-30,35-50L180,40z" />
+                                                    <path class="wing-detail" d="M140,60c-25,15-55,25-75,10c-10-10-10-25,0-35c15-15,40-15,65-5C150,40,155,55,140,60z" />
+                                                    <path class="wing-path" d="M160,80c-15-10-35-15-55-10c-20,5-35,20-40,40c-3,10,3,20,12,25c15,8,40,5,60-15c10-10,20-20,23-35L160,80z" opacity="0.8" />
+                                                    <path class="wing-detail" d="M150,90c-10-5-25-10-40-5c-15,5-25,15-28,30c-2,8,2,15,8,18c10,5,30,20,45-12c8-8,15-15,18-25L150,90z" opacity="0.4" />
+                                                </svg>
+                                            </div>
+                                            
+                                            <span class="glassy-text-saniya text-[16px] sm:text-5xl tracking-tighter">SANIYA</span>
+                                            
+                                            <!-- Hyper-Realistic Right Wing -->
+                                            <div class="wing-animation">
+                                                <svg class="saniya-wing wing-right w-10 h-10 sm:w-20 sm:h-20" viewBox="0 0 200 200" style="transform: scaleX(-1);">
+                                                    <path class="wing-path" d="M180,40c-20-15-50-20-80-15c-30,5-55,25-65,55c-5,15,5,30,20,35c25,10,60,5,90-25c15-15,30-30,35-50L180,40z" />
+                                                    <path class="wing-detail" d="M140,60c-25,15-55,25-75,10c-10-10-10-25,0-35c15-15,40-15,65-5C150,40,155,55,140,60z" />
+                                                    <path class="wing-path" d="M160,80c-15-10-35-15-55-10c-20,5-35,20-40,40c-3,10,3,20,12,25c15,8,40,5,60-15c10-10,20-20,23-35L160,80z" opacity="0.8" />
+                                                    <path class="wing-detail" d="M150,90c-10-5-25-10-40-5c-15,5-25,15-28,30c-2,8,2,15,8,18c10,5,30,20,45-12c8-8,15-15,18-25L150,90z" opacity="0.4" />
+                                                </svg>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="h-18 sm:h-20 flex flex-col justify-center items-center text-center px-2 sm:px-4">
-                                        <span class="text-[8px] sm:text-[12px] font-display font-bold leading-tight text-neutral-800 dark:text-neutral-200 italic super-text-animation whitespace-normal overflow-visible">"Some people only recognize sincerity when it becomes absence… I just didn’t think you’d be one of them"</span>
-                                    </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
