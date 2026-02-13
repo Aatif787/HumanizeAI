@@ -3543,9 +3543,8 @@ function initializeScrollMotion() {
   const starsCanvas = document.getElementById('stars-canvas');
   const nebulae = document.querySelectorAll('.nebula');
   const revealElements = document.querySelectorAll('.reveal-on-scroll, .reveal-left, .reveal-right');
-  
+
   let isScrolling = false;
-  let lastScrollY = window.scrollY;
 
   // Initial trigger for mobile/small screens to ensure visibility
   if (window.innerWidth <= 1024) {
@@ -3568,7 +3567,6 @@ function initializeScrollMotion() {
   // Optimized parallax logic
   const updateParallax = () => {
     const scrollY = window.scrollY;
-    
     // Deeper Parallax for stars
     if (starsCanvas) {
       starsCanvas.style.transform = `translate3d(0, ${scrollY * 0.15}px, 0)`;
@@ -3580,7 +3578,7 @@ function initializeScrollMotion() {
       const rotationSpeed = 0.01 + (index * 0.005);
       nebula.style.transform = `translate3d(0, ${scrollY * speed}px, 0) rotate(${scrollY * rotationSpeed}deg)`;
     });
-    
+
     checkReveal();
     isScrolling = false;
   };
@@ -4253,13 +4251,6 @@ function initializeEnhancedAnimations() {
     if (!button.classList.contains('no-animation')) {
       button.classList.add('ripple-effect');
     }
-  });
-
-  // Add floating animation to header elements
-  const headerElements = document.querySelectorAll('header .container > div');
-  headerElements.forEach((element, index) => {
-    element.style.animationDelay = `${index * 0.1}s`;
-    element.classList.add('fade-in-scale');
   });
 
   // Add typing animation to title if it exists
