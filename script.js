@@ -3545,27 +3545,27 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initializeGlassBubbles() {
   const glassElements = document.querySelectorAll('.glass-text');
-  
+
   glassElements.forEach(el => {
     // Ensure container doesn't already exist
     if (el.querySelector('.glass-bubbles')) return;
-    
+
     const bubblesContainer = document.createElement('div');
     bubblesContainer.className = 'glass-bubbles';
     el.appendChild(bubblesContainer);
-    
+
     setInterval(() => {
       const bubble = document.createElement('span');
       const size = Math.random() * 6 + 2 + 'px';
       const left = Math.random() * 90 + 5 + '%';
-      
+
       bubble.style.width = size;
       bubble.style.height = size;
       bubble.style.left = left;
       bubble.style.bottom = '0';
-      
+
       bubblesContainer.appendChild(bubble);
-      
+
       setTimeout(() => {
         bubble.remove();
       }, 4000);
@@ -3955,8 +3955,6 @@ function initializeMainUI() {
 
   // Export functionality
   initializeExportFunctionality();
-
-
 
   // Add real-time preview to style selector changes
 
