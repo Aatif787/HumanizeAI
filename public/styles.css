@@ -2667,3 +2667,55 @@ body[data-ui-template="classic"] {
     }
 }
 
+/* Glassy Text Effect for SANIYA */
+.glassy-text-saniya {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(255, 255, 255, 0.4) 25%,
+        rgba(200, 210, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0.4) 75%,
+        rgba(255, 255, 255, 0.95) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    position: relative;
+    display: inline-block;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    text-shadow: 
+        0 1px 0 rgba(255, 255, 255, 0.9),
+        0 2px 0 rgba(255, 255, 255, 0.5),
+        0 3px 1px rgba(0, 0, 0, 0.1),
+        0 0 5px rgba(255, 255, 255, 0.2);
+    animation: glassy-shimmer 3s infinite linear;
+    background-size: 200% auto;
+}
+
+@keyframes glassy-shimmer {
+    to {
+        background-position: 200% center;
+    }
+}
+
+.saniya-wing {
+    color: rgba(255, 255, 255, 0.8);
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.4));
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.saniya-container:hover .saniya-wing {
+    color: rgba(255, 255, 255, 1);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+}
+
+.saniya-container:hover .wing-left {
+    transform: translateX(-5px) rotate(-10deg) scale(1.1);
+}
+
+.saniya-container:hover .wing-right {
+    transform: translateX(5px) rotate(10deg) scale(1.1);
+}
+
+
