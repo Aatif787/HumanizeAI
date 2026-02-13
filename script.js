@@ -3540,12 +3540,16 @@ document.addEventListener('DOMContentLoaded', function() {
  * Initialize Scroll Motion and Reveal Effects
  */
 function initializeScrollMotion() {
+  // Parallax Effect for Background Elements
+  const starsCanvas = document.getElementById('stars-canvas');
+  const nebulae = document.querySelectorAll('.nebula');
+
   // Intersection Observer for revealing elements on scroll
   const revealCallback = (entries, observer) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
+      // Use intersectionRatio for more reliable detection
+      if (entry.isIntersecting || entry.intersectionRatio > 0) {
         entry.target.classList.add('active');
-        // Once revealed, we can stop observing this element
         observer.unobserve(entry.target);
       }
     });
@@ -3553,33 +3557,45 @@ function initializeScrollMotion() {
 
   const revealObserver = new IntersectionObserver(revealCallback, {
     root: null,
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.01, // Trigger as soon as 1% is visible
+    rootMargin: '0px 0px -20px 0px'
   });
 
   // Observe elements with reveal-on-scroll class
-  document.querySelectorAll('.reveal-on-scroll').forEach(el => {
+  const revealElements = document.querySelectorAll('.reveal-on-scroll');
+  revealElements.forEach(el => {
     revealObserver.observe(el);
   });
 
-  // Parallax Effect for Background Elements
-  const starsCanvas = document.getElementById('stars-canvas');
-  const nebulae = document.querySelectorAll('.nebula');
-
+  // Fallback: If observer doesn't trigger, show elements on scroll anyway
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
+    const windowHeight = window.innerHeight;
+
+    revealElements.forEach(el => {
+      if (!el.classList.contains('active')) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < windowHeight * 0.95) {
+          el.classList.add('active');
+        }
+      }
+    });
     
-    // Move stars canvas slightly based on scroll
+    // Deeper Parallax for stars
     if (starsCanvas) {
-      starsCanvas.style.transform = `translateY(${scrollY * 0.15}px)`;
+      starsCanvas.style.transform = `translateY(${scrollY * 0.25}px)`;
     }
 
     // Move nebulae for deeper parallax
     nebulae.forEach((nebula, index) => {
-      const speed = 0.05 + (index * 0.02);
-      nebula.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY * 0.02}deg)`;
+      const speed = 0.08 + (index * 0.04);
+      const rotationSpeed = 0.03 + (index * 0.01);
+      nebula.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY * rotationSpeed}deg)`;
     });
   });
+
+  // Trigger once on load for elements already in view
+  window.dispatchEvent(new Event('scroll'));
 }
 
 /**
