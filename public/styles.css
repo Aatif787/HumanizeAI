@@ -171,7 +171,7 @@ html, body {
     padding: 0 !important;
     width: 100% !important;
     min-height: 100% !important;
-    overflow-x: hidden;
+    overflow-x: hidden !important; /* Strict enforcement to prevent side overflow */
     position: relative;
     -webkit-font-smoothing: antialiased;
     background: transparent !important;
@@ -199,6 +199,13 @@ html, body {
 
 .reveal-right {
     transform: translateX(40px) translateY(20px);
+}
+
+@media (max-width: 768px) {
+    .reveal-left, .reveal-right {
+        transform: translateY(30px); /* Remove horizontal offset on mobile to prevent overflow */
+        opacity: 0;
+    }
 }
 
 .reveal-left.active, .reveal-right.active {
