@@ -889,78 +889,113 @@
         (function() {
             const canvas = document.getElementById('stars-canvas');
             const ctx = canvas.getContext('2d');
-            let stars = [];
+            let particles = [];
             let width, height;
+            let mouse = { x: null, y: null, radius: 150 };
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.size = Math.random() * 2 + 1;
+                    this.baseSize = this.size;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.glow = Math.random() > 0.9;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Subtle wave motion
+                    this.y += Math.sin(Date.now() * 0.001 + this.x * 0.005) * 0.2;
+
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                    // Mouse interaction
+                    if (mouse.x != null && mouse.y != null) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < mouse.radius) {
+                            const force = (mouse.radius - distance) / mouse.radius;
+                            this.x -= dx * force * 0.03;
+                            this.y -= dy * force * 0.03;
+                            this.size = this.baseSize * (1 + force * 2);
+                        } else {
+                            this.size = this.baseSize;
+                        }
+                    }
+                }
+
+                draw() {
+                    ctx.fillStyle = this.glow ? '#00f2ff' : 'rgba(0, 242, 255, 0.5)';
+                    if (this.glow) {
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = '#00f2ff';
+                    }
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
 
             function init() {
                 width = window.innerWidth;
                 height = window.innerHeight;
                 canvas.width = width;
                 canvas.height = height;
-                stars = [];
-                const starCount = 600; // Increased count for finer stars
-                for (let i = 0; i < starCount; i++) {
-                    stars.push({
-                        x: Math.random() * width,
-                        y: Math.random() * height,
-                        size: Math.random() * 0.8 + 0.1, // Significantly smaller stars
-                        speedX: (Math.random() - 0.5) * 0.05, // Slower, more subtle movement
-                        speedY: (Math.random() - 0.5) * 0.05,
-                        opacity: Math.random(),
-                        twinkleSpeed: Math.random() * 0.01 + 0.005,
-                        color: getStarColor()
-                    });
+                particles = [];
+                const particleCount = Math.min(Math.floor((width * height) / 10000), 150);
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
                 }
             }
 
-            function getStarColor() {
-                const rand = Math.random();
-                if (rand > 0.95) return '#cbd5e1'; // Blue-ish white
-                if (rand > 0.90) return '#fef08a'; // Soft yellow
-                if (rand > 0.85) return '#fecaca'; // Soft red/pink
-                return '#ffffff'; // Pure white
+            function drawLines() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        let dx = particles[i].x - particles[j].x;
+                        let dy = particles[i].y - particles[j].y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 150) {
+                            ctx.strokeStyle = `rgba(0, 242, 255, ${1 - distance / 150})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
             }
 
-            function draw() {
+            function animate() {
                 ctx.clearRect(0, 0, width, height);
-                stars.forEach(star => {
-                    star.x += star.speedX;
-                    star.y += star.speedY;
-                    star.opacity += star.twinkleSpeed;
-
-                    if (star.opacity > 0.8 || star.opacity < 0.1) {
-                        star.twinkleSpeed = -star.twinkleSpeed;
-                    }
-
-                    if (star.x < 0) star.x = width;
-                    if (star.x > width) star.x = 0;
-                    if (star.y < 0) star.y = height;
-                    if (star.y > height) star.y = 0;
-
-                    ctx.globalAlpha = star.opacity;
-                    ctx.fillStyle = star.color;
-                    
-                    // Draw main star
-                    ctx.beginPath();
-                    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    // Enhanced realistic glow for specific stars
-                    if (star.size > 0.6) {
-                        ctx.shadowBlur = star.size * 4;
-                        ctx.shadowColor = star.color;
-                        ctx.beginPath();
-                        ctx.arc(star.x, star.y, star.size * 0.5, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.shadowBlur = 0;
-                    }
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
                 });
-                requestAnimationFrame(draw);
+                drawLines();
+                requestAnimationFrame(animate);
             }
 
             window.addEventListener('resize', init);
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.x;
+                mouse.y = e.y;
+            });
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
             init();
-            draw();
+            animate();
         })();
     </script>
     <script src="advanced-humanizer.js?v=1.1.7-ts1739119500"></script>

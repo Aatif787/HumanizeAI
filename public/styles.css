@@ -33,9 +33,9 @@
     height: 200% !important;
     z-index: -997 !important;
     background: 
-        radial-gradient(circle at 30% 40%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 70% 60%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(217, 70, 239, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 30% 40%, rgba(20, 184, 166, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(13, 148, 136, 0.08) 0%, transparent 50%);
     filter: blur(100px);
     animation: nebulaRotate 120s linear infinite;
     pointer-events: none;
