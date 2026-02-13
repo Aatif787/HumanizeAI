@@ -76,7 +76,7 @@ html, body, .mk-theme, .ui-template-root, .main-content, #ui-template-root {
     bottom: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    z-index: -1 !important;
+    z-index: -999 !important; /* Move deep behind everything */
     background-color: #020205 !important;
     overflow: hidden;
     pointer-events: none;
@@ -91,7 +91,7 @@ html, body, .mk-theme, .ui-template-root, .main-content, #ui-template-root {
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    z-index: 2 !important;
+    z-index: -998 !important;
 }
 
 .nebula {
@@ -100,7 +100,7 @@ html, body, .mk-theme, .ui-template-root, .main-content, #ui-template-root {
     left: -50% !important;
     width: 200% !important;
     height: 200% !important;
-    z-index: 1 !important;
+    z-index: -997 !important;
     background: 
         radial-gradient(circle at 30% 40%, rgba(20, 184, 166, 0.2) 0%, transparent 50%),
         radial-gradient(circle at 70% 60%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
@@ -108,6 +108,12 @@ html, body, .mk-theme, .ui-template-root, .main-content, #ui-template-root {
     filter: blur(100px);
     animation: nebulaRotate 120s linear infinite;
     pointer-events: none;
+}
+
+/* Ensure content stays on top */
+.site-header, #ui-template-root, .ui-template-root, .main-content {
+    position: relative !important;
+    z-index: 10 !important;
 }
 
 /* Ensure existing sections have glassmorphism for better look */
