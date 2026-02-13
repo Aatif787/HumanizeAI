@@ -2394,3 +2394,63 @@ body[data-ui-template="classic"] {
         letter-spacing: 0.28em;
     }
 }
+
+/* Metal Text Effect */
+.metal-text {
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.05em;
+    background: linear-gradient(
+        to bottom,
+        #e2e8f0 0%,
+        #ffffff 15%,
+        #94a3b8 45%,
+        #475569 50%,
+        #1e293b 51%,
+        #64748b 65%,
+        #94a3b8 85%,
+        #e2e8f0 100%
+    ) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    position: relative;
+    display: inline-block;
+    filter: drop-shadow(0 0 1px rgba(255,255,255,0.8))
+            drop-shadow(0 2px 0 #111)
+            drop-shadow(0 4px 0 #000)
+            drop-shadow(0 8px 15px rgba(0,0,0,0.5)) !important;
+    padding: 0 0.1em;
+}
+
+.metal-text::before,
+.metal-text::after {
+    content: '✦';
+    position: absolute;
+    color: #fff;
+    font-size: 1.2rem;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff;
+    animation: metal-sparkle 4s infinite linear;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 10;
+}
+
+.metal-text::before {
+    top: -10%;
+    left: 5%;
+    animation-delay: 0s;
+}
+
+.metal-text::after {
+    bottom: -10%;
+    right: 5%;
+    animation-delay: 1.3s;
+}
+
+@keyframes metal-sparkle {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    10% { transform: scale(1.2) rotate(90deg); opacity: 1; }
+    20% { transform: scale(0) rotate(180deg); opacity: 0; }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
