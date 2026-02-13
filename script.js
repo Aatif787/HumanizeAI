@@ -3530,8 +3530,48 @@ document.addEventListener('DOMContentLoaded', function() {
     console.error('Initialization error (Comprehensive Testing):', error);
   }
 
+  // Initialize Liquid Glass Bubbles
+  try {
+    initializeGlassBubbles();
+  } catch (error) {
+    console.error('Initialization error (Glass Bubbles):', error);
+  }
+
   console.log('AI Text Humanizer and Detector initialized successfully');
 });
+
+/**
+ * Creates dynamic bubbles for the glass text effect
+ */
+function initializeGlassBubbles() {
+  const glassElements = document.querySelectorAll('.glass-text');
+  
+  glassElements.forEach(el => {
+    // Ensure container doesn't already exist
+    if (el.querySelector('.glass-bubbles')) return;
+    
+    const bubblesContainer = document.createElement('div');
+    bubblesContainer.className = 'glass-bubbles';
+    el.appendChild(bubblesContainer);
+    
+    setInterval(() => {
+      const bubble = document.createElement('span');
+      const size = Math.random() * 6 + 2 + 'px';
+      const left = Math.random() * 90 + 5 + '%';
+      
+      bubble.style.width = size;
+      bubble.style.height = size;
+      bubble.style.left = left;
+      bubble.style.bottom = '0';
+      
+      bubblesContainer.appendChild(bubble);
+      
+      setTimeout(() => {
+        bubble.remove();
+      }, 4000);
+    }, 600);
+  });
+}
 
 /**
  * Initialize navigation video functionality

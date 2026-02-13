@@ -2395,52 +2395,84 @@ body[data-ui-template="classic"] {
     }
 }
 
-/* Glass Text Effect */
+/* Liquid Glass Text Effect - Refined */
 .glass-text {
     font-family: 'Fredoka', sans-serif !important;
     font-weight: 700 !important;
-    color: transparent !important;
-    -webkit-background-clip: text !important;
-    background-clip: text !important;
     position: relative;
     display: inline-block;
-    line-height: 1.2;
-    
-    /* Liquid Glass Gradient */
-    background-image: linear-gradient(
+    color: rgba(255, 255, 255, 0.2) !important;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
+    background: linear-gradient(
         to bottom,
-        #ffffff 0%,
-        #e2e8f0 15%,
-        #cbd5e1 39%,
-        #00d2ff 40%,
-        #0099ff 65%,
-        #0066cc 90%,
-        #004499 100%
+        rgba(255, 255, 255, 0.8) 0%,
+        rgba(255, 255, 255, 0.2) 35%,
+        #00f2ff 36%,
+        #00a2ff 60%,
+        #0066ff 100%
     ) !important;
-    
-    /* Glass Depth & Reflections */
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2))
-            brightness(1.1)
-            contrast(1.1) !important;
-            
-    /* Text stroke for glass outline */
-    -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.3);
-    
-    padding: 0.1em 0;
-    transition: all 0.3s ease;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.glass-text::before {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at 50% 10%, #fff 0%, transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.4) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3) 0%, transparent 20%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: blur(1px) brightness(1.5);
 }
 
 .glass-text::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, transparent 20%);
-    pointer-events: none;
-    mix-blend-mode: overlay;
+    left: 0;
+    top: 36%;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.8);
+    z-index: 2;
+    filter: blur(1px);
+    opacity: 0.8;
 }
 
-@keyframes liquid-flow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* Bubbles inside the liquid */
+.glass-bubbles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.glass-bubbles span {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    box-shadow: inset 0 0 5px #fff;
+    animation: bubble-float 4s infinite ease-in;
+}
+
+@keyframes bubble-float {
+    0% { transform: translateY(100%) scale(0); opacity: 0; }
+    50% { opacity: 0.6; }
+    100% { transform: translateY(-20%) scale(1); opacity: 0; }
+}
+
+@keyframes liquid-pulse {
+    0%, 100% { filter: brightness(1) contrast(1); }
+    50% { filter: brightness(1.2) contrast(1.1); }
 }
