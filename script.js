@@ -3542,10 +3542,15 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeScrollMotion() {
   const starsCanvas = document.getElementById('stars-canvas');
   const nebulae = document.querySelectorAll('.nebula');
-  const revealElements = document.querySelectorAll('.reveal-on-scroll');
+  const revealElements = document.querySelectorAll('.reveal-on-scroll, .reveal-left, .reveal-right');
   
   let isScrolling = false;
   let lastScrollY = window.scrollY;
+
+  // Initial trigger for mobile/small screens to ensure visibility
+  if (window.innerWidth <= 1024) {
+    revealElements.forEach(el => el.classList.add('active'));
+  }
 
   // Optimized reveal logic
   const checkReveal = () => {
@@ -3602,6 +3607,20 @@ function initializeScrollMotion() {
 
   // Initial trigger
   updateParallax();
+
+  // Re-check on resize to handle layout shifts
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 1024) {
+      revealElements.forEach(el => el.classList.add('active'));
+    }
+    if (!isScrolling) {
+      window.requestAnimationFrame(() => {
+        checkReveal();
+        updateParallax();
+      });
+      isScrolling = true;
+    }
+  }, { passive: true });
 }
 
 /**
@@ -4282,32 +4301,6 @@ function initializeEnhancedAnimations() {
   const specialElements = document.querySelectorAll('.gradient-border, .bg-gradient-to-r');
   specialElements.forEach(element => {
     element.classList.add('gradient-border');
-  });
-
-  const sections = document.querySelectorAll('section');
-  sections.forEach(section => {
-    section.style.opacity = '1';
-    section.style.transition = 'opacity 0.6s ease-out';
-  });
-
-  if (!('IntersectionObserver' in window)) return;
-
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('fade-in-scale');
-        entry.target.style.opacity = '1';
-      }
-    });
-  }, observerOptions);
-
-  sections.forEach(section => {
-    observer.observe(section);
   });
 
   // Ensure navbar video plays

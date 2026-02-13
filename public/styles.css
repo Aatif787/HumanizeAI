@@ -188,6 +188,13 @@ html, body {
     scroll-behavior: smooth;
 }
 
+/* Ensure critical UI remains visible even if scroll reveal fails */
+#app-interface.reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+}
+
 /* Scroll Reveal Animations - Performance Optimized */
 .reveal-on-scroll {
     opacity: 0;
@@ -233,6 +240,17 @@ html, body {
 
 .reveal-left.active, .reveal-right.active {
     transform: translate(0, 0) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Fallback for elements that should always be visible on mobile */
+@media (max-width: 1023px) {
+    .reveal-left.active, .reveal-right.active {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+    }
 }
 
 /* Optimize Galaxy Background Layers */
@@ -292,12 +310,15 @@ html, body {
         margin: 0 !important;
         transform: none !important; /* Force reset all transforms on mobile */
         opacity: 1 !important; /* Ensure visibility if scroll trigger fails */
+        visibility: visible !important;
     }
     
-    .reveal-on-scroll, .reveal-left, .reveal-right {
+    .reveal-on-scroll, .reveal-left, .reveal-right, .animate-slide-up, .animate-fade-in {
         transform: none !important;
         opacity: 1 !important;
+        visibility: visible !important;
         transition: none !important;
+        animation: none !important;
     }
 }
 
