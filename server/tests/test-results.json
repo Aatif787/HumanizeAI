@@ -1,0 +1,292 @@
+{
+  "unitTests": [],
+  "integrationTests": [],
+  "performanceTests": [],
+  "summary": {
+    "totalTestSuites": 0,
+    "totalPassed": 0,
+    "totalTests": 0,
+    "successRate": "0.0",
+    "testDuration": 485
+  },
+  "unittestsTests": [
+    {
+      "model": "TextClassifierModel",
+      "tests": [
+        {
+          "test": "TextClassifierModel.analyze(\"Hello world...\")",
+          "success": true,
+          "prediction": "human_written",
+          "confidence": 0.3333333333333333,
+          "processingTime": 4.410000000000025,
+          "expected": [
+            "human_written",
+            "ai_generated",
+            "mixed_content"
+          ]
+        },
+        {
+          "test": "TextClassifierModel.analyze(\"The implementation of machine ...\")",
+          "success": true,
+          "prediction": "human_written",
+          "confidence": 0.3333333333333333,
+          "processingTime": 3.79219999999998,
+          "expected": [
+            "human_written",
+            "ai_generated",
+            "mixed_content"
+          ]
+        },
+        {
+          "test": "TextClassifierModel.analyze(\"Hey guys! What's up? I think w...\")",
+          "success": true,
+          "prediction": "human_written",
+          "confidence": 0.3333333333333333,
+          "processingTime": 3.226600000000019,
+          "expected": [
+            "human_written",
+            "ai_generated",
+            "mixed_content"
+          ]
+        }
+      ],
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "model": "StatisticalLanguageModel",
+      "tests": [
+        {
+          "test": "StatisticalLanguageModel.analyze(\"The quick brown fox jumps over...\")",
+          "success": true,
+          "perplexity": 1,
+          "vocabularyDiversity": 0.8888888888888888,
+          "sentenceLengthVariance": 0,
+          "avgSentenceLength": 9,
+          "patternScore": 0
+        },
+        {
+          "test": "StatisticalLanguageModel.analyze(\"Machine learning algorithms ar...\")",
+          "success": true,
+          "perplexity": 1,
+          "vocabularyDiversity": 1,
+          "sentenceLengthVariance": 0,
+          "avgSentenceLength": 7,
+          "patternScore": 0
+        },
+        {
+          "test": "StatisticalLanguageModel.analyze(\"I went to the store yesterday ...\")",
+          "success": true,
+          "perplexity": 1,
+          "vocabularyDiversity": 1,
+          "sentenceLengthVariance": 0,
+          "avgSentenceLength": 10,
+          "patternScore": 0.75
+        }
+      ],
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "model": "StylometricAnalyzer",
+      "tests": [
+        {
+          "test": "StylometricAnalyzer.analyze(\"The implementation of machine ...\")",
+          "success": true
+        },
+        {
+          "test": "StylometricAnalyzer.analyze(\"Hey guys! I went to the park y...\")",
+          "success": true
+        }
+      ],
+      "passed": 2,
+      "total": 2
+    },
+    {
+      "model": "SemanticCoherenceAnalyzer",
+      "tests": [
+        {
+          "test": "SemanticCoherenceAnalyzer.analyze(\"The cat sat on the mat. The ma...\")",
+          "success": true
+        },
+        {
+          "test": "SemanticCoherenceAnalyzer.analyze(\"Machine learning is a subset o...\")",
+          "success": true
+        }
+      ],
+      "passed": 2,
+      "total": 2
+    }
+  ],
+  "integrationtestsTests": [
+    {
+      "integration": "Basic Detection",
+      "tests": [
+        {
+          "test": "Basic Detection - Human Text",
+          "success": true,
+          "prediction": "mixed_content",
+          "confidence": 0.5,
+          "processingTime": 11.053499999999985,
+          "modelsUsed": [
+            "detailedAnalysis",
+            "processingTime",
+            "modelVersions",
+            "timestamp"
+          ]
+        },
+        {
+          "test": "Basic Detection - AI Text",
+          "success": true,
+          "prediction": "mixed_content",
+          "confidence": 0.5,
+          "processingTime": 7.810100000000034,
+          "modelsUsed": [
+            "detailedAnalysis",
+            "processingTime",
+            "modelVersions",
+            "timestamp"
+          ]
+        },
+        {
+          "test": "Basic Detection - Mixed Content",
+          "success": true,
+          "prediction": "mixed_content",
+          "confidence": 0.5,
+          "processingTime": 9.282299999999964,
+          "modelsUsed": [
+            "detailedAnalysis",
+            "processingTime",
+            "modelVersions",
+            "timestamp"
+          ]
+        }
+      ],
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "integration": "Detailed Analysis",
+      "tests": [
+        {
+          "test": "Has prediction",
+          "success": true,
+          "value": "mixed_content"
+        },
+        {
+          "test": "Has confidence",
+          "success": true,
+          "value": 0.5
+        },
+        {
+          "test": "Has detailed analysis",
+          "success": true,
+          "value": "Present"
+        },
+        {
+          "test": "Has text classification",
+          "success": true,
+          "value": "Present"
+        },
+        {
+          "test": "Has language analysis",
+          "success": true,
+          "value": "Present"
+        }
+      ],
+      "passed": 5,
+      "total": 5
+    },
+    {
+      "integration": "Error Handling",
+      "tests": [
+        {
+          "test": "Error Handling - Empty Text",
+          "success": true,
+          "prediction": "human_written",
+          "confidence": 0,
+          "note": "Should handle gracefully"
+        },
+        {
+          "test": "Error Handling - Very Long Text",
+          "success": true,
+          "prediction": "mixed_content",
+          "confidence": 0.5,
+          "note": "Should handle gracefully"
+        },
+        {
+          "test": "Error Handling - Special Characters",
+          "success": true,
+          "prediction": "mixed_content",
+          "confidence": 0.5,
+          "note": "Should handle gracefully"
+        },
+        {
+          "test": "Error Handling - Non-English Text",
+          "success": true,
+          "prediction": "mixed_content",
+          "confidence": 0.5,
+          "note": "Should handle gracefully"
+        },
+        {
+          "test": "Error Handling - Mixed Languages",
+          "success": true,
+          "prediction": "mixed_content",
+          "confidence": 0.5,
+          "note": "Should handle gracefully"
+        }
+      ],
+      "passed": 5,
+      "total": 5
+    }
+  ],
+  "performancetestsTests": [
+    {
+      "performance": "Processing Speed",
+      "tests": [
+        {
+          "test": "Performance - Short Text (12 chars)",
+          "success": true,
+          "averageTime": 2.3341400000000023,
+          "minTime": 1.4384999999999764,
+          "maxTime": 3.6767000000000962,
+          "iterations": 10,
+          "charactersPerSecond": 5141.079798126928
+        },
+        {
+          "test": "Performance - Medium Text (98 chars)",
+          "success": true,
+          "averageTime": 3.771109999999999,
+          "minTime": 3.0716999999999643,
+          "maxTime": 5.045800000000099,
+          "iterations": 10,
+          "charactersPerSecond": 25987.043602546735
+        },
+        {
+          "test": "Performance - Long Text (428 chars)",
+          "success": true,
+          "averageTime": 10.176759999999978,
+          "minTime": 8.07159999999999,
+          "maxTime": 11.908300000000054,
+          "iterations": 10,
+          "charactersPerSecond": 42056.60740746572
+        }
+      ],
+      "passed": 3,
+      "total": 3
+    },
+    {
+      "performance": "Memory Usage",
+      "tests": [
+        {
+          "test": "Memory increase per instance",
+          "success": true,
+          "memoryIncrease": 29694688,
+          "averagePerInstance": 5938937.6
+        }
+      ],
+      "passed": 1,
+      "total": 1
+    }
+  ]
+}

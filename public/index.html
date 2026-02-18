@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humanize AI — Classical Edition</title>
+    <meta name="description" content="Turn AI drafts into writing that feels human—measured rhythm, graceful tone, and authentic voice.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        secondary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.2/css/all.css">
+    
+    <link rel="stylesheet" href="styles.css?v=1.1.8-ts1770751500">
+
+    <script>
+        const style = document.createElement('style');
+        style.textContent = `
+            :root {
+                --primary-50: #fcf6f3;
+                --primary-100: #f6e8e1;
+                --primary-500: #7a2a2a;
+                --primary-600: #662020;
+                --primary-700: #521919;
+                --primary-800: #3f1313;
+                --accent-500: #b68a2b;
+                --accent-600: #9d7422;
+                --success-500: #2f6b4f;
+                --success-600: #255440;
+                --warning-500: #b56b2b;
+                --warning-600: #995522;
+                --error-500: #8a2f2f;
+                --error-600: #722525;
+                --neutral-50: #fffdf9;
+                --neutral-100: #f8f2e8;
+                --neutral-200: #eee4d3;
+                --neutral-300: #dccbb3;
+                --neutral-400: #c3b29a;
+                --neutral-500: #9d8a74;
+                --neutral-600: #7c6a57;
+                --neutral-700: #5d4e40;
+                --neutral-800: #3b3128;
+                --neutral-900: #251f19;
+            }
+            
+            .font-display { font-family: 'Cormorant Garamond', 'Libre Baskerville', serif; }
+            .font-body { font-family: 'Libre Baskerville', Georgia, serif; }
+            
+            .bg-primary-50 { background-color: var(--primary-50); }
+            .bg-primary-100 { background-color: var(--primary-100); }
+            .bg-primary-500 { background-color: var(--primary-500); }
+            .bg-primary-600 { background-color: var(--primary-600); }
+            .bg-primary-700 { background-color: var(--primary-700); }
+            .bg-primary-800 { background-color: var(--primary-800); }
+            .bg-accent-500 { background-color: var(--accent-500); }
+            .bg-accent-600 { background-color: var(--accent-600); }
+            .bg-success-500 { background-color: var(--success-500); }
+            .bg-success-600 { background-color: var(--success-600); }
+            
+            .text-primary-500 { color: var(--primary-500); }
+            .text-primary-600 { color: var(--primary-600); }
+            .text-primary-700 { color: var(--primary-700); }
+            .text-accent-500 { color: var(--accent-500); }
+            .text-accent-600 { color: var(--accent-600); }
+            .text-success-500 { color: var(--success-500); }
+            .text-success-600 { color: var(--success-600); }
+            
+            .border-primary-500 { border-color: var(--primary-500); }
+            .border-primary-600 { border-color: var(--primary-600); }
+            .ring-primary-500 { --tw-ring-color: var(--primary-500); }
+            .ring-accent-500 { --tw-ring-color: var(--accent-500); }
+            
+            .bg-neutral-50 { background-color: var(--neutral-50); }
+            .bg-neutral-100 { background-color: var(--neutral-100); }
+            .bg-neutral-800 { background-color: var(--neutral-800); }
+            .bg-neutral-900 { background-color: var(--neutral-900); }
+            
+            .text-neutral-400 { color: var(--neutral-400); }
+            .text-neutral-500 { color: var(--neutral-500); }
+            .text-neutral-600 { color: var(--neutral-600); }
+            .text-neutral-700 { color: var(--neutral-700); }
+            
+            .dark .bg-neutral-800 { background-color: var(--neutral-800); }
+            .dark .bg-neutral-900 { background-color: var(--neutral-900); }
+            .dark .text-neutral-400 { color: var(--neutral-400); }
+            .dark .text-neutral-500 { color: var(--neutral-500); }
+            
+            .animate-fade-in { animation: fadeIn 0.6s ease-out; }
+            .animate-slide-up { animation: slideUp 0.4s ease-out; }
+            .animate-pulse-slow { animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+            .animate-float { animation: float 4s ease-in-out infinite; }
+            .animate-shimmer { animation: shimmer 2s infinite; }
+            
+            @keyframes fadeIn { 
+                0% { opacity: 0; } 
+                100% { opacity: 1; } 
+            }
+            @keyframes slideUp { 
+                0% { opacity: 0; } 
+                100% { opacity: 1; } 
+            }
+            @keyframes float {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+            }
+            @keyframes shimmer {
+                0% { background-position: -1000px 0; }
+                100% { background-position: 1000px 0; }
+            }
+            
+            .gradient-text {
+                background: linear-gradient(135deg, var(--primary-600), var(--accent-600));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.25);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+            
+            .dark .glass-effect {
+                background: rgba(0, 0, 0, 0.25);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            
+            .card-shadow {
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+            
+            .card-shadow-lg {
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+            
+            .hover-lift {
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            .hover-lift:hover {
+                transform: scale(1.02);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            
+            .writing-cursor::after {
+                content: '|';
+                animation: blink 1s infinite;
+                color: var(--primary-600);
+                font-weight: 300;
+            }
+            
+            @keyframes blink {
+                0%, 50% { opacity: 1; }
+                51%, 100% { opacity: 0; }
+            }
+            
+            .processing-glow {
+                box-shadow: 0 0 20px rgba(14, 165, 233, 0.3);
+            }
+            
+            .success-glow {
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            }
+            
+            .error-glow {
+                box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+            }
+        `;
+        document.head.appendChild(style);
+
+        let storedTheme = null;
+        try {
+            storedTheme = localStorage.getItem('theme');
+        } catch (error) {
+            storedTheme = null;
+        }
+
+        // Mobile-first theme logic: Force dark mode on mobile devices (< 1024px)
+        const isMobile = window.innerWidth < 1024;
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (isMobile || storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+            document.documentElement.classList.add('dark');
+        } else if (storedTheme === 'light' || !prefersDark) {
+            document.documentElement.classList.remove('dark');
+        }
+
+    </script>
+</head>
+<body class="mk-theme bg-[#020205] text-neutral-900 dark:text-neutral-100 font-body transition-colors duration-300" data-ui-template="modern">
+    <!-- Galaxy Background -->
+    <div class="galaxy-bg">
+        <canvas id="stars-canvas"></canvas>
+        <div class="nebula"></div>
+    </div>
+    <!-- Header -->
+    <header class="site-header sticky top-0 z-50 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md border-b border-neutral-200 dark:border-neutral-800 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="site-header__row flex items-center justify-between h-20">
+                <!-- Brand & Video & Text Carousel Group -->
+                <div class="site-header__brand flex items-center space-x-2 sm:space-x-8">
+                    <!-- Brand -->
+                    <div class="flex items-center space-x-2 sm:space-x-4">
+                        <div class="flex items-center justify-center w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-primary-600 to-secondary-500 shadow-lg shadow-primary-500/20 group cursor-pointer hover:scale-110 transition-transform duration-300">
+                            <span class="text-white text-lg sm:text-2xl group-hover:rotate-12 transition-transform duration-300">✒️</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <h1 class="text-base sm:text-2xl font-display font-extrabold tracking-tight text-neutral-900 dark:text-white leading-none">
+                                Saniya Humanizer
+                            </h1>
+                            <span class="text-[8px] sm:text-[10px] uppercase tracking-[0.1em] sm:tracking-[0.2em] font-bold text-neutral-500 dark:text-neutral-400">AI Humanizer</span>
+                        </div>
+                    </div>
+
+                    <!-- Video and Text Carousel -->
+                    <div class="flex items-center space-x-2 sm:space-x-4 bg-transparent rounded-2xl px-2 sm:px-5 py-1.5 sm:py-2.5 max-w-full sm:max-w-[500px] overflow-hidden">
+                        <div class="nav-video-shell flex-shrink-0 w-12 h-12 sm:w-20 sm:h-20 rounded-lg sm:rounded-xl overflow-hidden bg-black shadow-inner border border-neutral-200 dark:border-neutral-700">
+                            <video id="nav-video" class="nav-video w-full h-full object-cover opacity-90" autoplay loop muted playsinline preload="metadata" poster="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='90'><rect width='100%25' height='100%25' fill='%230b0f19'/></svg>">
+                                <source src="video.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="flex flex-col justify-center overflow-hidden min-w-[140px] sm:min-w-[400px]">
+                            <div id="nav-carousel" class="relative h-18 sm:h-20 overflow-hidden">
+                                <div id="carousel-track" class="carousel-animate transition-all duration-1000 ease-in-out">
+                                    <div class="h-18 sm:h-20 flex flex-row justify-center items-center text-center px-2 sm:px-4">
+                                        <div class="saniya-container flex items-center space-x-2 sm:space-x-4">
+                                            <svg class="hidden">
+                                                <defs>
+                                                    <linearGradient id="wing-gradient-ultra" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                        <stop offset="0%" style="stop-color:rgba(255,255,255,1);stop-opacity:1" />
+                                                        <stop offset="30%" style="stop-color:rgba(230,235,255,0.6);stop-opacity:0.9" />
+                                                        <stop offset="70%" style="stop-color:rgba(200,210,255,0.4);stop-opacity:0.8" />
+                                                        <stop offset="100%" style="stop-color:rgba(255,255,255,1);stop-opacity:1" />
+                                                    </linearGradient>
+                                                </defs>
+                                            </svg>
+                                            <!-- Hyper-Realistic Left Wing -->
+                                            <div class="wing-animation">
+                                                <svg class="saniya-wing wing-left w-10 h-10 sm:w-20 sm:h-20" viewBox="0 0 200 200">
+                                                    <path class="wing-path" d="M180,40c-20-15-50-20-80-15c-30,5-55,25-65,55c-5,15,5,30,20,35c25,10,60,5,90-25c15-15,30-30,35-50L180,40z" />
+                                                    <path class="wing-detail" d="M140,60c-25,15-55,25-75,10c-10-10-10-25,0-35c15-15,40-15,65-5C150,40,155,55,140,60z" />
+                                                    <path class="wing-path" d="M160,80c-15-10-35-15-55-10c-20,5-35,20-40,40c-3,10,3,20,12,25c15,8,40,5,60-15c10-10,20-20,23-35L160,80z" opacity="0.8" />
+                                                    <path class="wing-detail" d="M150,90c-10-5-25-10-40-5c-15,5-25,15-28,30c-2,8,2,15,8,18c10,5,30,20,45-12c8-8,15-15,18-25L150,90z" opacity="0.4" />
+                                                </svg>
+                                            </div>
+                                            
+                                            <span class="glassy-text-saniya text-[16px] sm:text-5xl tracking-tighter">SANIYA</span>
+                                            
+                                            <!-- Hyper-Realistic Right Wing -->
+                                            <div class="wing-animation">
+                                                <svg class="saniya-wing wing-right w-10 h-10 sm:w-20 sm:h-20" viewBox="0 0 200 200" style="transform: scaleX(-1);">
+                                                    <path class="wing-path" d="M180,40c-20-15-50-20-80-15c-30,5-55,25-65,55c-5,15,5,30,20,35c25,10,60,5,90-25c15-15,30-30,35-50L180,40z" />
+                                                    <path class="wing-detail" d="M140,60c-25,15-55,25-75,10c-10-10-10-25,0-35c15-15,40-15,65-5C150,40,155,55,140,60z" />
+                                                    <path class="wing-path" d="M160,80c-15-10-35-15-55-10c-20,5-35,20-40,40c-3,10,3,20,12,25c15,8,40,5,60-15c10-10,20-20,23-35L160,80z" opacity="0.8" />
+                                                    <path class="wing-detail" d="M150,90c-10-5-25-10-40-5c-15,5-25,15-28,30c-2,8,2,15,8,18c10,5,30,20,45-12c8-8,15-15,18-25L150,90z" opacity="0.4" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation & Actions -->
+                <div class="site-header__actions flex items-center space-x-3 sm:space-x-6">
+                    <!-- Style Selector (Redesigned) -->
+                    <div class="hidden sm:flex items-center bg-neutral-100 dark:bg-neutral-800/50 rounded-xl p-1 border border-neutral-200 dark:border-neutral-700">
+                        <select id="style-selector" class="nav-touch bg-transparent text-sm font-medium text-neutral-700 dark:text-neutral-300 px-4 py-1.5 focus:outline-none cursor-pointer">
+                            <option value="conversational" selected>Conversational</option>
+                            <option value="academic">Academic</option>
+                            <option value="casual">Casual</option>
+                            <option value="creative">Creative</option>
+                            <option value="professional">Professional</option>
+                            <option value="storytelling">Storytelling</option>
+                        </select>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div id="ui-template-root" class="ui-template-root">
+        <main class="main-content mk-main py-0">
+            <!-- Redesigned Hero Section -->
+            <section class="hero-shell relative pt-0 pb-16 overflow-hidden">
+                <!-- Advanced Background Layer removed to reveal global neural background -->
+                
+                <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-primary-50 dark:bg-primary-900/30 border border-primary-100 dark:border-primary-800 mb-6 sm:mb-8 animate-fade-in scale-90 sm:scale-100">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+                        </span>
+                        <span class="text-[10px] sm:text-xs font-bold text-primary-700 dark:text-primary-300 uppercase tracking-wider">Next-Gen AI Humanizer</span>
+                    </div>
+
+                    <h1 class="hero-title text-4xl sm:text-6xl md:text-8xl font-display font-extrabold mb-6 sm:mb-8 tracking-tight leading-[1.1] animate-slide-up w-full px-2 reveal-on-scroll">
+                        <span class="metal-text">Transform AI into</span> <br/>
+                        <span class="metal-text">Pure Humanity</span>
+                    </h1>
+                    
+                    <p class="hero-subtitle text-lg sm:text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto mb-10 sm:mb-12 leading-relaxed animate-fade-in w-full px-4 sm:px-2 reveal-on-scroll delay-100" style="animation-delay: 0.2s">
+                        Bypass AI detectors with clinical precision. Our advanced neural engine re-textures machine output into authentic, soulful human expression.
+                    </p>
+                    
+                    <!-- Modern Statistics Grid -->
+                    <div class="hero-stats grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 md:gap-8 max-w-5xl mx-auto animate-slide-up px-2 sm:px-0 reveal-on-scroll delay-200" style="animation-delay: 0.4s">
+                        <!-- Accuracy Card -->
+                        <div class="group relative p-3.5 sm:p-8 rounded-[1.2rem] sm:rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-primary-500/20 transition-all duration-500 hover:scale-[1.02] overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative">
+                                <div class="text-xl sm:text-4xl font-display font-black text-primary-600 dark:text-primary-400 mb-1 sm:mb-2 tracking-tighter">99.7%</div>
+                                <div class="flex items-center space-x-1.5 sm:space-x-2">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                                    <span class="text-[7px] sm:text-[10px] font-black text-neutral-500 dark:text-neutral-400 uppercase tracking-[0.1em] sm:tracking-[0.2em]">Accuracy Rate</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Latency Card -->
+                        <div class="group relative p-3.5 sm:p-8 rounded-[1.2rem] sm:rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-secondary-500/20 transition-all duration-500 hover:scale-[1.02] overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-secondary-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative">
+                                <div class="text-xl sm:text-4xl font-display font-black text-secondary-500 dark:text-secondary-400 mb-1 sm:mb-2 tracking-tighter">&lt; 1s</div>
+                                <div class="flex items-center space-x-1.5 sm:space-x-2">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-secondary-500 animate-pulse"></div>
+                                    <span class="text-[7px] sm:text-[10px] font-black text-neutral-500 dark:text-neutral-400 uppercase tracking-[0.1em] sm:tracking-[0.2em]">Neural Speed</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Creators Card -->
+                        <div class="group relative p-3.5 sm:p-8 rounded-[1.2rem] sm:rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-primary-500/20 transition-all duration-500 hover:scale-[1.02] overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative">
+                                <div class="text-xl sm:text-4xl font-display font-black text-primary-500 dark:text-primary-400 mb-1 sm:mb-2 tracking-tighter">50K+</div>
+                                <div class="flex items-center space-x-1.5 sm:space-x-2">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-primary-400 animate-pulse"></div>
+                                    <span class="text-[7px] sm:text-[10px] font-black text-neutral-500 dark:text-neutral-400 uppercase tracking-[0.1em] sm:tracking-[0.2em]">Global Users</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Privacy Card -->
+                        <div class="group relative p-3.5 sm:p-8 rounded-[1.2rem] sm:rounded-[2.5rem] bg-white/40 dark:bg-neutral-900/40 backdrop-blur-xl border border-white/20 dark:border-neutral-800/50 shadow-xl hover:shadow-success-500/20 transition-all duration-500 hover:scale-[1.02] overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-success-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="relative">
+                                <div class="text-xl sm:text-4xl font-display font-black text-success-500 dark:text-success-400 mb-1 sm:mb-2 tracking-tighter">100%</div>
+                                <div class="flex items-center space-x-1.5 sm:space-x-2">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-success-500 animate-pulse"></div>
+                                    <span class="text-[7px] sm:text-[10px] font-black text-neutral-500 dark:text-neutral-400 uppercase tracking-[0.1em] sm:tracking-[0.2em]">Privacy Shield</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        <!-- Main Interface -->
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <section id="app-interface" class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-12 reveal-on-scroll">
+                <!-- Input Section -->
+                <div class="flex flex-col space-y-4 animate-slide-up reveal-on-scroll reveal-left">
+                    <div class="flex items-center justify-between px-2">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-xl">
+                                🤖
+                            </div>
+                            <div>
+                                <h3 class="text-base sm:text-lg font-display font-bold text-neutral-900 dark:text-white leading-none">Robot Draft</h3>
+                                <p class="text-[10px] sm:text-xs text-neutral-500 mt-1">Paste your AI content</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span id="input-word-count" class="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-md">0 Words</span>
+                            <button id="clear-input" class="p-2 text-neutral-400 hover:text-red-500 transition-colors">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="relative group">
+                        <div class="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-[1.5rem] sm:rounded-[2rem] blur opacity-10 group-focus-within:opacity-25 transition duration-500"></div>
+                        <textarea 
+                            id="input-text" 
+                            placeholder="Paste your AI-generated text here..."
+                            class="relative w-full h-[350px] sm:h-[500px] p-4 sm:p-8 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-[1.5rem] sm:rounded-[2rem] focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all duration-300 text-base sm:text-lg leading-relaxed custom-scrollbar shadow-sm"
+                        ></textarea>
+                        
+                        <div class="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 flex items-center space-x-2">
+                            <button class="quick-sample px-3 py-1.5 sm:px-4 sm:py-2 bg-neutral-100 dark:bg-neutral-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all border border-transparent hover:border-primary-200" data-sample="academic">
+                                Academic
+                            </button>
+                            <button class="quick-sample px-3 py-1.5 sm:px-4 sm:py-2 bg-neutral-100 dark:bg-neutral-800 hover:bg-primary-50 dark:hover:bg-primary-900/30 text-neutral-600 dark:text-neutral-400 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition-all border border-transparent hover:border-primary-200" data-sample="casual">
+                                Casual
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output Section -->
+                <div class="flex flex-col space-y-4 animate-slide-up reveal-on-scroll reveal-right" style="animation-delay: 0.1s;">
+                    <div class="flex items-center justify-between px-2">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-success-50 dark:bg-success-900/20 flex items-center justify-center text-xl">
+                                ✨
+                            </div>
+                            <div>
+                                <h3 class="text-base sm:text-lg font-display font-bold text-neutral-900 dark:text-white leading-none">Human Essence</h3>
+                                <p class="text-[10px] sm:text-xs text-neutral-500 mt-1">Soulful, undetectable output</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span id="output-word-count" class="text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-1 rounded-md">0 Words</span>
+                            <button id="copy-output" class="p-2 text-neutral-400 hover:text-primary-500 transition-colors">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="relative group">
+                        <div class="absolute -inset-0.5 bg-gradient-to-r from-success-500 to-primary-500 rounded-[1.5rem] sm:rounded-[2rem] blur opacity-10 transition duration-500"></div>
+                        <textarea 
+                            id="output-text" 
+                            placeholder="Your humanized content will appear here..."
+                            class="relative w-full h-[350px] sm:h-[500px] p-4 sm:p-8 bg-neutral-50/50 dark:bg-neutral-800/30 border border-neutral-200 dark:border-neutral-800 rounded-[1.5rem] sm:rounded-[2rem] focus:outline-none text-base sm:text-lg leading-relaxed custom-scrollbar shadow-sm"
+                            readonly
+                        ></textarea>
+                        
+                        <!-- Modern Processing Overlay -->
+                        <div id="processing-overlay" class="hidden absolute inset-0 bg-white/80 dark:bg-neutral-900/80 rounded-[1.5rem] sm:rounded-[2rem] backdrop-blur-sm z-20 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4 sm:mb-6">
+                                    <div class="absolute inset-0 border-4 border-primary-500/20 rounded-full"></div>
+                                    <div class="absolute inset-0 border-4 border-primary-500 border-t-transparent rounded-full animate-spin"></div>
+                                    <div class="absolute inset-3 sm:inset-4 bg-primary-500/10 rounded-full flex items-center justify-center">
+                                        <span class="animate-pulse text-lg sm:text-xl">🧠</span>
+                                    </div>
+                                </div>
+                                <h4 class="text-base sm:text-lg font-display font-bold text-neutral-900 dark:text-white mb-1">Humanizing</h4>
+                                <p class="text-xs sm:text-sm text-neutral-500">Applying neural textures</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quality Metrics -->
+                    <div id="quality-indicators" class="hidden grid grid-cols-2 gap-4">
+                        <div class="p-4 rounded-2xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Human Score</span>
+                                <span id="human-score" class="text-sm font-black text-success-500">0%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-neutral-100 dark:bg-neutral-700 rounded-full overflow-hidden">
+                                <div id="human-score-bar" class="h-full bg-gradient-to-r from-success-400 to-success-600 transition-all duration-1000" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 rounded-2xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[10px] font-bold uppercase tracking-wider text-neutral-500">Readability</span>
+                                <span id="readability-score" class="text-sm font-black text-primary-500">0/100</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-neutral-100 dark:bg-neutral-700 rounded-full overflow-hidden">
+                                <div id="readability-bar" class="h-full bg-gradient-to-r from-primary-400 to-primary-600 transition-all duration-1000" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Redesigned Humanize Button Section -->
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <section class="flex flex-col items-center justify-center py-12">
+                <div id="status-message" class="text-sm font-bold uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-6 h-6"></div>
+                
+                <div class="relative group">
+                    <!-- Glowing background effect -->
+                    <div class="absolute -inset-1 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    
+                    <button id="humanize-button" class="relative px-12 py-6 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-display font-black text-2xl rounded-[2rem] shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center space-x-4 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-600/20 to-secondary-600/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        
+                        <div class="relative w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/40">
+                            <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                        </div>
+                        <span class="relative">Transform to Human</span>
+                        
+                        <div id="processing-spinner" class="hidden relative">
+                            <i class="fa-solid fa-circle-notch animate-spin text-2xl"></i>
+                        </div>
+                    </button>
+                </div>
+                
+                <div class="mt-8 flex items-center space-x-6 text-sm font-bold uppercase tracking-widest text-neutral-400">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-shield-halved text-primary-500"></i>
+                        <span>Secure</span>
+                    </div>
+                    <div class="w-1 h-1 bg-neutral-300 dark:bg-neutral-700 rounded-full"></div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-bolt text-secondary-500"></i>
+                        <span>Instant</span>
+                    </div>
+                    <div class="w-1 h-1 bg-neutral-300 dark:bg-neutral-700 rounded-full"></div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-fingerprint text-success-500"></i>
+                        <span>Unique</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Advanced Options Redesign -->
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <section class="relative bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-[2rem] sm:rounded-[3rem] p-6 sm:p-10 mb-20 shadow-xl overflow-hidden">
+                <!-- Decorative Background -->
+                <div class="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-primary-500/5 rounded-full blur-[60px] sm:blur-[80px] -mr-24 -mt-24 sm:-mr-32 sm:-mt-32"></div>
+                
+                <div class="relative flex items-center space-x-4 mb-8 sm:mb-10">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:2xl bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center text-xl sm:text-2xl">
+                        🎚️
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-display font-black text-neutral-900 dark:text-white leading-none">Dial in the voice</h3>
+                        <p class="text-[10px] sm:text-sm text-neutral-500 mt-1">Fine-tune the neural output parameters</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+                    <!-- Writing Style -->
+                    <div class="group space-y-3 p-5 sm:p-6 bg-neutral-50/50 dark:bg-neutral-800/30 rounded-[1.5rem] sm:rounded-[2rem] border border-neutral-100 dark:border-neutral-800 transition-all hover:border-primary-500/30 hover:shadow-lg">
+                        <label class="flex items-center space-x-2 text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 group-hover:text-primary-500 transition-colors">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Writing Style</span>
+                        </label>
+                        <div class="relative">
+                            <select id="writing-style" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-neutral-700 dark:text-neutral-300 appearance-none focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all cursor-pointer">
+                                <option value="natural" selected>Natural & Conversational</option>
+                                <option value="academic">Academic & Formal</option>
+                                <option value="casual">Casual & Friendly</option>
+                                <option value="creative">Creative & Expressive</option>
+                                <option value="professional">Professional & Business</option>
+                                <option value="storytelling">Storytelling & Narrative</option>
+                            </select>
+                            <div class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-400">
+                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Humanization Level -->
+                    <div class="group space-y-3 p-5 sm:p-6 bg-neutral-50/50 dark:bg-neutral-800/30 rounded-[1.5rem] sm:rounded-[2rem] border border-neutral-100 dark:border-neutral-800 transition-all hover:border-secondary-500/30 hover:shadow-lg">
+                        <label class="flex items-center space-x-2 text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 group-hover:text-secondary-500 transition-colors">
+                            <i class="fa-solid fa-gauge-high"></i>
+                            <span>Humanization Intensity</span>
+                        </label>
+                        <div class="pt-2 px-1">
+                            <input type="range" id="humanization-level-slider" min="0" max="3" step="1" value="1" 
+                                class="w-full h-1.5 sm:h-2 bg-neutral-200 dark:bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-secondary-500">
+                            <div class="flex justify-between mt-3 sm:mt-4 text-[8px] sm:text-[10px] font-black uppercase tracking-tighter text-neutral-500">
+                                <span class="text-secondary-500">Light</span>
+                                <span>Moderate</span>
+                                <span>Deep</span>
+                                <span>Max</span>
+                            </div>
+                            <!-- Hidden select to maintain compatibility if needed, or we'll update script.js -->
+                            <select id="humanization-level" class="hidden">
+                                <option value="light">light</option>
+                                <option value="moderate" selected>moderate</option>
+                                <option value="deep">deep</option>
+                                <option value="extreme">extreme</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Natural Variations -->
+                    <div class="group space-y-3 p-5 sm:p-6 bg-neutral-50/50 dark:bg-neutral-800/30 rounded-[1.5rem] sm:rounded-[2rem] border border-neutral-100 dark:border-neutral-800 transition-all hover:border-success-500/30 hover:shadow-lg">
+                        <label class="flex items-center space-x-2 text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 group-hover:text-success-500 transition-colors">
+                            <i class="fa-solid fa-fingerprint"></i>
+                            <span>Natural Variations</span>
+                        </label>
+                        <div class="relative">
+                            <select id="natural-variations" class="w-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-bold text-neutral-700 dark:text-neutral-300 appearance-none focus:outline-none focus:ring-2 focus:ring-success-500/20 transition-all cursor-pointer">
+                                <option value="none">Perfect Grammar</option>
+                                <option value="minimal" selected>Minimal Variations</option>
+                                <option value="moderate">Moderate Naturalness</option>
+                                <option value="high">High Authenticity</option>
+                            </select>
+                            <div class="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 pointer-events-none text-neutral-400">
+                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Capabilities Toggles -->
+                <div class="mt-8 sm:mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <!-- Hyper-Humanize -->
+                    <div class="group relative flex items-center justify-between p-5 sm:p-6 bg-white dark:bg-neutral-900/40 rounded-[1.5rem] sm:rounded-[2rem] border border-neutral-100 dark:border-neutral-800 transition-all duration-300 hover:border-primary-500/30 hover:shadow-xl hover:shadow-primary-500/5">
+                        <div class="flex items-center space-x-3 sm:space-x-4">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-primary-50 dark:bg-primary-900/20 rounded-xl sm:rounded-2xl flex items-center justify-center text-primary-600 dark:text-primary-400 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-bolt-lightning text-sm sm:text-base"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs sm:text-sm font-black text-neutral-900 dark:text-neutral-100 uppercase tracking-widest">Hyper-Humanize</h4>
+                                <p class="text-[8px] sm:text-[10px] text-neutral-500 font-bold uppercase tracking-tighter mt-1">Linguistic Overhaul</p>
+                            </div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="advanced-pipeline" checked class="sr-only peer">
+                            <div class="w-10 h-5 sm:w-12 sm:h-6 bg-neutral-200 dark:bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 sm:after:h-5 after:w-4 sm:after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
+                        </label>
+                    </div>
+
+                <!-- Empathy Engine -->
+                <div class="group relative flex items-center justify-between p-5 sm:p-6 bg-white dark:bg-neutral-900/40 rounded-[1.5rem] sm:rounded-[2rem] border border-neutral-100 dark:border-neutral-800 transition-all duration-300 hover:border-secondary-500/30 hover:shadow-xl hover:shadow-secondary-500/5">
+                    <div class="flex items-center space-x-3 sm:space-x-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-secondary-50 dark:bg-secondary-900/20 rounded-xl sm:rounded-2xl flex items-center justify-center text-secondary-600 dark:text-secondary-400 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-heart text-sm sm:text-base"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs sm:text-sm font-black text-neutral-900 dark:text-neutral-100 uppercase tracking-widest">Empathy Engine</h4>
+                            <p class="text-[8px] sm:text-[10px] text-neutral-500 font-bold uppercase tracking-tighter mt-1">Emotional Resonance</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="empathy-mode" class="sr-only peer">
+                        <div class="w-10 h-5 sm:w-12 sm:h-6 bg-neutral-200 dark:bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 sm:after:h-5 after:w-4 sm:after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-secondary-600"></div>
+                    </label>
+                </div>
+
+                <!-- Speech Output -->
+                <div class="group relative flex items-center justify-between p-5 sm:p-6 bg-white dark:bg-neutral-900/40 rounded-[1.5rem] sm:rounded-[2rem] border border-neutral-100 dark:border-neutral-800 transition-all duration-300 hover:border-success-500/30 hover:shadow-xl hover:shadow-success-500/5">
+                    <div class="flex items-center space-x-3 sm:space-x-4">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-success-50 dark:bg-success-900/20 rounded-xl sm:rounded-2xl flex items-center justify-center text-success-600 dark:text-success-400 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-microphone-lines text-sm sm:text-base"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-xs sm:text-sm font-black text-neutral-900 dark:text-neutral-100 uppercase tracking-widest">Speech Output</h4>
+                            <p class="text-[8px] sm:text-[10px] text-neutral-500 font-bold uppercase tracking-tighter mt-1">Prosody Synthesis</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="speech-enabled" class="sr-only peer">
+                        <div class="w-10 h-5 sm:w-12 sm:h-6 bg-neutral-200 dark:bg-neutral-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 sm:after:h-5 after:w-4 sm:after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-success-500"></div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Tone Analysis & Context -->
+            <div class="mt-6">
+                <div class="group p-5 sm:p-8 bg-white dark:bg-neutral-900/40 rounded-[1.5rem] sm:rounded-[2.5rem] border border-neutral-100 dark:border-neutral-800 transition-all duration-300 hover:border-accent-500/30 hover:shadow-xl">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
+                        <div class="flex items-center space-x-3 sm:space-x-4">
+                            <div class="w-10 h-10 sm:w-14 sm:h-14 bg-accent-50 dark:bg-accent-900/20 rounded-xl sm:rounded-2xl flex items-center justify-center text-accent-600 dark:text-accent-400">
+                                <i class="fa-solid fa-image text-sm sm:text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs sm:text-sm font-black text-neutral-900 dark:text-neutral-100 uppercase tracking-widest">Visual Tone Context</h4>
+                                <p class="text-[8px] sm:text-[10px] text-neutral-500 font-bold uppercase tracking-tighter mt-1">Upload an image to guide the rewriting tone (Optional)</p>
+                            </div>
+                        </div>
+                        <div class="flex-1 w-full md:max-w-md">
+                            <label for="tone-image" class="relative group/file flex items-center justify-center px-4 py-2.5 sm:px-6 sm:py-3 border-2 border-dashed border-neutral-200 dark:border-neutral-700 rounded-xl hover:border-accent-500/50 hover:bg-accent-50/10 transition-all cursor-pointer">
+                                <div class="flex items-center space-x-2 text-neutral-500 group-hover/file:text-accent-500">
+                                    <i class="fa-solid fa-cloud-arrow-up text-base sm:text-lg"></i>
+                                    <span class="text-[9px] sm:text-xs font-black uppercase tracking-widest">Select Tone Image</span>
+                                </div>
+                                <input id="tone-image" type="file" accept="image/*" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        </section>
+
+        <!-- Trust Indicators Redesign -->
+        <section id="trust-indicators" class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-20">
+            <!-- Privacy Feature -->
+            <div class="group relative p-6 sm:p-8 bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-success-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="relative flex flex-col h-full">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-success-50 dark:bg-success-900/20 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 text-xl sm:text-2xl group-hover:scale-110 transition-transform duration-500">
+                        <i class="fa-solid fa-shield-halved text-success-600 dark:text-success-400"></i>
+                    </div>
+                    <h4 class="text-lg sm:text-xl font-display font-black text-neutral-900 dark:text-white mb-2 sm:mb-3 tracking-tight">100% Private</h4>
+                    <p class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed mb-4 sm:mb-6">Your text stays on your device. We prioritize your privacy with local-first neural processing</p>
+                    <div class="mt-auto flex items-center text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-success-600 dark:text-success-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span>Secured by NeuralVault</span>
+                        <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Speed Feature -->
+            <div class="group relative p-6 sm:p-8 bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="relative flex flex-col h-full">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-primary-50 dark:bg-primary-900/20 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 text-xl sm:text-2xl group-hover:scale-110 transition-transform duration-500">
+                        <i class="fa-solid fa-bolt-lightning text-primary-600 dark:text-primary-400"></i>
+                    </div>
+                    <h4 class="text-lg sm:text-xl font-display font-black text-neutral-900 dark:text-white mb-2 sm:mb-3 tracking-tight">Lightning Fast</h4>
+                    <p class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed mb-4 sm:mb-6">Optimized inference engines deliver humanized results in milliseconds, not minutes</p>
+                    <div class="mt-auto flex items-center text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-primary-600 dark:text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span>Real-time Synthesis</span>
+                        <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Intelligence Feature -->
+            <div class="group relative p-6 sm:p-8 bg-white dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-[2rem] sm:rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="relative flex flex-col h-full">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 bg-secondary-50 dark:bg-secondary-900/20 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 text-xl sm:text-2xl group-hover:scale-110 transition-transform duration-500">
+                        <i class="fa-solid fa-brain text-secondary-600 dark:text-secondary-400"></i>
+                    </div>
+                    <h4 class="text-lg sm:text-xl font-display font-black text-neutral-900 dark:text-white mb-2 sm:mb-3 tracking-tight">Neural Intelligence</h4>
+                    <p class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed mb-4 sm:mb-6">Deep semantic understanding ensures your message remains intact while the delivery transforms</p>
+                    <div class="mt-auto flex items-center text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-secondary-600 dark:text-secondary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span>Quantum Processing</span>
+                        <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Redesign -->
+        <section class="relative bg-neutral-900 dark:bg-black rounded-[2rem] sm:rounded-[3rem] p-8 sm:p-12 md:p-20 mb-24 overflow-hidden">
+            <!-- Decorative Background Elements -->
+            <div class="absolute top-0 right-0 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-primary-500/10 rounded-full blur-[80px] sm:blur-[120px] -mr-32 -mt-32 sm:-mr-64 sm:-mt-64 animate-pulse-slow"></div>
+            <div class="absolute bottom-0 left-0 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] bg-secondary-500/10 rounded-full blur-[80px] sm:blur-[120px] -ml-32 -mb-32 sm:-ml-64 sm:-mb-64 animate-pulse-slow" style="animation-delay: 1.5s"></div>
+            
+            <div class="relative z-10 text-center mb-12 sm:mb-20">
+                <span class="inline-block px-3 py-1 sm:px-4 sm:py-2 bg-white/5 border border-white/10 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-primary-400 mb-4 sm:mb-6">Process Workflow</span>
+                <h3 class="text-2xl sm:text-4xl md:text-5xl font-display font-black text-white mb-4 sm:mb-6 tracking-tight">How it comes to life</h3>
+                <p class="text-sm sm:text-neutral-400 max-w-2xl mx-auto text-neutral-400 sm:text-lg leading-relaxed">Four precise stages to transform your robotic drafts into authentic human masterpieces</p>
+            </div>
+            
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-4 gap-8 sm:gap-12">
+                <!-- Step 01 -->
+                <div class="relative text-center group">
+                    <div class="hidden md:block absolute top-10 left-[60%] w-full h-[2px] bg-gradient-to-r from-neutral-800 to-transparent z-0"></div>
+                    <div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-neutral-800 dark:bg-neutral-900 border border-neutral-700 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center mx-auto mb-6 sm:mb-8 text-xl sm:text-2xl font-display font-black text-primary-400 group-hover:scale-110 group-hover:border-primary-500/50 transition-all duration-500 shadow-2xl">
+                        01
+                        <div class="absolute -inset-2 bg-primary-500/20 rounded-[2rem] sm:rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h4 class="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-4 tracking-tight">Input Draft</h4>
+                    <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed px-4">Paste your AI-generated text that feels stiff or automated</p>
+                </div>
+                
+                <!-- Step 02 -->
+                <div class="relative text-center group">
+                    <div class="hidden md:block absolute top-10 left-[60%] w-full h-[2px] bg-gradient-to-r from-neutral-800 to-transparent z-0"></div>
+                    <div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-neutral-800 dark:bg-neutral-900 border border-neutral-700 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center mx-auto mb-6 sm:mb-8 text-xl sm:text-2xl font-display font-black text-secondary-400 group-hover:scale-110 group-hover:border-secondary-500/50 transition-all duration-500 shadow-2xl">
+                        02
+                        <div class="absolute -inset-2 bg-secondary-500/20 rounded-[2rem] sm:rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h4 class="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-4 tracking-tight">Define Voice</h4>
+                    <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed px-4">Select the specific tone and style that matches your intent</p>
+                </div>
+                
+                <!-- Step 03 -->
+                <div class="relative text-center group">
+                    <div class="hidden md:block absolute top-10 left-[60%] w-full h-[2px] bg-gradient-to-r from-neutral-800 to-transparent z-0"></div>
+                    <div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-neutral-800 dark:bg-neutral-900 border border-neutral-700 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center mx-auto mb-6 sm:mb-8 text-xl sm:text-2xl font-display font-black text-success-400 group-hover:scale-110 group-hover:border-success-500/50 transition-all duration-500 shadow-2xl">
+                        03
+                        <div class="absolute -inset-2 bg-success-500/20 rounded-[2rem] sm:rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h4 class="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-4 tracking-tight">Neural Rewrite</h4>
+                    <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed px-4">Our engine restructures the text for natural rhythm and flow</p>
+                </div>
+                
+                <!-- Step 04 -->
+                <div class="relative text-center group">
+                    <div class="relative w-16 h-16 sm:w-20 sm:h-20 bg-neutral-800 dark:bg-neutral-900 border border-neutral-700 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center mx-auto mb-6 sm:mb-8 text-xl sm:text-2xl font-display font-black text-accent-400 group-hover:scale-110 group-hover:border-accent-500/50 transition-all duration-500 shadow-2xl">
+                        04
+                        <div class="absolute -inset-2 bg-accent-500/20 rounded-[2rem] sm:rounded-[2.5rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                    <h4 class="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-4 tracking-tight">Authentic Output</h4>
+                    <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed px-4">Copy your humanized content and share it with confidence</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Redesign -->
+        <footer class="relative pt-16 sm:pt-24 pb-8 sm:pb-12 border-t border-neutral-200 dark:border-neutral-800 overflow-hidden">
+            <!-- Footer Decorative Elements -->
+            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-primary-500/20 to-transparent"></div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-10 sm:gap-12 mb-12 sm:mb-16">
+                    <!-- Brand Section -->
+                    <div class="lg:col-span-2 space-y-5 sm:space-y-6">
+                        <div class="flex items-center space-x-3 sm:space-x-4">
+                            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-600 to-secondary-500 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/20">
+                                <span class="text-white text-xl sm:text-2xl font-display font-black">H</span>
+                            </div>
+                            <div>
+                                <span class="text-xl sm:text-2xl font-display font-black text-neutral-900 dark:text-white tracking-tight">Humanize AI</span>
+                                <p class="text-[8px] sm:text-[10px] text-neutral-500 font-black uppercase tracking-[0.2em]">Next-Gen Linguistic Engine</p>
+                            </div>
+                        </div>
+                        <p class="text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 max-w-sm leading-relaxed">
+                            Empowering creators with neural intelligence to bridge the gap between artificial generation and human expression.
+                        </p>
+                        <div class="flex space-x-3 sm:space-x-4">
+                            <a href="#" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-primary-500 hover:text-white transition-all">
+                                <i class="fa-brands fa-x-twitter text-sm sm:text-base"></i>
+                            </a>
+                            <a href="#" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-primary-500 hover:text-white transition-all">
+                                <i class="fa-brands fa-github text-sm sm:text-base"></i>
+                            </a>
+                            <a href="#" class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center text-neutral-500 hover:bg-primary-500 hover:text-white transition-all">
+                                <i class="fa-brands fa-discord text-sm sm:text-base"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Links Grid -->
+                    <div class="grid grid-cols-2 gap-6 sm:gap-8 lg:col-span-2">
+                        <div class="space-y-4 sm:space-y-6">
+                            <h4 class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-white">Platform</h4>
+                            <ul class="space-y-3 sm:space-y-4">
+                                <li><a href="#" class="text-xs sm:text-sm font-bold text-neutral-500 hover:text-primary-600 transition-colors">Privacy Policy</a></li>
+                                <li><a href="#" class="text-sm font-bold text-neutral-500 hover:text-primary-600 transition-colors">Terms of Service</a></li>
+                                <li><a href="#" class="text-xs sm:text-sm font-bold text-neutral-500 hover:text-primary-600 transition-colors">Security Vault</a></li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4 sm:space-y-6">
+                            <h4 class="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] text-neutral-900 dark:text-white">Resources</h4>
+                            <ul class="space-y-3 sm:space-y-4">
+                                <li><a href="#" class="text-xs sm:text-sm font-bold text-neutral-500 hover:text-primary-600 transition-colors">API Documentation</a></li>
+                                <li><a href="#" class="text-xs sm:text-sm font-bold text-neutral-500 hover:text-primary-600 transition-colors">Support Center</a></li>
+                                <li><a href="#" class="text-xs sm:text-sm font-bold text-neutral-500 hover:text-primary-600 transition-colors">Community</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Bar -->
+                <div class="pt-6 sm:pt-8 border-t border-neutral-100 dark:border-neutral-800 flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-6 text-center md:text-left">
+                    <p class="text-[10px] sm:text-sm font-medium text-neutral-400">
+                        © 2024 Humanize AI Text. v1.1.8 PROD-LATEST
+                    </p>
+                    <div class="flex items-center space-x-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-neutral-500">
+                        <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-success-500 animate-pulse"></span>
+                        <span>Systems Operational</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        (function() {
+            let canvas, ctx;
+            let particles = [];
+            let width, height;
+            let mouse = { x: null, y: null, radius: 150 };
+            let animationId;
+
+            class Particle {
+                constructor() {
+                    this.init();
+                }
+
+                init() {
+                    this.x = Math.random() * (width || window.innerWidth);
+                    this.y = Math.random() * (height || window.innerHeight);
+                    this.size = Math.random() * 2 + 1;
+                    this.baseSize = this.size;
+                    this.vx = (Math.random() - 0.5) * 0.5;
+                    this.vy = (Math.random() - 0.5) * 0.5;
+                    this.glow = Math.random() > 0.9;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Subtle wave motion
+                    this.y += Math.sin(Date.now() * 0.001 + this.x * 0.005) * 0.2;
+
+                    if (this.x < 0 || this.x > width) this.vx *= -1;
+                    if (this.y < 0 || this.y > height) this.vy *= -1;
+
+                    // Mouse interaction
+                    if (mouse.x != null && mouse.y != null) {
+                        let dx = mouse.x - this.x;
+                        let dy = mouse.y - this.y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < mouse.radius) {
+                            const force = (mouse.radius - distance) / mouse.radius;
+                            this.x -= dx * force * 0.03;
+                            this.y -= dy * force * 0.03;
+                            this.size = this.baseSize * (1 + force * 2);
+                        } else {
+                            this.size = this.baseSize;
+                        }
+                    }
+                }
+
+                draw() {
+                    if (!ctx) return;
+                    ctx.fillStyle = this.glow ? '#00f2ff' : 'rgba(0, 242, 255, 0.5)';
+                    if (this.glow) {
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = '#00f2ff';
+                    }
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+
+            function init() {
+                canvas = document.getElementById('stars-canvas');
+                if (!canvas) return;
+                
+                ctx = canvas.getContext('2d');
+                if (!ctx) return;
+
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+                
+                particles = [];
+                const particleCount = Math.min(Math.floor((width * height) / 10000), 150);
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function drawLines() {
+                if (!ctx) return;
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        let dx = particles[i].x - particles[j].x;
+                        let dy = particles[i].y - particles[j].y;
+                        let distance = Math.sqrt(dx * dx + dy * dy);
+
+                        if (distance < 150) {
+                            ctx.strokeStyle = `rgba(0, 242, 255, ${1 - distance / 150})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animate() {
+                if (!ctx) return;
+                ctx.clearRect(0, 0, width, height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                drawLines();
+                animationId = requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', () => {
+                cancelAnimationFrame(animationId);
+                init();
+                animate();
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+
+            window.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 0) {
+                    mouse.x = e.touches[0].clientX;
+                    mouse.y = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    mouse.x = e.touches[0].clientX;
+                    mouse.y = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchend', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            window.addEventListener('mouseout', () => {
+                mouse.x = null;
+                mouse.y = null;
+            });
+
+            // Start after DOM is loaded
+            if (document.readyState === 'complete') {
+                init();
+                animate();
+            } else {
+                window.addEventListener('load', () => {
+                    init();
+                    animate();
+                });
+            }
+        })();
+    </script>
+    <script src="advanced-humanizer.js?v=1.1.7-ts1739119500"></script>
+    <script src="script.js?v=1.1.7-ts1739119500"></script>
+</body>
+</html>

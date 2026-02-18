@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server/index.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "public/**",
+          "script.js",
+          "advanced-humanizer.js",
+          "ai-detection-tester.js",
+          "on-device-detection-integration.js"
+        ]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "cache-control": "public, max-age=0, must-revalidate",
+        "surrogate-control": "max-age=0",
+        "pragma": "no-cache",
+        "expires": "0"
+      },
+      "continue": true
+    },
+    {
+      "src": "/(.*)",
+      "dest": "server/index.js"
+    }
+  ],
+
+  "git": {
+    "deploymentEnabled": true,
+    "silent": false,
+    "autoJobCancelation": false
+  }
+}

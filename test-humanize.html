@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Humanize Functionality</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Saniya Humanizer Test</h1>
+    
+    <div>
+        <h2>Input:</h2>
+        <textarea id="test-input" rows="5" cols="50">This is an AI generated text that needs to be humanized. It contains formal language and robotic patterns that should be transformed into more natural human-like writing.</textarea>
+    </div>
+    
+    <div>
+        <button id="test-humanize-btn">Test Humanize</button>
+    </div>
+    
+    <div>
+        <h2>Output:</h2>
+        <textarea id="test-output" rows="5" cols="50" readonly></textarea>
+    </div>
+    
+    <div id="test-status"></div>
+    
+    <!-- Load the scripts -->
+    <script src="advanced-humanizer.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        // Wait for scripts to load
+        document.addEventListener('DOMContentLoaded', function() {
+            const testBtn = document.getElementById('test-humanize-btn');
+            const testInput = document.getElementById('test-input');
+            const testOutput = document.getElementById('test-output');
+            const testStatus = document.getElementById('test-status');
+            
+            testBtn.addEventListener('click', async function() {
+                try {
+                    testStatus.innerHTML = '<p style="color: blue;">Processing...</p>';
+                    
+                    if (!window.textHumanizer) {
+                        throw new Error('TextHumanizer not loaded');
+                    }
+                    
+                    const result = await window.textHumanizer.humanizeText(testInput.value, {
+                        style: 'casual',
+                        errorLevel: 'minimal',
+                        synonymLevel: 'medium',
+                        sentenceLevel: 'moderate',
+                        humanizationLevel: 'moderate',
+                        useAdvanced: true
+                    });
+                    
+                    if (result && result.humanized) {
+                        testOutput.value = result.humanized;
+                        testStatus.innerHTML = '<p style="color: green;">Success! Confidence: ' + (result.confidence || 0) + '%</p>';
+                    } else {
+                        testStatus.innerHTML = '<p style="color: red;">Error: No result returned</p>';
+                    }
+                } catch (error) {
+                    console.error('Test error:', error);
+                    testStatus.innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+                }
+            });
+            
+            // Test if advanced humanizer is available
+            testStatus.innerHTML = '<p>Advanced Humanizer: ' + 
+                (typeof AdvancedTextHumanizer !== 'undefined' ? 'Available' : 'Not Available') + '</p>';
+        });
+    </script>
+</body>
+</html>

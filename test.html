@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Humanizer Test Suite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">AI Humanizer Test Suite</h1>
+        
+        <!-- Test Input Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Test Input</h2>
+            <textarea id="testInput" class="w-full h-32 p-4 border rounded-lg resize-none" placeholder="Enter AI-generated text to test...">In today's digital landscape, artificial intelligence has revolutionized the way we approach content creation. The utilization of advanced algorithms enables the generation of high-quality textual content that closely mimics human writing patterns. This technological advancement has significant implications for various industries, including marketing, education, and creative writing.</textarea>
+            <div class="mt-4 flex gap-4">
+                <button id="runTest" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Run Humanization Test
+                </button>
+                <select id="testStyle" class="px-4 py-2 border rounded-lg">
+                    <option value="casual">Casual</option>
+                    <option value="academic">Academic</option>
+                    <option value="creative">Creative</option>
+                    <option value="professional">Professional</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Original vs Humanized Comparison -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">Comparison</h3>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-medium text-gray-600 mb-2">Original (AI-like)</h4>
+                        <div id="originalText" class="p-3 bg-gray-100 rounded text-sm"></div>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-gray-600 mb-2">Humanized</h4>
+                        <div id="humanizedText" class="p-3 bg-green-50 rounded text-sm"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Detection Analysis -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold mb-4">AI Detection Analysis</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Confidence Score:</span>
+                        <span id="confidenceScore" class="font-bold text-blue-600">--</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">AI Patterns Found:</span>
+                        <span id="aiPatterns" class="font-bold text-red-600">--</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-600">Human Indicators:</span>
+                        <span id="humanIndicators" class="font-bold text-green-600">--</span>
+                    </div>
+                    <div class="mt-4 p-3 bg-gray-50 rounded">
+                        <h4 class="font-medium mb-2">Detection Risk</h4>
+                        <div id="riskLevel" class="text-sm text-gray-600">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Analysis -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-8">
+            <h3 class="text-lg font-semibold mb-4">Detailed Analysis</h3>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div>
+                    <h4 class="font-medium mb-2">Sentence Structure</h4>
+                    <div id="sentenceAnalysis" class="text-sm text-gray-600 space-y-1"></div>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-2">Vocabulary Diversity</h4>
+                    <div id="vocabularyAnalysis" class="text-sm text-gray-600 space-y-1"></div>
+                </div>
+                <div>
+                    <h4 class="font-medium mb-2">Writing Patterns</h4>
+                    <div id="patternAnalysis" class="text-sm text-gray-600 space-y-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Cases -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mt-8">
+            <h3 class="text-lg font-semibold mb-4">Predefined Test Cases</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+                <button class="test-case p-3 border rounded-lg hover:bg-gray-50 text-left" data-case="academic">
+                    <div class="font-medium">Academic Paper</div>
+                    <div class="text-sm text-gray-600">Formal research-style text</div>
+                </button>
+                <button class="test-case p-3 border rounded-lg hover:bg-gray-50 text-left" data-case="marketing">
+                    <div class="font-medium">Marketing Content</div>
+                    <div class="text-sm text-gray-600">Promotional AI-generated text</div>
+                </button>
+                <button class="test-case p-3 border rounded-lg hover:bg-gray-50 text-left" data-case="technical">
+                    <div class="font-medium">Technical Documentation</div>
+                    <div class="text-sm text-gray-600">Complex technical explanation</div>
+                </button>
+                <button class="test-case p-3 border rounded-lg hover:bg-gray-50 text-left" data-case="creative">
+                    <div class="font-medium">Creative Writing</div>
+                    <div class="text-sm text-gray-600">Storytelling content</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="test.js"></script>
+</body>
+</html>
