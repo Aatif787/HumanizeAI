@@ -7,7 +7,7 @@
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
     "build": "npm run vercel-build",
-    "vercel-build": "npm install && pip install -r requirements.txt && npm run build:assets && echo 'Vercel build complete - v1.1.8-force'",
+    "vercel-build": "npm install && pip install -r requirements.txt --break-system-packages && npm run build:assets && echo 'Vercel build complete - v1.1.8-force'",
     "build:assets": "echo 'Building assets...' && node -e \"console.log('Asset build complete - ' + new Date().toISOString())\"",
     "test": "jest",
     "test:unit": "jest server/tests/hyperHumanizer.test.js server/tests/modelEnhancementPipeline.test.js",
