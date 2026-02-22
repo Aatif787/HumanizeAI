@@ -34,27 +34,30 @@ const validateHumanization = [
 ];
 
 // Humanize text endpoint
-router.post('/', validateHumanization, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(400).json({ errors: errors.array() });
+    // }
 
-    const user = await User.findById(req.user.userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+    // Mock user for public access
+    const user = { _id: 'public_user', username: 'Guest', usage: { dailyCount: 0, monthlyCount: 0, totalCount: 0 }, save: async () => {} };
+    
+    // const user = await User.findById(req.user.userId);
+    // if (!user) {
+    //   return res.status(404).json({ error: 'User not found' });
+    // }
 
     // Check usage limits
-    const usageCheck = user.canMakeRequest();
-    if (!usageCheck.canProceed) {
-      return res.status(429).json({
-        error: 'Daily/monthly limit exceeded',
-        dailyRemaining: usageCheck.dailyRemaining,
-        monthlyRemaining: usageCheck.monthlyRemaining
-      });
-    }
+    // const usageCheck = user.canMakeRequest();
+    // if (!usageCheck.canProceed) {
+    //   return res.status(429).json({
+    //     error: 'Daily/monthly limit exceeded',
+    //     dailyRemaining: usageCheck.dailyRemaining,
+    //     monthlyRemaining: usageCheck.monthlyRemaining
+    //   });
+    // }
 
     const {
       text,

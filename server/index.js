@@ -75,7 +75,7 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
-app.use('/api/humanize', authenticateToken, humanizerRoutes);
+app.use('/api/humanize', humanizerRoutes);
 app.use('/api/user', authenticateToken, userRoutes);
 app.use('/api/detect', authenticateToken, detectionRoutes);
 
