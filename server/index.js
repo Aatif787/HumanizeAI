@@ -122,6 +122,10 @@ const serveScript = (fileName) => (req, res) => {
 
 app.get('/advanced-humanizer.js', serveScript('advanced-humanizer.js'));
 app.get('/script.js', serveScript('script.js'));
+app.get('/app.js', (req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.sendFile(path.join(__dirname, '../public/app.js'));
+});
 app.get('/ai-detection-tester.js', serveScript('ai-detection-tester.js'));
 app.get('/on-device-detection-integration.js', serveScript('on-device-detection-integration.js'));
 

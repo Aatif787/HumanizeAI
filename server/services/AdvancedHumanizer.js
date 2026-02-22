@@ -35,6 +35,12 @@ class HumanizerService {
    * @returns {Promise<Object>}
    */
   async invokePythonSuperHumanizer(text) {
+    // Skip Python execution on Vercel environment to ensure stability
+    if (process.env.VERCEL) {
+      logger.info('Skipping Python SuperHumanizer on Vercel environment');
+      return null;
+    }
+
     return new Promise((resolve, reject) => {
       const pythonProcess = spawn('python', [
         path.join(__dirname, '../../super_humanize.py'),
