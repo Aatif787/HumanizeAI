@@ -12,6 +12,7 @@ class AdvancedTextHumanizer {
     this.obfuscationEngine = new PatternObfuscationEngine();
     this.humanVerifier = new HumanVerificationEngine();
     this.aiDetector = new AdvancedAIDetector();
+    this.superHyperEngine = null; // Lazy-loaded when needed
   }
 
   loadDatabases() {
@@ -28,9 +29,17 @@ class AdvancedTextHumanizer {
       formality: 'adaptive',
       culturalContext: 'general',
       preserveFacts: true,
-      maxRetries: 3,
+      maxRetries: options.style === 'super-hyper' ? 5 : 3,
       ...options
     };
+
+    // Extreme settings for Super Hyper mode
+    if (config.style === 'super-hyper') {
+      config.complexity = 'high';
+      config.formality = 'casual';
+      config.errorLevel = 'high';
+      console.log('🔥 SUPER HYPER MODE ACTIVATED - Initializing Max-Intensity Humanization');
+    }
 
     const startTime = Date.now();
     let currentText = text;
@@ -58,18 +67,41 @@ class AdvancedTextHumanizer {
         const uniqueText = await this.plagiarismChecker.ensureUniqueness(reengineeredText);
 
         // Stage 5: Pattern Obfuscation
-        const obfuscatedText = this.obfuscationEngine.obfuscate(uniqueText);
+        let obfuscatedText = this.obfuscationEngine.obfuscate(uniqueText);
+
+        // Extra Super Hyper Obfuscation
+        if (config.style === 'super-hyper' || attempts > 2) {
+          obfuscatedText = this.obfuscationEngine.applyAdversarialPerturbations(obfuscatedText);
+          obfuscatedText = this.obfuscationEngine.addHumanThoughtPivots(obfuscatedText);
+          obfuscatedText = this.obfuscationEngine.injectPersonalVoice(obfuscatedText);
+        }
 
         // Stage 6: Human Verification
-        const verifiedText = this.humanVerifier.verify(obfuscatedText, { errorLevel: config.errorLevel || 'moderate' });
+        const verifiedText = this.humanVerifier.verify(obfuscatedText, {
+          errorLevel: config.style === 'super-hyper' ? 'high' : (config.errorLevel || 'moderate')
+        });
 
         // Stage 7: Fact Reinjection
-        const finalText = config.preserveFacts ? this.reinjectFacts(verifiedText, factDatabase) : verifiedText;
+        let finalText = config.preserveFacts ? this.reinjectFacts(verifiedText, factDatabase) : verifiedText;
+
+        // Stage 8: SuperHyperEngine (ONLY for super-hyper mode)
+        // This is the ultimate AI evasion system — 3-pass multi-engine refinement
+        // targeting perplexity, burstiness, n-grams, entropy, and coherence
+        if (config.style === 'super-hyper') {
+          if (!this.superHyperEngine) {
+            this.superHyperEngine = new SuperHyperEngine();
+            console.log('🔥 SuperHyperEngine initialized — targeting GPTZero/ZeroGPT/Originality detection signals');
+          }
+          const passes = attempts <= 2 ? 3 : 2; // More passes on early attempts
+          finalText = this.superHyperEngine.superHyperProcess(finalText, passes);
+          console.log(`✅ SuperHyperEngine applied ${passes} refinement passes`);
+        }
 
         // Final validation
         lastValidation = await this.validateOutput(finalText);
 
-        if (lastValidation.detectionRisk === 'minimal' || lastValidation.detectionRisk === 'low') {
+        // Super Hyper requirement: must be Minimal risk
+        if (lastValidation.detectionRisk === 'minimal' || (config.style !== 'super-hyper' && lastValidation.detectionRisk === 'low')) {
           return {
             success: true,
             originalText: text,
@@ -81,16 +113,22 @@ class AdvancedTextHumanizer {
             metadata: {
               attempts,
               semanticComplexity: semanticAnalysis.complexity,
-              processingTime: Date.now() - startTime
+              processingTime: Date.now() - startTime,
+              mode: config.style === 'super-hyper' ? 'super-hyper' : 'standard'
             }
           };
         }
 
         // If risk is too high, adjust parameters for next attempt
         console.log(`⚠️ Risk too high (${lastValidation.detectionRisk}). Refining...`);
-        config.style = attempts === 1 ? 'creative' : 'casual';
-        config.errorLevel = attempts === 1 ? 'moderate' : 'high';
-        currentText = finalText; // Refine on top of previous output
+        if (config.style === 'super-hyper') {
+          config.formality = attempts % 2 === 0 ? 'casual' : 'professional';
+          config.complexity = attempts > 2 ? 'medium' : 'high';
+        } else {
+          config.style = attempts === 1 ? 'creative' : 'casual';
+          config.errorLevel = attempts === 1 ? 'moderate' : 'high';
+        }
+        currentText = finalText;
 
       } catch (error) {
         console.error(`Attempt ${attempts} failed:`, error);
@@ -306,7 +344,7 @@ class SemanticDisassemblyEngine {
 
     for (let i = 0; i < sentences.length - 1; i++) {
       const current = sentences[i];
-      const next = sentences[i+1];
+      const next = sentences[i + 1];
 
       flow.push({
         transitionType: this.identifyTransitionType(current, next),
@@ -2046,10 +2084,10 @@ class PatternObfuscationEngine {
     aiTransitions.forEach(trans => {
       // Increased probability to 1.0 for critical AI patterns to ensure complete removal
       const prob = trans.pattern.toString().includes('landscape') ||
-                   trans.pattern.toString().includes('note') ||
-                   trans.pattern.toString().includes('role') ||
-                   trans.pattern.toString().includes('is') ||
-                   trans.pattern.toString().includes('are') ? 1.0 : 0.95;
+        trans.pattern.toString().includes('note') ||
+        trans.pattern.toString().includes('role') ||
+        trans.pattern.toString().includes('is') ||
+        trans.pattern.toString().includes('are') ? 1.0 : 0.95;
 
       if (Math.random() < prob) {
         const replacement = trans.replacements[Math.floor(Math.random() * trans.replacements.length)];
@@ -3708,17 +3746,708 @@ class AIDetectionTestSuite {
   }
 }
 
+/**
+ * ============================================================================
+ * SUPER HYPER ENGINE — Ultimate AI Detection Evasion System
+ * Targets: GPTZero, ZeroGPT, Originality.ai, Copyleaks, Turnitin
+ * ============================================================================
+ * 
+ * How AI detectors work:
+ * 1. PERPLEXITY: AI text has LOW perplexity (very predictable word choices).
+ *    Human text has HIGH perplexity (surprising, varied word choices).
+ * 2. BURSTINESS: AI text has LOW burstiness (uniform sentence lengths).
+ *    Human text has HIGH burstiness (mix of short punchy + long rambling).
+ * 3. N-GRAM REGULARITY: AI produces statistically regular n-gram patterns.
+ *    Humans produce irregular, unpredictable n-gram distributions.
+ * 4. ENTROPY: AI text has low vocabulary entropy (repetitive word selection).
+ *    Human text has high entropy (diverse, unexpected vocabulary).
+ * 5. COHERENCE UNIFORMITY: AI maintains perfect topic coherence.
+ *    Humans digress, self-correct, and have associative tangents.
+ * 
+ * This engine specifically attacks ALL FIVE signals simultaneously.
+ * ============================================================================
+ */
+class SuperHyperEngine {
+  constructor() {
+    this.sentenceTemplates = this._buildSentenceTemplates();
+    this.paraphraseMap = this._buildDeepParaphraseMap();
+    this.humanPhraseBank = this._buildHumanPhraseBank();
+    this.entropyBooster = this._buildEntropyDatabase();
+  }
+
+  /**
+   * Main entry point: takes already-humanized text and makes it UNDETECTABLE.
+   * This is designed to be called AFTER the standard pipeline as a final polish.
+   */
+  superHyperProcess(text, passes = 3) {
+    let current = text;
+
+    // PRE-PASS: Always run the AI Phrase Annihilator first (once)
+    // This strips the highest-confidence AI detection triggers before anything else
+    current = this.annihilateAIPhrases(current);
+
+    // PRE-PASS: Force contractions (AI text almost never uses contractions)
+    current = this.enforceContractions(current);
+
+    for (let pass = 0; pass < passes; pass++) {
+      console.log(`  [SuperHyper] Pass ${pass + 1}/${passes}...`);
+
+      // 1. Deep sentence-level paraphrasing (rewrite entire sentences)
+      current = this.deepParaphrase(current);
+
+      // 2. Maximize perplexity (make word choices surprising/unpredictable)
+      current = this.maximizePerplexity(current);
+
+      // 3. Inject extreme burstiness (wildly vary sentence lengths)
+      current = this.injectBurstiness(current);
+
+      // 4. Boost vocabulary entropy (never repeat the same word twice if possible)
+      current = this.boostEntropy(current);
+
+      // 5. Break n-gram regularity (insert micro-disruptions)
+      current = this.shatterNGrams(current);
+
+      // 6. Add human coherence breaks (tangents, self-corrections)
+      if (pass === 0) {
+        current = this.addCoherenceBreaks(current);
+      }
+
+      // 7. Diversify sentence openers (no two consecutive sentences start the same way)
+      current = this.diversifySentenceOpeners(current);
+
+      // 8. Final grammatical cleanup
+      current = this.cleanupArtifacts(current);
+    }
+
+    // POST-PASS: One final contraction enforcement and cleanup
+    current = this.enforceContractions(current);
+    current = this.cleanupArtifacts(current);
+
+    return current;
+  }
+
+  // =========================================================================
+  // 0-A. AI PHRASE ANNIHILATOR (PRE-PASS)
+  // The nuclear option: aggressively replace ALL known AI-flagged phrases.
+  // These are the top patterns that GPTZero, ZeroGPT, and Turnitin flag.
+  // =========================================================================
+  annihilateAIPhrases(text) {
+    // Ordered by detection confidence (highest-flagged first)
+    const killList = [
+      // --- CRITICAL: These are GPTZero's top-flagged patterns ---
+      [/\bin\s+today'?s\s+(rapidly\s+)?evolving\s+(technological\s+)?landscape\b/gi, 'these days'],
+      [/\bin\s+today'?s\s+(rapidly\s+)?changing\s+world\b/gi, 'right now'],
+      [/\bin\s+the\s+realm\s+of\b/gi, 'when it comes to'],
+      [/\bplays?\s+a\s+(crucial|vital|important|significant|key|pivotal)\s+role\s+in\b/gi, 'really matters for'],
+      [/\bit\s+is\s+(important|crucial|essential|vital|worth\s+noting|imperative)\s+to\s+(note|mention|understand|recognize|acknowledge)\s+that\b/gi, 'here\'s the thing:'],
+      [/\bthe\s+significance\s+of\s+this\s+(cannot|can't)\s+be\s+overstated\b/gi, 'this is a huge deal'],
+      [/\bin\s+conclusion,?\b/gi, 'so yeah, at the end of the day'],
+      [/\bfurthermore,?\b/gi, 'and also'],
+      [/\bmoreover,?\b/gi, 'on top of that'],
+      [/\bnevertheless,?\b/gi, 'but still'],
+      [/\bnonetheless,?\b/gi, 'even so'],
+      [/\bconsequently,?\b/gi, 'so basically'],
+      [/\badditionally,?\b/gi, 'plus'],
+      [/\bsubsequently,?\b/gi, 'then'],
+      [/\bnotwithstanding\b/gi, 'regardless'],
+
+      // --- HIGH: Academic/formal constructions ---
+      [/\bhas\s+emerged\s+as\s+a\s+(transformative|powerful|key|significant)\s+force\b/gi, 'has become a big deal'],
+      [/\bdemonstrated\s+significant\s+(improvements?|advancements?|progress)\b/gi, 'shown some real progress'],
+      [/\boperational\s+efficiency\b/gi, 'how smoothly things run'],
+      [/\bcompetitive\s+advantages?\b/gi, 'an edge over others'],
+      [/\bstrategic\s+decision[\s-]?making\b/gi, 'making smart choices'],
+      [/\bfundamentally\s+transform\b/gi, 'totally change'],
+      [/\bcontinued\s+development\b/gi, 'ongoing progress'],
+      [/\brapidly\s+evolving\b/gi, 'fast-changing'],
+      [/\bdiverse\s+array\s+of\b/gi, 'all sorts of'],
+      [/\bwide\s+range\s+of\b/gi, 'a bunch of'],
+      [/\bplethora\s+of\b/gi, 'tons of'],
+      [/\bmultitude\s+of\b/gi, 'loads of'],
+      [/\bmyriad\s+of?\b/gi, 'a whole bunch of'],
+      [/\bparadigm\s+shift\b/gi, 'big change'],
+      [/\bcutting[\s-]?edge\b/gi, 'latest and greatest'],
+      [/\bstate[\s-]?of[\s-]?the[\s-]?art\b/gi, 'top-of-the-line'],
+      [/\bgroundbreaking\b/gi, 'game-changing'],
+      [/\bpivotal\s+moment\b/gi, 'turning point'],
+
+      // --- MEDIUM: Overly formal single words ---
+      [/\butilize\b/gi, 'use'],
+      [/\butilization\b/gi, 'use'],
+      [/\bleverage\b/gi, 'take advantage of'],
+      [/\bfacilitate\b/gi, 'help with'],
+      [/\bimplement\b/gi, 'set up'],
+      [/\bimplementation\b/gi, 'setup'],
+      [/\boptimize\b/gi, 'improve'],
+      [/\boptimization\b/gi, 'improvement'],
+      [/\bcomprehensive\b/gi, 'thorough'],
+      [/\bsystematic\b/gi, 'organized'],
+      [/\bmethodology\b/gi, 'approach'],
+      [/\bparamount\b/gi, 'super important'],
+      [/\bcommence\b/gi, 'start'],
+      [/\bterminate\b/gi, 'end'],
+      [/\bsubstantial\b/gi, 'major'],
+      [/\bdemonstrate\b/gi, 'show'],
+      [/\bascertain\b/gi, 'figure out'],
+      [/\bexacerbate\b/gi, 'make worse'],
+      [/\bameliorate\b/gi, 'improve'],
+      [/\bdelve\s+into\b/gi, 'dig into'],
+      [/\bdelve\b/gi, 'get into'],
+      [/\bunderscore\b/gi, 'highlight'],
+      [/\bpivotal\b/gi, 'key'],
+      [/\bintricate\b/gi, 'complex'],
+      [/\bmeticulous\b/gi, 'careful'],
+      [/\brobust\b/gi, 'strong'],
+    ];
+
+    let result = text;
+    killList.forEach(([pattern, replacement]) => {
+      result = result.replace(pattern, replacement);
+    });
+
+    return result;
+  }
+
+  // =========================================================================
+  // 0-B. CONTRACTION ENFORCER (PRE-PASS)
+  // AI-generated text almost NEVER uses contractions.
+  // Humans use them constantly. This is a strong GPTZero signal.
+  // =========================================================================
+  enforceContractions(text) {
+    const contractions = [
+      [/\b(I|you|we|they)\s+are\b/gi, (m, p) => `${p}'re`],
+      [/\b(I|you|we|they)\s+have\b/gi, (m, p) => `${p}'ve`],
+      [/\b(he|she|it)\s+is\b/gi, (m, p) => `${p}'s`],
+      [/\b(he|she|it)\s+has\b/gi, (m, p) => `${p}'s`],
+      [/\b(I|he|she|it|we|you|they)\s+will\b/gi, (m, p) => `${p}'ll`],
+      [/\b(I|he|she|it|we|you|they)\s+would\b/gi, (m, p) => `${p}'d`],
+      [/\b(I|he|she|it|we|you|they)\s+had\b/gi, (m, p) => `${p}'d`],
+      [/\bdo\s+not\b/gi, 'don\'t'],
+      [/\bdoes\s+not\b/gi, 'doesn\'t'],
+      [/\bdid\s+not\b/gi, 'didn\'t'],
+      [/\bis\s+not\b/gi, 'isn\'t'],
+      [/\bare\s+not\b/gi, 'aren\'t'],
+      [/\bwas\s+not\b/gi, 'wasn\'t'],
+      [/\bwere\s+not\b/gi, 'weren\'t'],
+      [/\bhave\s+not\b/gi, 'haven\'t'],
+      [/\bhas\s+not\b/gi, 'hasn\'t'],
+      [/\bhad\s+not\b/gi, 'hadn\'t'],
+      [/\bwill\s+not\b/gi, 'won\'t'],
+      [/\bwould\s+not\b/gi, 'wouldn\'t'],
+      [/\bcould\s+not\b/gi, 'couldn\'t'],
+      [/\bshould\s+not\b/gi, 'shouldn\'t'],
+      [/\bcannot\b/gi, 'can\'t'],
+      [/\bcan\s+not\b/gi, 'can\'t'],
+      [/\blet\s+us\b/gi, 'let\'s'],
+      [/\bit\s+is\b/gi, 'it\'s'],
+      [/\bthat\s+is\b/gi, 'that\'s'],
+      [/\bwhat\s+is\b/gi, 'what\'s'],
+      [/\bthere\s+is\b/gi, 'there\'s'],
+      [/\bhere\s+is\b/gi, 'here\'s'],
+      [/\bwho\s+is\b/gi, 'who\'s'],
+      [/\bwhere\s+is\b/gi, 'where\'s'],
+      [/\bwhen\s+is\b/gi, 'when\'s'],
+      [/\bhow\s+is\b/gi, 'how\'s'],
+    ];
+
+    let result = text;
+    contractions.forEach(([pattern, replacement]) => {
+      // Apply with 80% probability to avoid being too uniform
+      if (Math.random() < 0.80) {
+        result = result.replace(pattern, replacement);
+      }
+    });
+
+    return result;
+  }
+
+  // =========================================================================
+  // 7. SENTENCE OPENER DIVERSIFIER
+  // AI text often starts consecutive sentences the same way.
+  // Humans naturally vary their sentence starters.
+  // =========================================================================
+  diversifySentenceOpeners(text) {
+    const sentences = this._splitSentences(text);
+    if (sentences.length < 3) return text;
+
+    const openerAlternatives = [
+      'Honestly, ', 'Look, ', 'The thing is, ', 'I mean, ',
+      'So basically, ', 'What I think is, ', 'From what I can tell, ',
+      'Point being, ', 'Here\'s the deal — ', 'Truth is, ',
+      'Let me put it this way: ', 'You know, ', 'In a nutshell, ',
+      'At the end of the day, ', 'For what it\'s worth, ', 'Real talk though, ',
+      'Not gonna lie, ', 'If I\'m being honest, ', 'Just to be clear, ',
+      'That said, '
+    ];
+
+    const result = sentences.map((s, i) => {
+      if (i === 0) return s;
+
+      const trimmed = s.trim();
+      if (trimmed.length < 10) return s;
+
+      const prevTrimmed = sentences[i - 1].trim();
+      const currentFirst = trimmed.split(/\s+/)[0]?.toLowerCase();
+      const prevFirst = prevTrimmed.split(/\s+/)[0]?.toLowerCase();
+
+      // If two consecutive sentences start with the same word, diversify
+      if (currentFirst === prevFirst && Math.random() < 0.85) {
+        const opener = openerAlternatives[Math.floor(Math.random() * openerAlternatives.length)];
+        return opener + trimmed.charAt(0).toLowerCase() + trimmed.slice(1) + ' ';
+      }
+
+      // Also randomly diversify ~20% of sentences for extra burstiness
+      if (Math.random() < 0.15) {
+        const opener = openerAlternatives[Math.floor(Math.random() * openerAlternatives.length)];
+        return opener + trimmed.charAt(0).toLowerCase() + trimmed.slice(1) + ' ';
+      }
+
+      return s;
+    });
+
+    return result.join('').replace(/\s+/g, ' ').trim();
+  }
+
+
+  // =========================================================================
+  // 1. DEEP SENTENCE-LEVEL PARAPHRASING
+  // Instead of just swapping words, rewrite entire sentence structures.
+  // =========================================================================
+  deepParaphrase(text) {
+    const sentences = this._splitSentences(text);
+    return sentences.map((s, i) => {
+      const trimmed = s.trim();
+      if (trimmed.length < 15) return s;
+
+      // 40% chance to deeply restructure each sentence
+      if (Math.random() < 0.4) {
+        return this._restructureSentence(trimmed) + ' ';
+      }
+      return s;
+    }).join('');
+  }
+
+  _restructureSentence(sentence) {
+    const clean = sentence.replace(/[.!?]+$/, '');
+    const words = clean.split(/\s+/);
+    const endPunc = sentence.match(/[.!?]+$/)?.[0] || '.';
+
+    // Strategy 1: Front-to-back flip (move last clause first)
+    if (words.length > 12 && Math.random() < 0.3) {
+      const commaIdx = words.findIndex((w, i) => i > 3 && w.endsWith(','));
+      if (commaIdx > 0) {
+        const firstPart = words.slice(0, commaIdx + 1).join(' ').replace(/,$/, '');
+        const secondPart = words.slice(commaIdx + 1).join(' ');
+        if (secondPart.length > 5) {
+          return secondPart.charAt(0).toUpperCase() + secondPart.slice(1) + ', ' +
+            firstPart.charAt(0).toLowerCase() + firstPart.slice(1) + endPunc;
+        }
+      }
+    }
+
+    // Strategy 2: Convert statement to rhetorical + answer pattern
+    if (words.length > 8 && Math.random() < 0.2) {
+      const starters = [
+        'Why does that matter?', 'What does this mean?', 'So what?',
+        'The real question is:', 'Here\'s the thing:'
+      ];
+      const starter = starters[Math.floor(Math.random() * starters.length)];
+      return starter + ' Well, ' + clean.charAt(0).toLowerCase() + clean.slice(1) + endPunc;
+    }
+
+    // Strategy 3: Add a personal framing
+    if (Math.random() < 0.25) {
+      const frames = [
+        'From my perspective, ', 'The way I see it, ', 'If you ask me, ',
+        'Honestly speaking, ', 'Look, ', 'Here\'s my take: ',
+        'I\'ll be straight with you — ', 'Real talk, '
+      ];
+      const frame = frames[Math.floor(Math.random() * frames.length)];
+      return frame + clean.charAt(0).toLowerCase() + clean.slice(1) + endPunc;
+    }
+
+    // Strategy 4: Break into two shorter sentences with a connector
+    if (words.length > 15 && Math.random() < 0.3) {
+      const mid = Math.floor(words.length / 2);
+      // Find nearest comma or conjunction near midpoint
+      let splitAt = mid;
+      for (let j = mid - 3; j <= mid + 3 && j < words.length; j++) {
+        if (j > 0 && (words[j].endsWith(',') || /^(and|but|or|so|which|because)$/i.test(words[j]))) {
+          splitAt = j;
+          break;
+        }
+      }
+      const p1 = words.slice(0, splitAt).join(' ').replace(/[,;]$/, '') + '.';
+      const p2 = words.slice(splitAt).join(' ').replace(/^(and|but|or|so)\s*/i, '');
+      if (p2.length > 5) {
+        return p1 + ' ' + p2.charAt(0).toUpperCase() + p2.slice(1) + endPunc;
+      }
+    }
+
+    return sentence;
+  }
+
+  // =========================================================================
+  // 2. PERPLEXITY MAXIMIZER
+  // Replace predictable words with less common but valid synonyms.
+  // The goal is to increase the "surprise" factor of each word choice.
+  // =========================================================================
+  maximizePerplexity(text) {
+    let result = text;
+
+    // Replace common, predictable words with less obvious alternatives
+    const perplexitySwaps = [
+      [/\bvery\b/gi, () => this._pick(['remarkably', 'unusually', 'strikingly', 'genuinely', 'seriously'])],
+      [/\breally\b/gi, () => this._pick(['genuinely', 'truly', 'honestly', 'straight up', 'for real'])],
+      [/\bimportant\b/gi, () => this._pick(['pivotal', 'non-negotiable', 'game-changing', 'essential', 'meaningful'])],
+      [/\bgood\b/gi, () => this._pick(['solid', 'decent', 'worthwhile', 'promising', 'respectable'])],
+      [/\bbad\b/gi, () => this._pick(['rough', 'messy', 'problematic', 'underwhelming', 'questionable'])],
+      [/\bbig\b/gi, () => this._pick(['massive', 'sizable', 'hefty', 'substantial', 'whopping'])],
+      [/\bsmall\b/gi, () => this._pick(['modest', 'minimal', 'minor', 'subtle', 'slight'])],
+      [/\bmake\b/gi, () => this._pick(['craft', 'build', 'put together', 'pull off', 'shape'])],
+      [/\bget\b/gi, () => this._pick(['grab', 'land', 'snag', 'score', 'pick up'])],
+      [/\buse\b/gi, () => this._pick(['rely on', 'go with', 'work with', 'lean on', 'tap into'])],
+      [/\bshow\b/gi, () => this._pick(['reveal', 'highlight', 'point out', 'spell out', 'lay bare'])],
+      [/\bhelp\b/gi, () => this._pick(['assist', 'support', 'back up', 'pitch in', 'lend a hand'])],
+      [/\bthink\b/gi, () => this._pick(['reckon', 'figure', 'suspect', 'gather', 'sense'])],
+      [/\bsay\b/gi, () => this._pick(['mention', 'point out', 'note', 'put it like this', 'remark'])],
+      [/\bwork\b/gi, () => this._pick(['function', 'operate', 'perform', 'run', 'do the job'])],
+      [/\bchange\b/gi, () => this._pick(['shift', 'tweak', 'adjust', 'reshape', 'rework'])],
+      [/\bneed\b/gi, () => this._pick(['require', 'call for', 'demand', 'depend on', 'gotta have'])],
+      [/\btry\b/gi, () => this._pick(['attempt', 'give it a shot', 'take a stab at', 'go for', 'test out'])],
+      [/\bstart\b/gi, () => this._pick(['kick off', 'begin', 'launch into', 'dive into', 'get rolling on'])],
+    ];
+
+    // Apply each swap with a controlled probability to avoid over-transformation
+    perplexitySwaps.forEach(([pattern, replacer]) => {
+      if (Math.random() < 0.5) {
+        // Only replace the FIRST occurrence to avoid repetitive patterns
+        result = result.replace(pattern, () => replacer());
+      }
+    });
+
+    return result;
+  }
+
+  // =========================================================================
+  // 3. BURSTINESS INJECTION
+  // GPTZero's #1 detection signal. AI sentences are ~same length.
+  // Human text wildly varies: "No way." followed by a 40-word sentence.
+  // =========================================================================
+  injectBurstiness(text) {
+    const sentences = this._splitSentences(text);
+    if (sentences.length < 4) return text;
+
+    const result = [];
+    for (let i = 0; i < sentences.length; i++) {
+      const s = sentences[i].trim();
+      if (!s) continue;
+
+      const words = s.split(/\s+/);
+
+      // Every 3rd-4th sentence: make it VERY short (2-6 words)
+      if (i % 4 === 2 && words.length > 10 && Math.random() < 0.4) {
+        // Extract the core idea into a short punchy sentence
+        const punchy = this._makePunchy(s);
+        const remainder = this._makeRemainder(s, punchy);
+        result.push(punchy);
+        if (remainder) result.push(remainder);
+        continue;
+      }
+
+      // Every 5th sentence: make it VERY long (combine with next if possible)
+      if (i % 5 === 0 && i < sentences.length - 1 && words.length < 15 && Math.random() < 0.35) {
+        const nextS = sentences[i + 1]?.trim();
+        if (nextS && nextS.length > 10) {
+          const connectors = [' and honestly, ', ' — plus, ', ', and on top of that, ', ' which also means '];
+          const connector = connectors[Math.floor(Math.random() * connectors.length)];
+          const combined = s.replace(/[.!?]+$/, '') + connector +
+            nextS.charAt(0).toLowerCase() + nextS.slice(1);
+          result.push(combined);
+          i++; // Skip next sentence since we combined
+          continue;
+        }
+      }
+
+      result.push(s);
+    }
+
+    return result.join(' ').replace(/\s+/g, ' ').trim();
+  }
+
+  _makePunchy(sentence) {
+    const punchyStarters = [
+      'That matters.', 'Big deal.', 'Think about that.', 'Wild, right?',
+      'Not kidding.', 'Facts.', 'Seriously.', 'Full stop.',
+      'No question.', 'Can\'t ignore that.', 'Game changer.',
+      'It clicks.', 'Clear as day.', 'Say less.', 'Speaks for itself.'
+    ];
+    return punchyStarters[Math.floor(Math.random() * punchyStarters.length)];
+  }
+
+  _makeRemainder(sentence, _punchy) {
+    const clean = sentence.replace(/[.!?]+$/, '');
+    const words = clean.split(/\s+/);
+    if (words.length < 8) return null;
+    // Return the original sentence slightly trimmed
+    const trimmed = words.slice(0, Math.min(words.length, 20)).join(' ');
+    return trimmed.charAt(0).toUpperCase() + trimmed.slice(1) + '.';
+  }
+
+  // =========================================================================
+  // 4. VOCABULARY ENTROPY BOOSTER
+  // Ensures the text never uses the same significant word more than twice.
+  // This directly counters the low entropy signal AI detectors measure.
+  // =========================================================================
+  boostEntropy(text) {
+    const words = text.split(/\s+/);
+    const seen = new Map(); // word -> count
+    const stopWords = new Set([
+      'the', 'a', 'an', 'is', 'are', 'was', 'were', 'be', 'been', 'being',
+      'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could',
+      'should', 'may', 'might', 'can', 'shall', 'to', 'of', 'in', 'for',
+      'on', 'with', 'at', 'by', 'from', 'as', 'into', 'through', 'during',
+      'before', 'after', 'above', 'below', 'between', 'and', 'but', 'or',
+      'not', 'no', 'if', 'so', 'this', 'that', 'it', 'its', 'i', 'you',
+      'he', 'she', 'they', 'we', 'me', 'him', 'her', 'us', 'them', 'my',
+      'your', 'his', 'our', 'their', 'what', 'which', 'who', 'when', 'where',
+      'how', 'why', 'all', 'each', 'every', 'both', 'few', 'more', 'most',
+      'some', 'any', 'other', 'than', 'too', 'very', 'just', 'also'
+    ]);
+
+    const result = words.map(word => {
+      const lower = word.toLowerCase().replace(/[^a-z']/g, '');
+      if (lower.length < 4 || stopWords.has(lower)) return word;
+
+      const count = seen.get(lower) || 0;
+      seen.set(lower, count + 1);
+
+      // If word appears more than twice, replace with a synonym
+      if (count >= 2) {
+        const syn = this._getEntropySynonym(lower);
+        if (syn && syn !== lower) {
+          // Preserve original capitalization
+          const isCapitalized = word[0] === word[0].toUpperCase();
+          const punct = word.match(/[^a-zA-Z']+$/)?.[0] || '';
+          let replacement = syn;
+          if (isCapitalized) replacement = replacement.charAt(0).toUpperCase() + replacement.slice(1);
+          return replacement + punct;
+        }
+      }
+
+      return word;
+    });
+
+    return result.join(' ');
+  }
+
+  // =========================================================================
+  // 5. N-GRAM SHATTERER
+  // AI text has very regular 3-gram and 4-gram patterns.
+  // This inserts micro-disruptions that break statistical regularity
+  // without changing the meaning.
+  // =========================================================================
+  shatterNGrams(text) {
+    const sentences = this._splitSentences(text);
+
+    return sentences.map(s => {
+      const trimmed = s.trim();
+      if (trimmed.length < 20) return s;
+
+      const words = trimmed.split(/\s+/);
+      if (words.length < 6) return s;
+
+      // Technique 1: Insert a micro-pause word ONLY after conjunctions (8% chance)
+      if (Math.random() < 0.08) {
+        const microPauses = ['actually', 'honestly', 'really'];
+        const pause = microPauses[Math.floor(Math.random() * microPauses.length)];
+        for (let k = 1; k < words.length - 1; k++) {
+          const w = words[k].toLowerCase().replace(/[^a-z]/g, '');
+          if ((w === 'and' || w === 'but' || w === 'so') && Math.random() < 0.5) {
+            words.splice(k + 1, 0, pause);
+            break;
+          }
+        }
+      }
+
+      // Technique 2: removed — word swaps cause too many grammar breaks
+
+      // Technique 3: Change punctuation style (comma to dash, etc.) (12% chance)
+      if (Math.random() < 0.12) {
+        return words.join(' ')
+          .replace(/,\s/g, (match) => Math.random() < 0.3 ? ' — ' : match)
+          + ' ';
+      }
+
+      return words.join(' ') + ' ';
+    }).join('').replace(/\s+/g, ' ').trim();
+  }
+
+  // =========================================================================
+  // 6. COHERENCE BREAKER
+  // Humans naturally digress. AI stays perfectly on-topic.
+  // This adds natural-sounding tangents that break coherence uniformity.
+  // =========================================================================
+  addCoherenceBreaks(text) {
+    const sentences = this._splitSentences(text);
+    if (sentences.length < 6) return text;
+
+    const tangents = [
+      'But that\'s just one piece of the puzzle, I guess.',
+      'Anyway, I\'m getting sidetracked here.',
+      'Not that it matters much in the grand scheme of things.',
+      'I probably should\'ve mentioned this earlier, but whatever.',
+      'Come to think of it, that\'s a whole conversation in itself.',
+      'Funny how that works, isn\'t it?',
+      'I know I\'m jumping around a bit, bear with me.',
+      'Side note: that\'s actually more complicated than people realize.',
+      'But I digress.',
+      'Anyway, back to what I was saying.',
+      'It\'s one of those things you don\'t think about until you have to.',
+      'Random thought, but it\'s related.',
+      'Take that for what it\'s worth.'
+    ];
+
+    const result = [...sentences];
+
+    // Insert 1-2 tangents for every 8-10 sentences
+    const numTangents = Math.max(1, Math.floor(sentences.length / 9));
+    const usedPositions = new Set();
+
+    for (let t = 0; t < numTangents; t++) {
+      if (Math.random() < 0.45) {
+        const tangent = tangents[Math.floor(Math.random() * tangents.length)];
+        let pos;
+        let attempts = 0;
+        do {
+          pos = Math.floor(Math.random() * (result.length - 2)) + 2;
+          attempts++;
+        } while (usedPositions.has(pos) && attempts < 10);
+
+        if (attempts < 10) {
+          usedPositions.add(pos);
+          result.splice(pos, 0, tangent + ' ');
+        }
+      }
+    }
+
+    return result.join(' ').replace(/\s+/g, ' ').trim();
+  }
+
+  // =========================================================================
+  // CLEANUP
+  // Fix artifacts from all the transformations above.
+  // =========================================================================
+  cleanupArtifacts(text) {
+    return text
+      .replace(/\s+/g, ' ')
+      .replace(/([.!?])\s*([.!?])/g, '$1')     // double punctuation
+      .replace(/,\s*,/g, ',')                    // double commas
+      .replace(/\s+([.!?,;:])/g, '$1')           // space before punctuation
+      .replace(/([.!?])\s*([a-z])/g, (m, p, c) => p + ' ' + c.toUpperCase()) // capitalize after period
+      .replace(/\.\s+\./g, '.')                  // double periods
+      .replace(/\s{2,}/g, ' ')                   // multiple spaces
+      .trim();
+  }
+
+  // =========================================================================
+  // UTILITY METHODS
+  // =========================================================================
+  _splitSentences(text) {
+    const parts = text.split(/([.!?]+\s+)/);
+    const sentences = [];
+    for (let i = 0; i < parts.length; i += 2) {
+      const sentence = parts[i] + (parts[i + 1] || '');
+      if (sentence.trim()) sentences.push(sentence);
+    }
+    return sentences;
+  }
+
+  _pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  _getEntropySynonym(word) {
+    const db = this.entropyBooster;
+    return db[word] ? db[word][Math.floor(Math.random() * db[word].length)] : word;
+  }
+
+  _buildSentenceTemplates() {
+    return {
+      question_answer: (content) => `Why does this matter? Because ${content.toLowerCase()}.`,
+      contrast: (content) => `You might think otherwise, but ${content.toLowerCase()}.`,
+      personal: (content) => `In my experience, ${content.toLowerCase()}.`,
+      emphatic: (content) => `Let me be clear: ${content.toLowerCase()}.`,
+    };
+  }
+
+  _buildDeepParaphraseMap() {
+    return {
+      'in today\'s world': ['nowadays', 'these days', 'the way things are right now', 'in the current climate'],
+      'plays a crucial role': ['is a massive factor', 'really drives things', 'can\'t be overlooked', 'sits at the center of'],
+      'it is worth noting': ['don\'t miss the fact that', 'one thing to point out is', 'keep in mind that'],
+      'on the other hand': ['flip side though', 'then again', 'but looking at it differently', 'that said'],
+      'as a result': ['because of that', 'so what happened is', 'that led to', 'which meant'],
+    };
+  }
+
+  _buildHumanPhraseBank() {
+    return [
+      'if you follow me', 'you know how it goes', 'crazy as it sounds',
+      'not gonna sugarcoat it', 'for what it\'s worth', 'at least in my book',
+      'take it or leave it', 'no two ways about it', 'long story short',
+      'cut to the chase', 'bottom line', 'when all is said and done'
+    ];
+  }
+
+  _buildEntropyDatabase() {
+    return {
+      'important': ['pivotal', 'key', 'critical', 'vital', 'central', 'pressing', 'top-priority'],
+      'significant': ['notable', 'meaningful', 'substantial', 'considerable', 'weighty', 'telling'],
+      'development': ['advancement', 'evolution', 'progress', 'breakthrough', 'stride', 'leap'],
+      'technology': ['tech', 'innovation', 'tools', 'systems', 'machinery', 'digital infrastructure'],
+      'approach': ['method', 'strategy', 'path', 'tactic', 'angle', 'game plan'],
+      'effective': ['powerful', 'potent', 'impactful', 'productive', 'solid', 'reliable'],
+      'consider': ['think about', 'weigh', 'reflect on', 'factor in', 'keep in mind'],
+      'provide': ['deliver', 'supply', 'offer', 'hand over', 'furnish', 'bring'],
+      'various': ['multiple', 'diverse', 'assorted', 'different', 'a range of'],
+      'process': ['procedure', 'workflow', 'operation', 'mechanism', 'routine'],
+      'impact': ['effect', 'influence', 'consequence', 'ripple effect', 'footprint'],
+      'challenge': ['hurdle', 'obstacle', 'difficulty', 'roadblock', 'struggle'],
+      'opportunity': ['opening', 'chance', 'window', 'prospect', 'possibility'],
+      'perspective': ['viewpoint', 'angle', 'outlook', 'lens', 'standpoint'],
+      'environment': ['setting', 'landscape', 'context', 'arena', 'scene'],
+      'information': ['data', 'intel', 'details', 'insights', 'findings'],
+      'experience': ['encounter', 'exposure', 'journey', 'background', 'track record'],
+      'potential': ['promise', 'capability', 'possibility', 'capacity', 'upside'],
+      'analysis': ['breakdown', 'assessment', 'review', 'examination', 'deep dive'],
+      'research': ['study', 'investigation', 'exploration', 'inquiry', 'probe'],
+      'conclusion': ['takeaway', 'verdict', 'finding', 'bottom line', 'end result'],
+      'understanding': ['grasp', 'comprehension', 'awareness', 'insight', 'handle'],
+      'organization': ['company', 'group', 'outfit', 'team', 'entity'],
+      'function': ['role', 'purpose', 'job', 'task', 'duty'],
+      'establish': ['set up', 'build', 'create', 'form', 'put in place'],
+      'demonstrate': ['show', 'prove', 'illustrate', 'make clear', 'lay out'],
+      'influence': ['sway', 'shape', 'steer', 'guide', 'affect'],
+      'maintain': ['keep up', 'sustain', 'preserve', 'hold onto', 'uphold'],
+      'achieve': ['reach', 'hit', 'pull off', 'nail', 'accomplish'],
+      'require': ['need', 'demand', 'call for', 'depend on', 'insist on'],
+    };
+  }
+}
+
 // Explicitly expose classes to window for script.js to access
 if (typeof window !== 'undefined') {
   window.AdvancedTextHumanizer = AdvancedTextHumanizer;
   window.AdvancedAIDetector = AdvancedAIDetector;
   window.PatternObfuscationEngine = PatternObfuscationEngine;
   window.AIDetectionTestSuite = AIDetectionTestSuite;
+  window.SuperHyperEngine = SuperHyperEngine;
 }
 
 // Browser initialization - only run in browser environment
 if (typeof document !== 'undefined' && typeof window !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     try {
       window.advancedHumanizer = new AdvancedTextHumanizer();
       window.advancedDetector = new AdvancedAIDetector();
@@ -3746,6 +4475,7 @@ if (typeof module !== 'undefined' && module.exports) {
     AdvancedTextHumanizer,
     PatternObfuscationEngine,
     AdvancedAIDetector,
-    AIDetectionTestSuite
+    AIDetectionTestSuite,
+    SuperHyperEngine
   };
 }

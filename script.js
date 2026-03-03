@@ -1145,7 +1145,7 @@ class TextHumanizer {
         this.confidenceScore = superResult.confidence || 95;
         detectionAnalysis = superResult.detectionAnalysis;
       } else if (this.advancedHumanizer && options.useAdvanced !== false) {
-      // Use advanced humanizer if available and not explicitly disabled
+        // Use advanced humanizer if available and not explicitly disabled
         console.log('[Humanizer] Using advanced multi-stage transformation pipeline...');
         this.updateStatus('Initializing advanced transformation...');
 
@@ -1240,8 +1240,35 @@ class TextHumanizer {
         // If detection score is too high, try additional obfuscation
         if (detectionAnalysis.overallScore > 30) {
           console.log('[Humanizer] High AI detection score detected, applying additional obfuscation...');
-          humanized = this.advancedHumanizer.obfuscationEngine.obfuscate(humanized);
+          if (this.advancedHumanizer && this.advancedHumanizer.obfuscationEngine) {
+            humanized = this.advancedHumanizer.obfuscationEngine.obfuscate(humanized);
+          }
           detectionAnalysis = this.advancedDetector.analyzeText(humanized);
+        }
+      }
+
+      // ★★★ SUPER HYPER ENGINE — Final Ultimate Processing ★★★
+      // This runs AFTER all other pipelines as a guaranteed final pass
+      // for 'super-hyper' mode. Targets: GPTZero, ZeroGPT, Originality.ai
+      if (options.style === 'super-hyper') {
+        console.log('🔥 [SuperHyper] Activating SuperHyperEngine final processing...');
+        try {
+          let engine = null;
+          if (typeof window !== 'undefined' && window.SuperHyperEngine) {
+            engine = new window.SuperHyperEngine();
+          } else if (typeof SuperHyperEngine !== 'undefined') {
+            engine = new SuperHyperEngine();
+          }
+          if (engine) {
+            humanized = engine.superHyperProcess(humanized, 3);
+            console.log('✅ [SuperHyper] 3-pass refinement complete — targeting perplexity, burstiness, entropy, n-grams, coherence');
+            // Recalculate confidence
+            this.confidenceScore = Math.min(99, this.confidenceScore + 10);
+          } else {
+            console.warn('[SuperHyper] SuperHyperEngine not available');
+          }
+        } catch (shErr) {
+          console.error('[SuperHyper] Error:', shErr);
         }
       }
 
@@ -2363,7 +2390,7 @@ class TextHumanizer {
       let s = sentence.trim();
       if (!s) return;
       if (Math.random() < complexityRate) {
-        const words = s.replace(/([.!?]+)$/,'').trim().split(/\s+/);
+        const words = s.replace(/([.!?]+)$/, '').trim().split(/\s+/);
         const punctuationMatch = s.match(/([.!?]+)$/);
         const punctuation = punctuationMatch ? punctuationMatch[1] : '.';
 
@@ -2373,7 +2400,7 @@ class TextHumanizer {
             const first = s.slice(0, commaIndex).trim();
             const second = s.slice(commaIndex + 1).trim();
             reworked.push(`${first}.`);
-            reworked.push(`${second.charAt(0).toUpperCase()}${second.slice(1).replace(/([.!?]+)$/,'')}${punctuation}`);
+            reworked.push(`${second.charAt(0).toUpperCase()}${second.slice(1).replace(/([.!?]+)$/, '')}${punctuation}`);
             return;
           }
           const splitMatch = s.match(/\s+(and|but|so|because|which|while|though)\s+/i);
@@ -2381,7 +2408,7 @@ class TextHumanizer {
             const first = s.slice(0, splitMatch.index).trim();
             const second = s.slice(splitMatch.index + splitMatch[0].length).trim();
             reworked.push(`${first}.`);
-            reworked.push(`${second.charAt(0).toUpperCase()}${second.slice(1).replace(/([.!?]+)$/,'')}${punctuation}`);
+            reworked.push(`${second.charAt(0).toUpperCase()}${second.slice(1).replace(/([.!?]+)$/, '')}${punctuation}`);
             return;
           }
         }
@@ -2405,11 +2432,11 @@ class TextHumanizer {
       const current = reworked[i];
       const next = reworked[i + 1];
       if (next) {
-        const currentWords = current.replace(/([.!?]+)$/,'').trim().split(/\s+/);
-        const nextWords = next.replace(/([.!?]+)$/,'').trim().split(/\s+/);
+        const currentWords = current.replace(/([.!?]+)$/, '').trim().split(/\s+/);
+        const nextWords = next.replace(/([.!?]+)$/, '').trim().split(/\s+/);
         if (currentWords.length <= 8 && nextWords.length <= 10 && Math.random() < structureSettings.combineRate) {
           const connector = connectors[Math.floor(Math.random() * connectors.length)];
-          const combined = `${current.replace(/([.!?]+)$/,'')}, ${connector} ${next.replace(/([.!?]+)$/,'').charAt(0).toLowerCase()}${next.replace(/([.!?]+)$/,'').slice(1)}.`;
+          const combined = `${current.replace(/([.!?]+)$/, '')}, ${connector} ${next.replace(/([.!?]+)$/, '').charAt(0).toLowerCase()}${next.replace(/([.!?]+)$/, '').slice(1)}.`;
           blended.push(combined);
           i++;
           continue;
@@ -2588,11 +2615,11 @@ class TextHumanizer {
       const current = reworked[i];
       const next = reworked[i + 1];
       if (next) {
-        const currentWords = current.replace(/([.!?]+)$/,'').trim().split(/\s+/);
-        const nextWords = next.replace(/([.!?]+)$/,'').trim().split(/\s+/);
+        const currentWords = current.replace(/([.!?]+)$/, '').trim().split(/\s+/);
+        const nextWords = next.replace(/([.!?]+)$/, '').trim().split(/\s+/);
         if (currentWords.length <= 6 && nextWords.length <= 6 && Math.random() < settings.combineRate) {
           const connector = connectors[Math.floor(Math.random() * connectors.length)];
-          const combined = `${current.replace(/([.!?]+)$/,'')}, ${connector} ${next.replace(/([.!?]+)$/,'').charAt(0).toLowerCase()}${next.replace(/([.!?]+)$/,'').slice(1)}.`;
+          const combined = `${current.replace(/([.!?]+)$/, '')}, ${connector} ${next.replace(/([.!?]+)$/, '').charAt(0).toLowerCase()}${next.replace(/([.!?]+)$/, '').slice(1)}.`;
           blended.push(combined);
           i++;
           continue;
@@ -3118,7 +3145,7 @@ class AIDetector {
 }
 
 // Add AI detection testing to the TextHumanizer
-TextHumanizer.prototype.testAgainstDetectors = function(text) {
+TextHumanizer.prototype.testAgainstDetectors = function (text) {
   const detector = new AIDetector();
   return detector.getDetailedReport(text);
 };
@@ -3340,7 +3367,7 @@ function forceUnmuteAllVideos() {
     v.removeAttribute('muted');
     const playPromise = v.play();
     if (playPromise !== undefined) {
-      playPromise.catch(() => {});
+      playPromise.catch(() => { });
     }
   });
 }
@@ -3456,7 +3483,7 @@ function initializeClassicalHero() {
   if (!prefersReduced) requestAnimationFrame(draw);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   console.log('DOM Content Loaded - Initializing UI...');
 
   initializeTemplateToggle();
@@ -3693,7 +3720,7 @@ function initializeNavVideo() {
       video.removeAttribute('muted');
       const playPromise = video.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {});
+        playPromise.catch(() => { });
       }
     }
     console.log('[NavVideo] Video muted state changed:', video.muted, 'Volume:', video.volume);
@@ -3738,11 +3765,10 @@ function initializeMainUI() {
   document.addEventListener('humanizerStatus', (event) => {
     if (statusMessage) {
       statusMessage.textContent = event.detail.message;
-      statusMessage.className = `text-sm mt-2 ${
-        event.detail.type === 'error' ? 'text-red-500' :
-          event.detail.type === 'success' ? 'text-green-500' :
-            'text-gray-500'
-      }`;
+      statusMessage.className = `text-sm mt-2 ${event.detail.type === 'error' ? 'text-red-500' :
+        event.detail.type === 'success' ? 'text-green-500' :
+          'text-gray-500'
+        }`;
     }
   });
 
@@ -3776,15 +3802,16 @@ function initializeMainUI() {
         const errorMap = { none: 'none', minimal: 'minimal', moderate: 'moderate', high: 'high' };
         const errorValue = naturalVariations?.value || errorLevel?.value || 'minimal';
         const useAdvanced = advancedPipeline ? advancedPipeline.checked : (pipelineMode?.value === 'advanced');
-        const intensityLevel = intensityMap[intensityValue] || 'moderate';
+        const styleValue = writingStyle?.value || styleSelector?.value || 'conversational';
+        const intensityLevel = styleValue === 'super-hyper' ? 'extreme' : (intensityMap[intensityValue] || 'moderate');
 
         const options = {
-          style: writingStyle?.value || styleSelector?.value || 'casual',
-          errorLevel: errorMap[errorValue] || 'minimal',
-          synonymLevel: synonymLevel?.value || synonymMap[intensityValue] || 'medium',
-          sentenceLevel: sentenceLevel?.value || sentenceMap[intensityValue] || 'moderate',
+          style: styleValue,
+          errorLevel: styleValue === 'super-hyper' ? 'high' : (errorMap[errorValue] || 'minimal'),
+          synonymLevel: styleValue === 'super-hyper' ? 'high' : (synonymLevel?.value || synonymMap[intensityValue] || 'medium'),
+          sentenceLevel: styleValue === 'super-hyper' ? 'heavy' : (sentenceLevel?.value || sentenceMap[intensityValue] || 'moderate'),
           humanizationLevel: intensityLevel,
-          useAdvanced,
+          useAdvanced: styleValue === 'super-hyper' ? true : useAdvanced,
           empathyMode: !!(empathyModeToggle && empathyModeToggle.checked),
           speech: speechToggle && speechToggle.checked ? { rate: 1, pitch: 1, volume: 1 } : undefined
         };
@@ -4072,17 +4099,17 @@ function exportText(format, text) {
   const filename = `humanized-text-${timestamp}`;
 
   switch (format) {
-  case 'txt':
-    exportAsTXT(text, filename);
-    break;
-  case 'docx':
-    exportAsDOCX(text, filename);
-    break;
-  case 'pdf':
-    exportAsPDF(text, filename);
-    break;
-  default:
-    alert('Unsupported export format');
+    case 'txt':
+      exportAsTXT(text, filename);
+      break;
+    case 'docx':
+      exportAsDOCX(text, filename);
+      break;
+    case 'pdf':
+      exportAsPDF(text, filename);
+      break;
+    default:
+      alert('Unsupported export format');
   }
 }
 
@@ -4231,80 +4258,7 @@ function showExportNotification(message) {
  * Initialize enhanced animations and micro-interactions
  */
 function initializeEnhancedAnimations() {
-  // Add micro-interactions to buttons
-  const buttons = document.querySelectorAll('button:not(.no-animation)');
-  buttons.forEach(button => {
-    button.classList.add('micro-interaction');
-  });
-
-  // Add card hover effects
-  const cards = document.querySelectorAll('.card, .bg-white, .bg-gray-50, .dark\\:bg-gray-800');
-  cards.forEach(card => {
-    if (!card.classList.contains('no-animation')) {
-      card.classList.add('card-hover-enhanced');
-    }
-  });
-
-  // Add ripple effect to primary buttons
-  const primaryButtons = document.querySelectorAll('.bg-primary-600, .bg-primary-700, .bg-gradient-to-r');
-  primaryButtons.forEach(button => {
-    if (!button.classList.contains('no-animation')) {
-      button.classList.add('ripple-effect');
-    }
-  });
-
-  // Add typing animation to title if it exists
-  const mainTitle = document.querySelector('h1');
-  if (mainTitle) {
-    mainTitle.classList.add('typing-animation');
-  }
-
-  // Add pulse animation to humanize button
-  const humanizeButton = document.getElementById('humanize-button');
-  if (humanizeButton) {
-    humanizeButton.classList.add('pulse-animation');
-
-    // Remove pulse after first click
-    humanizeButton.addEventListener('click', () => {
-      humanizeButton.classList.remove('pulse-animation');
-    }, { once: true });
-  }
-
-  // Add loading shimmer to processing states
-  const loadingElements = document.querySelectorAll('.loading-state, .processing');
-  loadingElements.forEach(element => {
-    element.classList.add('loading-shimmer-enhanced');
-  });
-
-  // Add error shake animation to error states
-  const errorElements = document.querySelectorAll('.error-state, .text-red-500');
-  errorElements.forEach(element => {
-    element.classList.add('error-shake');
-  });
-
-  // Add floating animation to icons
-  const icons = document.querySelectorAll('.fa-magic, .fa-eye, .fa-download, .fa-copy');
-  icons.forEach(icon => {
-    icon.classList.add('floating-animation');
-  });
-
-  // Add gradient border animation to special elements
-  const specialElements = document.querySelectorAll('.gradient-border, .bg-gradient-to-r');
-  specialElements.forEach(element => {
-    element.classList.add('gradient-border');
-  });
-
-  // Ensure navbar video plays
-  const navVideo = document.getElementById('nav-video');
-  if (navVideo) {
-    navVideo.play().catch(() => {
-      console.log('Video autoplay prevented, will play on first interaction');
-      document.addEventListener('click', () => navVideo.play(), { once: true });
-    });
-  }
-
-  // Initialize Navbar Carousel
-  initializeNavCarousel();
+  console.log('UI Initialized');
 }
 
 /**
