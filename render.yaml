@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: humainez
+    name: saniya-humanize
     env: node
-    plan: starter
+    plan: free
     buildCommand: "npm install"
     startCommand: "npm start"
     autoDeploy: true
@@ -14,17 +14,9 @@ services:
       - key: PORT
         value: 3000
       - key: CORS_ORIGIN
-        value: https://your-domain
+        value: "*"
       - key: LOG_LEVEL
         value: info
-      - key: OPENAI_MODEL
-        value: gpt-4o-mini
-      # Add secrets via Render dashboard (values left blank here)
-      - key: OPENAI_API_KEY
-        sync: false
-      - key: GEMINI_API_KEY
-        sync: false
-      - key: LLM_GATEWAY_URL
-        sync: false
-      - key: LLM_API_KEY
+      # Add secrets via Render dashboard
+      - key: MONGODB_URI
         sync: false
